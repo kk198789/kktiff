@@ -1385,11 +1385,13 @@ function updateMuteBtn() {
 
 function subscribeChat() {
   if (chatUnsubscribe) return;
-  const q = query(collection(db, 'messages'), orderBy('ts', 'asc'), limit(100));
+  const q = collection(db, 'messages');
   chatUnsubscribe = onSnapshot(q, snap => {
     console.log('chat snapshot received, docs:', snap.size);
     const msgs = [];
     snap.forEach(d => msgs.push({ id:d.id, ...d.data() }));
+    msgs.sort((a,b) => (a.ts||0) - (b.ts||0));
+    if (msgs.length > 100) msgs.splice(0, msgs.length - 100);
     if (lastChatCount > 0 && msgs.length > lastChatCount) {
       const latest = msgs[msgs.length - 1];
       if (latest.from !== myIdentity) playBeep();
@@ -1399,6 +1401,7 @@ function subscribeChat() {
     updateMuteBtn();
   }, err => {
     console.error('聊天监听失败', err.code, err.message);
+    chatUnsubscribe = null; // 清空，允许重试
   });
   console.log('subscribeChat started, unsubscribe:', !!chatUnsubscribe);
 }
