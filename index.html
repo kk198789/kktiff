@@ -1387,22 +1387,21 @@ function subscribeChat() {
   if (chatUnsubscribe) return;
   const q = collection(db, 'messages');
   chatUnsubscribe = onSnapshot(q, snap => {
-    console.log('chat snapshot received, docs:', snap.size);
     const msgs = [];
     snap.forEach(d => msgs.push({ id:d.id, ...d.data() }));
     msgs.sort((a,b) => (a.ts||0) - (b.ts||0));
+    const recent = msgs.slice(-100);
     if (lastChatCount > 0 && msgs.length > lastChatCount) {
       const latest = msgs[msgs.length - 1];
       if (latest.from !== myIdentity) playBeep();
     }
     lastChatCount = msgs.length;
-    renderChat(msgs);
+    renderChat(recent);
     updateMuteBtn();
   }, err => {
     console.error('聊天监听失败', err.code, err.message);
     chatUnsubscribe = null; // 清空，允许重试
   });
-  console.log('subscribeChat started, unsubscribe:', !!chatUnsubscribe);
 }
 
 function renderChat(msgs) {
@@ -1426,22 +1425,18 @@ function renderChat(msgs) {
 }
 
 window.sendMessage = async function() {
-  console.log('sendMessage called, isReadonly:', isReadonly, 'myIdentity:', myIdentity);
   if (isReadonly) return;
   const inp  = document.getElementById('chatInput');
   const text = inp.value.trim();
-  console.log('text:', text);
   if (!text) return;
   inp.value  = '';
   try {
-    console.log('attempting addDoc...');
     await addDoc(collection(db, 'messages'), {
       from: myIdentity,
       text,
       time: fmt(new Date()),
       ts:   Date.now()
     });
-    console.log('addDoc success');
   } catch(e) {
     console.error('发送失败', e);
     alert('发送失败，请检查网络');
