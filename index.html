@@ -1387,9 +1387,9 @@ function subscribeChat() {
   if (chatUnsubscribe) return;
   const q = query(collection(db, 'messages'), orderBy('ts', 'asc'), limit(100));
   chatUnsubscribe = onSnapshot(q, snap => {
+    console.log('chat snapshot received, docs:', snap.size);
     const msgs = [];
     snap.forEach(d => msgs.push({ id:d.id, ...d.data() }));
-    // 只有新消息到来（不是对方发的自己的消息，不是初始加载）才播放提示音
     if (lastChatCount > 0 && msgs.length > lastChatCount) {
       const latest = msgs[msgs.length - 1];
       if (latest.from !== myIdentity) playBeep();
@@ -1398,8 +1398,9 @@ function subscribeChat() {
     renderChat(msgs);
     updateMuteBtn();
   }, err => {
-    console.error('聊天监听失败', err);
+    console.error('聊天监听失败', err.code, err.message);
   });
+  console.log('subscribeChat started, unsubscribe:', !!chatUnsubscribe);
 }
 
 function renderChat(msgs) {
