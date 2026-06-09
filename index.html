@@ -1391,7 +1391,6 @@ function subscribeChat() {
     const msgs = [];
     snap.forEach(d => msgs.push({ id:d.id, ...d.data() }));
     msgs.sort((a,b) => (a.ts||0) - (b.ts||0));
-    if (msgs.length > 100) msgs.splice(0, msgs.length - 100);
     if (lastChatCount > 0 && msgs.length > lastChatCount) {
       const latest = msgs[msgs.length - 1];
       if (latest.from !== myIdentity) playBeep();
