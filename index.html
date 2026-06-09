@@ -948,7 +948,7 @@ window.switchTab = function(name) {
   if (tabBtn) tabBtn.classList.add('active');
   const tabContent = document.getElementById('tab-'+name);
   if (tabContent) tabContent.classList.add('active');
-  if (name==='log')  renderLog();
+  if (name==='log') { renderLog(); setTimeout(renderLog, 1000); }
   if (name==='cal')  renderCal();
   if (name==='chat') {
     const other = USERS[myIdentity === 'kk' ? 'tiffany' : 'kk'];
