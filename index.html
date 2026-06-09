@@ -1423,21 +1423,26 @@ function renderChat(msgs) {
 }
 
 window.sendMessage = async function() {
+  console.log('sendMessage called, isReadonly:', isReadonly, 'myIdentity:', myIdentity);
   if (isReadonly) return;
   const inp  = document.getElementById('chatInput');
-  const text = inp.value.trim(); if (!text) return;
+  const text = inp.value.trim();
+  console.log('text:', text);
+  if (!text) return;
   inp.value  = '';
   try {
+    console.log('attempting addDoc...');
     await addDoc(collection(db, 'messages'), {
       from: myIdentity,
       text,
       time: fmt(new Date()),
       ts:   Date.now()
     });
+    console.log('addDoc success');
   } catch(e) {
     console.error('发送失败', e);
     alert('发送失败，请检查网络');
-    inp.value = text; // 还原输入
+    inp.value = text;
   }
 };
 
