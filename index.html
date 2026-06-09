@@ -1549,6 +1549,14 @@ document.querySelectorAll('.theme-btn').forEach(btn => {
 
 // ── 启动 ──
 chooseIdentity();
+
+// 聊天发送事件绑定（避免 onclick 在某些环境下失效）
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('chatSendBtn');
+  const inp = document.getElementById('chatInput');
+  if (btn) btn.addEventListener('click', () => window.sendMessage());
+  if (inp) inp.addEventListener('keypress', e => { if(e.key==='Enter') window.sendMessage(); });
+});
 </script>
 </body>
 </html>
