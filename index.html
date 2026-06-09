@@ -539,7 +539,7 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
     <div id="tab-log" class="tab-content">
       <div class="log-filter">
         <span style="font-size:14px;color:#6b7280">🌌 查看日期：</span>
-        <select id="logDate" onchange="renderLog()"></select>
+        <select id="logDate" onchange="currentLogDate=this.value;renderLog()"></select>
       </div>
       <div id="logList"></div>
     </div>
@@ -948,11 +948,7 @@ window.switchTab = function(name) {
   if (tabBtn) tabBtn.classList.add('active');
   const tabContent = document.getElementById('tab-'+name);
   if (tabContent) tabContent.classList.add('active');
-  if (name==='log') {
-    // 强制清空之前的选择，让 renderLog 选最近有日志的日期
-    document.getElementById('logDate').value = '';
-    renderLog();
-  }
+  if (name==='log') renderLog();
   if (name==='cal')  renderCal();
   if (name==='chat') {
     const other = USERS[myIdentity === 'kk' ? 'tiffany' : 'kk'];
@@ -1086,29 +1082,29 @@ function renderMemos() {
 }
 
 // ── 日志 ──
+// ── 日志 ──
+let currentLogDate = null; // 用 JS 变量记录当前选中日期，不依赖隐藏元素的 select.value
+
 function renderLog() {
   const d     = get();
   const today = localDate();
   const sel   = document.getElementById('logDate');
-  const prev  = sel.value; // 用户当前选的日期
 
-  // 从日志里收集有数据的日期，降序排列
+  // 收集有日志的日期
   const logDates = [...new Set(d.logs.map(l=>l.date))].sort().reverse();
-  // 今天始终出现在列表里
   if (!logDates.includes(today)) logDates.unshift(today);
 
   // 重建选项
   sel.innerHTML = logDates.map(dt=>`<option value="${dt}">${fmtDate(dt)}</option>`).join('');
 
-  // 恢复用户之前选的日期，没有则默认今天
-  if (prev && logDates.includes(prev)) sel.value = prev;
-  else {
-    // 默认选最近有日志的日期，而不是今天
-    const mostRecent = [...new Set(d.logs.filter(l=>!l.isReminder).map(l=>l.date))].sort().reverse()[0];
-    sel.value = (mostRecent && logDates.includes(mostRecent)) ? mostRecent : today;
+  // 用 JS 变量而不是 sel.value 来确定选中日期
+  const mostRecent = [...new Set(d.logs.filter(l=>!l.isReminder).map(l=>l.date))].sort().reverse()[0];
+  if (!currentLogDate || !logDates.includes(currentLogDate)) {
+    currentLogDate = mostRecent || today;
   }
+  sel.value = currentLogDate;
 
-  const chosen        = sel.value;
+  const chosen        = currentLogDate;
   const logs          = d.logs.filter(l=>l.date===chosen && !l.isReminder);
   const reminderEntry = d.logs.find(l=>l.date===chosen && l.isReminder);
   const el  = document.getElementById('logList');
