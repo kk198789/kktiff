@@ -568,8 +568,8 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
           <div class="chat-empty">还没有消息，说点什么吧 💬</div>
         </div>
         <div class="chat-input-row">
-          <input type="text" id="chatInput" class="chat-input" placeholder="说点什么..." onkeypress="if(event.key==='Enter')sendMessage()">
-          <button class="btn" onclick="sendMessage()">发送 💌</button>
+          <input type="text" id="chatInput" class="chat-input" placeholder="说点什么...">
+          <button class="btn" id="chatSendBtn">发送 💌</button>
         </div>
       </div>
     </div>
