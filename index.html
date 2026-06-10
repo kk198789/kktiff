@@ -117,6 +117,140 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
 .stat-card:nth-child(2) .stat-num { color:var(--accent); }
 .stat-card:nth-child(3) .stat-num { color:#f59e0b; }
 
+/* Daily overview */
+.daily-overview {
+  display:grid; grid-template-columns:1.2fr 1fr; gap:10px; margin-bottom:16px;
+}
+.overview-panel {
+  background:rgba(255,255,255,0.78); border:1px solid rgba(255,255,255,0.7);
+  border-radius:14px; padding:12px 14px; box-shadow:0 4px 14px rgba(0,0,0,0.08);
+}
+.overview-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+.overview-title { font-size:13px; font-weight:800; color:var(--text); }
+.overview-count { font-size:12px; font-weight:800; color:var(--accent); background:rgba(245,87,108,0.1); padding:3px 8px; border-radius:999px; }
+.overview-list { display:flex; flex-direction:column; gap:6px; }
+.overview-item { display:flex; align-items:flex-start; gap:8px; min-height:22px; }
+.overview-index {
+  width:20px; height:20px; border-radius:50%; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:800; color:white;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+}
+.overview-text { flex:1; font-size:13px; color:var(--text); line-height:1.45; word-break:break-word; }
+.overview-meta { font-size:11px; color:#9ca3af; white-space:nowrap; padding-top:2px; }
+.overview-empty { font-size:13px; color:#aaa; padding:4px 0; }
+.cosmic-orbit {
+  display:none; grid-column:1 / -1; align-items:center;
+  grid-template-columns:auto minmax(100px,1fr) auto auto;
+  gap:10px; padding:9px 12px;
+  border:1px solid rgba(255,255,255,0.2); border-radius:10px;
+  background:rgba(22,28,58,0.78); box-shadow:0 5px 16px rgba(24,24,80,0.18);
+}
+.theme-layout-cosmic .cosmic-orbit { display:grid; }
+.cosmic-orbit-label { font-size:12px; font-weight:800; color:#f8fafc; white-space:nowrap; }
+.cosmic-progress { height:7px; overflow:hidden; border-radius:999px; background:rgba(255,255,255,0.14); }
+.cosmic-progress-fill {
+  width:0; height:100%; border-radius:inherit; transition:width 0.3s ease;
+  background:linear-gradient(90deg,#22d3ee,#fbbf24);
+}
+.cosmic-progress-text { min-width:34px; font-size:11px; font-weight:800; color:#fbbf24; text-align:right; }
+.cosmic-calendar-btn {
+  border:0; border-radius:7px; padding:5px 9px; cursor:pointer;
+  background:rgba(255,255,255,0.1); color:#e0e7ff; font-size:11px; font-weight:700;
+}
+.cosmic-calendar-btn:hover { background:rgba(255,255,255,0.18); }
+.theme-layout-cosmic .overview-panel {
+  min-width:0; border-color:rgba(255,255,255,0.38);
+  background:linear-gradient(145deg,rgba(255,255,255,0.88),rgba(238,242,255,0.86));
+}
+.theme-layout-cosmic .overview-index { border-radius:6px; }
+.theme-layout-star .cosmic-orbit { background:rgba(55,38,108,0.78); }
+.theme-layout-star .cosmic-progress-fill { background:linear-gradient(90deg,#f093fb,#4facfe,#fbbf24); }
+.focus-dashboard {
+  display:none; grid-column:1 / -1;
+  grid-template-columns:minmax(0,1.55fr) minmax(210px,0.75fr);
+  gap:10px;
+}
+.theme-layout-focus .overview-panel,
+.theme-layout-focus .cosmic-orbit { display:none; }
+.theme-layout-focus .focus-dashboard { display:grid; }
+.focus-main, .focus-side {
+  min-width:0; border-radius:12px; border:1px solid rgba(255,255,255,0.72);
+  background:rgba(255,255,255,0.84); box-shadow:0 5px 16px rgba(0,0,0,0.08);
+}
+.focus-main { padding:15px 16px; }
+.focus-side { padding:12px 14px; display:flex; flex-direction:column; gap:10px; }
+.focus-kicker { font-size:11px; font-weight:800; color:var(--accent); margin-bottom:8px; }
+.focus-task { font-size:19px; font-weight:800; color:var(--text); line-height:1.45; word-break:break-word; min-height:55px; }
+.focus-task-meta { display:flex; align-items:center; gap:8px; margin-top:8px; font-size:11px; color:#9ca3af; }
+.focus-actions { display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
+.focus-action {
+  border:0; border-radius:9px; padding:8px 12px; cursor:pointer;
+  font:inherit; font-size:12px; font-weight:800;
+}
+.focus-action.primary { color:white; background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+.focus-action.secondary { color:#6b7280; background:#f3f4f6; }
+.focus-action:disabled { opacity:0.45; cursor:not-allowed; }
+.focus-side-title { font-size:12px; font-weight:800; color:var(--text); }
+.focus-meter { height:7px; border-radius:999px; overflow:hidden; background:#e5e7eb; }
+.focus-meter-fill { height:100%; width:0; border-radius:inherit; background:linear-gradient(90deg,var(--accent),var(--accent2)); }
+.focus-rhythm { display:flex; justify-content:space-between; gap:8px; font-size:11px; color:#6b7280; }
+.focus-memo {
+  padding:9px 10px; border-radius:8px; background:rgba(255,255,255,0.75);
+  font-size:12px; line-height:1.45; color:#6b7280; word-break:break-word; cursor:pointer;
+}
+.theme-layout-cat .focus-main { background:linear-gradient(145deg,rgba(255,255,255,0.92),rgba(255,238,244,0.9)); }
+.theme-layout-bunny .focus-main { background:linear-gradient(145deg,rgba(255,255,255,0.92),rgba(239,253,244,0.9)); }
+.theme-layout-cat .focus-kicker::before { content:'🐾 '; }
+.theme-layout-bunny .focus-kicker::before { content:'🥕 '; }
+.theme-layout-wyb .daily-overview {
+  grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
+  gap:8px; margin-bottom:12px;
+}
+.theme-layout-wyb .overview-panel {
+  min-width:0; padding:10px 12px;
+  background:rgba(12,12,20,0.78);
+  border:1px solid rgba(255,255,255,0.12);
+  box-shadow:0 6px 18px rgba(0,0,0,0.22);
+}
+.theme-layout-wyb .overview-panel:first-child {
+  border-left:3px solid #e94560;
+  background:linear-gradient(135deg,rgba(233,69,96,0.2),rgba(12,12,20,0.82));
+}
+.theme-layout-wyb .overview-panel:last-child { border-left:3px solid #fbbf24; }
+.theme-layout-wyb .overview-head { margin-bottom:6px; }
+.theme-layout-wyb .overview-title { color:#f9fafb; letter-spacing:0; }
+.theme-layout-wyb .overview-count {
+  color:#fbbf24; background:rgba(251,191,36,0.12); padding:2px 7px;
+}
+.theme-layout-wyb .overview-list { gap:4px; }
+.theme-layout-wyb .overview-item {
+  align-items:center; min-height:25px; padding:3px 5px;
+  border-radius:6px; background:rgba(255,255,255,0.055);
+}
+.theme-layout-wyb .overview-index {
+  width:18px; height:18px; font-size:10px;
+  background:#e94560;
+}
+.theme-layout-wyb .overview-panel:last-child .overview-index {
+  color:#171717; background:#fbbf24;
+}
+.theme-layout-wyb .overview-text { color:#f3f4f6; font-size:12px; line-height:1.35; }
+.theme-layout-wyb .overview-meta { color:#9ca3af; font-size:10px; }
+.theme-layout-wyb .overview-empty { color:#9ca3af; font-size:12px; }
+.theme-layout-wyb .overview-text .pri-tag {
+  display:inline-block; margin-right:6px; padding:2px 6px; border-radius:5px; font-size:9px;
+}
+.theme-layout-wyb #wyb-strip { margin-bottom:10px !important; padding:7px 0 !important; border-radius:10px !important; }
+.theme-layout-wyb .wyb-photo { width:78px; height:96px; border-radius:8px; margin-right:6px; border-width:2px; }
+@media (max-width:640px) {
+  .daily-overview { grid-template-columns:1fr; }
+  .theme-layout-wyb .daily-overview { grid-template-columns:1fr; }
+  .cosmic-orbit { grid-template-columns:auto 1fr auto; }
+  .cosmic-calendar-btn { grid-column:1 / -1; width:100%; }
+  .focus-dashboard { grid-template-columns:1fr; }
+}
+
 /* ── 标签栏 ── */
 .tabs { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
 .tab {
@@ -486,10 +620,46 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
   </div>
   <div class="readonly-banner" id="readonlyBanner">👀 正在浏览对方的数据（只读）</div>
 
-  <div class="stats">
-    <div class="stat-card"><div class="stat-num" id="statDone">0</div><div class="stat-lbl" id="lblDone">🚀 今日完成</div></div>
-    <div class="stat-card"><div class="stat-num" id="statPending">0</div><div class="stat-lbl" id="lblPending">🛸 待办事项</div></div>
-    <div class="stat-card"><div class="stat-num" id="statMemo">0</div><div class="stat-lbl" id="lblMemo">⭐ 备忘数量</div></div>
+  <div class="daily-overview" id="dailyOverview">
+    <div class="overview-panel">
+      <div class="overview-head">
+        <div class="overview-title" id="overviewDoneTitle">今日完成</div>
+        <div class="overview-count" id="overviewDoneCount">0</div>
+      </div>
+      <div class="overview-list" id="overviewDoneList"></div>
+    </div>
+    <div class="overview-panel">
+      <div class="overview-head">
+        <div class="overview-title" id="overviewTodoTitle">待办事项</div>
+        <div class="overview-count" id="overviewTodoCount">0</div>
+      </div>
+      <div class="overview-list" id="overviewTodoList"></div>
+    </div>
+    <div class="cosmic-orbit" id="cosmicOrbit">
+      <span class="cosmic-orbit-label" id="cosmicOrbitLabel">今日轨道</span>
+      <div class="cosmic-progress"><div class="cosmic-progress-fill" id="cosmicProgressFill"></div></div>
+      <span class="cosmic-progress-text" id="cosmicProgressText">0%</span>
+      <button class="cosmic-calendar-btn" type="button" onclick="switchTab('cal')" id="cosmicCalendarBtn">查看日历</button>
+    </div>
+    <div class="focus-dashboard" id="focusDashboard">
+      <section class="focus-main">
+        <div class="focus-kicker" id="focusKicker">现在只做这一件</div>
+        <div class="focus-task" id="focusTaskText">待办清空了，先休息一下</div>
+        <div class="focus-task-meta" id="focusTaskMeta"></div>
+        <div class="focus-actions">
+          <button class="focus-action primary" type="button" id="focusCompleteBtn" onclick="completeFocusTask()">完成这件事</button>
+          <button class="focus-action secondary" type="button" id="focusNextBtn" onclick="nextFocusTask()">换一个</button>
+          <button class="focus-action secondary" type="button" onclick="switchTab('todo')">查看全部</button>
+        </div>
+      </section>
+      <aside class="focus-side">
+        <div class="focus-side-title" id="focusRhythmTitle">今日节奏</div>
+        <div class="focus-meter"><div class="focus-meter-fill" id="focusMeterFill"></div></div>
+        <div class="focus-rhythm"><span id="focusDoneText">完成 0</span><span id="focusPendingText">待办 0</span></div>
+        <div class="focus-side-title">最近备忘</div>
+        <div class="focus-memo" id="focusMemo" onclick="switchTab('memo')">还没有备忘</div>
+      </aside>
+    </div>
   </div>
 
   <div class="tabs">
@@ -608,22 +778,18 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
           </div>
         </div>
         <div style="width:220px;background:linear-gradient(135deg,#f0f4ff,#fff0fb);border-radius:14px;padding:14px;">
-          <h3 style="font-size:14px;font-weight:700;color:#374151;margin-bottom:8px;">🚀 关于</h3>
+          <h3 style="font-size:14px;font-weight:700;color:#374151;margin-bottom:8px;">更新日志</h3>
           <p style="font-size:12px;color:#6b7280;line-height:1.8">
-            📝 待办事项管理<br>
-            ⚡ 优先级自动排序<br>
-            💡 快速备忘记录<br>
-            📊 工作日志追踪<br>
-            📅 日历视图查看<br>
-            ⏰ 定时提醒功能<br>
-            💬 实时聊天对话<br>
-            🔔 新消息提示音<br>
-            🎨 11款可爱主题<br>
-            🏍️ 王一博应援墙<br>
-            👤 KK & Tiffany 双账户<br>
-            👀 互相查看对方数据<br>
-            ☁️ Firebase 实时同步<br>
-            🌐 Netlify 云端托管
+            2026-06-10<br>
+            - 新增今日概览<br>
+            - 修复日志与日历同步<br>
+            - 增强主题概览文案<br>
+            - 优化王一博主题布局<br>
+            - 新增太空与星星人星轨工作台<br>
+            - 猫咪与兔子改为单任务聚焦模式<br>
+            - 设置页改为更新日志<br><br>
+            数据同步：Firebase<br>
+            账户：KK & Tiffany
           </p>
         </div>
       </div>
@@ -684,7 +850,17 @@ const themes = {
   wyb:     { name:'王一博❤️',     bg:['#1a1a2e','#16213e','#0f3460','#533483','#e94560'], accent:'#e94560', accent2:'#533483', title:'🏍️ 一博工作台', subtitle:'💫 无所畏惧，乘风破浪，今天也要加油！✨', icons:['⚡','🏍️','🎵','🎤','🌙','💫','🔥','🖤','👑','✨'], statDone:'⚡ 今日完成', statPending:'🔥 待办事项', statMemo:'🌙 备忘事项', tabTodo:'🔥 待办事项', tabMemo:'🌙 快速备忘', tabLog:'⚡ 工作日志', tabCal:'🌙 日历', tabSettings:'👑 设置', btnAdd:'⚡ 添加', btnClear:'🖤 清除已完成', btnMemo:'🌙 记下', calStar:'⚡' },
 };
 
+const themeLayouts = {
+  space:'achievement', star:'achievement',
+  cat:'focus', bunny:'focus',
+  wyb:'support',
+  dino:'standard', giraffe:'standard', zoo:'standard',
+  penguin:'standard', fox:'standard', ocean:'standard'
+};
+
 let currentTheme = 'space';
+let focusTaskOffset = 0;
+let currentFocusTaskId = null;
 
 // ── Firestore 子集合路径 ──
 function userCol(userId, col) { return collection(db, 'users', userId, col); }
@@ -904,6 +1080,14 @@ async function applyTheme(themeName, save = true) {
   const t = themes[themeName];
   if (!t) return;
   currentTheme = themeName;
+  const layout = themeLayouts[themeName] || 'standard';
+  document.body.classList.toggle('theme-layout-wyb', layout === 'support');
+  document.body.classList.toggle('theme-layout-cosmic', layout === 'achievement');
+  document.body.classList.toggle('theme-layout-star', themeName === 'star');
+  document.body.classList.toggle('theme-layout-focus', layout === 'focus');
+  document.body.classList.toggle('theme-layout-cat', themeName === 'cat');
+  document.body.classList.toggle('theme-layout-bunny', themeName === 'bunny');
+  focusTaskOffset = 0;
   document.documentElement.style.setProperty('--bg1', t.bg[0]);
   document.documentElement.style.setProperty('--bg2', t.bg[1]);
   document.documentElement.style.setProperty('--bg3', t.bg[2]);
@@ -914,9 +1098,6 @@ async function applyTheme(themeName, save = true) {
   document.getElementById('mainTitle').textContent    = (isReadonly ? '👀 ' : '') + t.title;
   document.getElementById('mainSubtitle').textContent = isReadonly
     ? `正在查看 ${USERS[viewingUser]} 的工作台` : t.subtitle;
-  document.getElementById('lblDone').textContent    = t.statDone;
-  document.getElementById('lblPending').textContent = t.statPending;
-  document.getElementById('lblMemo').textContent    = t.statMemo;
   document.getElementById('tabTodo').textContent     = t.tabTodo;
   document.getElementById('tabMemo').textContent     = t.tabMemo;
   document.getElementById('tabLog').textContent      = t.tabLog;
@@ -932,6 +1113,7 @@ async function applyTheme(themeName, save = true) {
   // 王一博主题照片墙
   if (themeName === 'wyb') startWybBackground();
   else stopWybBackground();
+  updateStats();
 
   if (save && !isReadonly) {
     localStorage.setItem('wk_theme_' + myIdentity, themeName);
@@ -967,11 +1149,135 @@ window.switchTab = function(name) {
 // ── 统计 ──
 function updateStats() {
   const d = get();
-  const today = localDate();
-  document.getElementById('statDone').textContent    = d.logs.filter(l=>l.date===today && !l.isReminder).length;
-  document.getElementById('statPending').textContent = d.todos.filter(t=>!t.done).length;
-  document.getElementById('statMemo').textContent    = d.memos.length;
+  const memoTab = document.getElementById('tabMemo');
+  if (memoTab) memoTab.textContent = `${themes[currentTheme].tabMemo} · ${d.memos.length}`;
+  renderDailyOverview();
 }
+
+function renderDailyOverview() {
+  const d = get();
+  if (!d) return;
+  const today = localDate();
+  const done = d.logs
+    .filter(l => l.date === today && !l.isReminder)
+    .sort((a,b) => (a.createdAt||0) - (b.createdAt||0));
+  const allPending = d.todos
+    .filter(t => !t.done)
+    .sort((a,b)=>(priOrder[a.priority]??2)-(priOrder[b.priority]??2));
+  const isCosmic = themeLayouts[currentTheme] === 'achievement';
+  const shownDone = currentTheme === 'wyb' ? done.slice(-3) : (isCosmic ? done.slice(-4) : done);
+  const pending = allPending.slice(0, currentTheme === 'wyb' ? 3 : (isCosmic ? 4 : 5));
+  const doneTitle = document.getElementById('overviewDoneTitle');
+  const todoTitle = document.getElementById('overviewTodoTitle');
+  const doneCount = document.getElementById('overviewDoneCount');
+  const todoCount = document.getElementById('overviewTodoCount');
+  const doneList = document.getElementById('overviewDoneList');
+  const todoList = document.getElementById('overviewTodoList');
+  const orbitLabel = document.getElementById('cosmicOrbitLabel');
+  const progressFill = document.getElementById('cosmicProgressFill');
+  const progressText = document.getElementById('cosmicProgressText');
+  const calendarBtn = document.getElementById('cosmicCalendarBtn');
+  if (!doneTitle || !todoTitle || !doneCount || !todoCount || !doneList || !todoList) return;
+
+  const overviewCopy = {
+    space: ['今日完成航线', '待办任务舱'],
+    dino: ['今日孵化清单', '森林待办'],
+    star: ['今日闪耀记录', '待办星轨'],
+    giraffe: ['今日完成视野', '高处待办'],
+    zoo: ['今日完成巡游', '动物园待办'],
+    cat: ['今日喵完', '待办喵事'],
+    bunny: ['今日收获', '花园待办'],
+    penguin: ['今日冰面记录', '冰雪待办'],
+    fox: ['今日收获', '森林待办'],
+    ocean: ['今日海浪记录', '海底待办'],
+    wyb: ['今日打卡', '待办燃点']
+  };
+  const copy = overviewCopy[currentTheme] || ['今日完成', '待办事项'];
+  doneTitle.textContent = copy[0];
+  todoTitle.textContent = copy[1];
+  doneCount.textContent = done.length;
+  todoCount.textContent = allPending.length;
+  const totalToday = done.length + allPending.length;
+  const progress = totalToday ? Math.round(done.length / totalToday * 100) : 100;
+  if (progressFill) progressFill.style.width = `${progress}%`;
+  if (progressText) progressText.textContent = `${progress}%`;
+  if (orbitLabel) orbitLabel.textContent = currentTheme === 'star' ? '今日星轨' : '今日航线';
+  if (calendarBtn) calendarBtn.textContent = `${fmtDate(today)} · 查看日历`;
+  renderFocusDashboard(d, done, allPending);
+
+  doneList.innerHTML = shownDone.length ? shownDone.map((l,i)=>`
+    <div class="overview-item">
+      <span class="overview-index">${i+1}</span>
+      <span class="overview-text">${esc(l.text)}</span>
+      <span class="overview-meta">${l.time||''}</span>
+    </div>`).join('') : '<div class="overview-empty">今天还没有完成记录</div>';
+
+  todoList.innerHTML = pending.length ? pending.map((t,i)=>{
+    const p = priMap[t.priority] || priMap.normal;
+    return `<div class="overview-item">
+      <span class="overview-index">${i+1}</span>
+      <span class="overview-text"><span class="pri-tag ${p.cls}">${p.lbl}</span>${esc(t.text)}</span>
+    </div>`;
+  }).join('') : '<div class="overview-empty">待办清空了，今天很轻松</div>';
+}
+
+function renderFocusDashboard(d, done, allPending) {
+  const taskText = document.getElementById('focusTaskText');
+  const taskMeta = document.getElementById('focusTaskMeta');
+  const completeBtn = document.getElementById('focusCompleteBtn');
+  const nextBtn = document.getElementById('focusNextBtn');
+  const meterFill = document.getElementById('focusMeterFill');
+  const doneText = document.getElementById('focusDoneText');
+  const pendingText = document.getElementById('focusPendingText');
+  const memoEl = document.getElementById('focusMemo');
+  const kicker = document.getElementById('focusKicker');
+  const rhythmTitle = document.getElementById('focusRhythmTitle');
+  if (!taskText || !taskMeta || !completeBtn || !nextBtn || !meterFill || !doneText || !pendingText || !memoEl) return;
+
+  const total = done.length + allPending.length;
+  const progress = total ? Math.round(done.length / total * 100) : 100;
+  meterFill.style.width = `${progress}%`;
+  doneText.textContent = `完成 ${done.length}`;
+  pendingText.textContent = `待办 ${allPending.length}`;
+  if (kicker) kicker.textContent = currentTheme === 'cat' ? '现在只做这一件' : '今天先收获这一件';
+  if (rhythmTitle) rhythmTitle.textContent = currentTheme === 'cat' ? '今日节奏' : '花园进度';
+
+  const latestMemo = [...d.memos].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0))[0];
+  memoEl.textContent = latestMemo ? latestMemo.text : '还没有备忘，点这里记一条';
+
+  if (!allPending.length) {
+    currentFocusTaskId = null;
+    taskText.textContent = currentTheme === 'cat' ? '待办清空了，安心休息一下' : '花园已经整理好啦';
+    taskMeta.textContent = `今日完成度 ${progress}%`;
+    completeBtn.disabled = true;
+    nextBtn.disabled = true;
+    return;
+  }
+
+  focusTaskOffset = ((focusTaskOffset % allPending.length) + allPending.length) % allPending.length;
+  const task = allPending[focusTaskOffset];
+  const p = priMap[task.priority] || priMap.normal;
+  currentFocusTaskId = task._docId;
+  taskText.textContent = task.text;
+  taskMeta.innerHTML = `<span class="pri-tag ${p.cls}">${p.lbl}</span><span>${focusTaskOffset+1} / ${allPending.length}</span>`;
+  completeBtn.disabled = isReadonly;
+  nextBtn.disabled = allPending.length < 2;
+}
+
+window.nextFocusTask = function() {
+  const d = get();
+  const activeCount = d.todos.filter(t=>!t.done).length;
+  if (activeCount < 2) return;
+  focusTaskOffset = (focusTaskOffset + 1) % activeCount;
+  renderDailyOverview();
+};
+
+window.completeFocusTask = async function() {
+  if (isReadonly || !currentFocusTaskId) return;
+  await window.toggleTodo(currentFocusTaskId);
+  focusTaskOffset = 0;
+  renderDailyOverview();
+};
 
 // ── 待办 ──
 window.addTodo = async function() {
