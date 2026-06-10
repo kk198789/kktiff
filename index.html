@@ -250,6 +250,15 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
   .cosmic-calendar-btn { grid-column:1 / -1; width:100%; }
   .focus-dashboard { grid-template-columns:1fr; }
 }
+@media (max-width:430px) {
+  .theme-layout-wyb .wyb-photo {
+    width:92px; height:124px;
+    object-fit:contain;
+    object-position:50% 0% !important;
+    background:#0b0b12;
+  }
+  .theme-layout-wyb #wyb-strip { padding:8px 0 !important; }
+}
 
 /* ── 标签栏 ── */
 .tabs { display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
@@ -787,6 +796,7 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
             - 优化王一博主题布局<br>
             - 新增太空与星星人星轨工作台<br>
             - 猫咪与兔子改为单任务聚焦模式<br>
+            - 修复 iPhone 王一博照片头部裁切<br>
             - 设置页改为更新日志<br><br>
             数据同步：Firebase<br>
             账户：KK & Tiffany
