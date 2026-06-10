@@ -539,7 +539,7 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
     <div id="tab-log" class="tab-content">
       <div class="log-filter">
         <span style="font-size:14px;color:#6b7280">🌌 查看日期：</span>
-        <select id="logDate" onchange="currentLogDate=this.value;renderLog()"></select>
+        <select id="logDate"></select>
       </div>
       <div id="logList"></div>
     </div>
@@ -776,7 +776,7 @@ function subscribeUser(userId) {
     cache[userId].logs = snap.docs.map(d => ({ ...d.data(), _docId: d.id }))
       .sort((a,b) => (a.createdAt||0) - (b.createdAt||0));
     loaded.logs = true; checkAllLoaded();
-    if (viewingUser===userId) { renderLog(); updateStats(); }
+    if (viewingUser===userId) { renderLog(); renderCal(); updateStats(); }
   }, err => { setSyncStatus(false); loaded.logs=true; checkAllLoaded(); });
 
   // settings
@@ -888,6 +888,7 @@ function refreshAll() {
   renderTodos();
   renderMemos();
   renderLog();
+  renderCal();
   updateStats();
   const t = themes[currentTheme];
   if (t) {
@@ -1000,12 +1001,24 @@ window.toggleTodo = async function(id) {
     const doneTime = fmt(new Date());
     const { _docId, ...tData } = t;
     await cloudSet(userDocRef(myIdentity,'todos',id), { ...tData, done:true, doneTime, doneDate:dateInput });
-    await cloudAdd(myIdentity, 'logs', { date:dateInput, time:doneTime, text:t.text, priority:t.priority, todoDocId:id, isReminder:false, createdAt:Date.now() });
+    const logPayload = { date:dateInput, time:doneTime, text:t.text, priority:t.priority, todoDocId:id, isReminder:false, createdAt:Date.now() };
+    const logId = await cloudAdd(myIdentity, 'logs', logPayload);
+    currentLogDate = dateInput;
+    if (logId && !d.logs.some(l => l._docId === logId)) {
+      d.logs.push({ ...logPayload, _docId:logId });
+    }
+    renderLog();
+    renderCal();
+    updateStats();
   } else {
     const { _docId, ...tData } = t;
     await cloudSet(userDocRef(myIdentity,'todos',id), { ...tData, done:false, doneTime:null, doneDate:null });
     const logEntry = d.logs.find(l => l.todoDocId === id && l.date === t.doneDate);
     if (logEntry?._docId) await cloudDelete(userDocRef(myIdentity,'logs', logEntry._docId));
+    cache[viewingUser].logs = d.logs.filter(l => l._docId !== logEntry?._docId);
+    renderLog();
+    renderCal();
+    updateStats();
   }
 };
 
@@ -1084,6 +1097,15 @@ function renderMemos() {
 // ── 日志 ──
 // ── 日志 ──
 let currentLogDate = null; // 用 JS 变量记录当前选中日期，不依赖隐藏元素的 select.value
+
+const logDateSelect = document.getElementById('logDate');
+if (logDateSelect) {
+  logDateSelect.addEventListener('change', e => {
+    currentLogDate = e.target.value;
+    renderLog();
+    renderCal();
+  });
+}
 
 function renderLog() {
   const d     = get();
