@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <title>工作小助手 ✨ KK & Tiffany</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -425,7 +425,10 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
 }
 .mute-btn:hover { background:rgba(255,255,255,0.9); }
 .mute-btn.muted { opacity:0.45; }
-.chat-wrap { display:flex; flex-direction:column; height:360px; }
+.chat-wrap {
+  display:flex; flex-direction:column; height:360px; min-height:260px;
+  overscroll-behavior:contain;
+}
 .chat-messages {
   flex:1; overflow-y:auto; padding:8px 4px; display:flex; flex-direction:column; gap:8px;
 }
@@ -440,16 +443,56 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
   padding:10px 14px; border-radius:18px; font-size:14px; line-height:1.5;
   word-break:break-word; box-shadow:0 2px 8px rgba(0,0,0,0.08);
 }
+.chat-bubble.emoji-only {
+  padding:5px 8px; background:transparent !important; border:0 !important;
+  box-shadow:none; font-size:34px; line-height:1.2;
+}
 .chat-bubble-wrap.me   .chat-bubble { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; border-bottom-right-radius:4px; }
 .chat-bubble-wrap.them .chat-bubble { background:rgba(255,255,255,0.9); color:var(--text); border-bottom-left-radius:4px; border:1px solid rgba(0,0,0,0.06); }
 .chat-time { font-size:10px; color:#bbb; margin-top:3px; padding:0 4px; }
-.chat-input-row { display:flex; gap:10px; margin-top:12px; padding-top:12px; border-top:1px solid #f3f4f6; }
+.chat-compose {
+  position:relative; flex-shrink:0; margin-top:8px; padding-top:8px;
+  border-top:1px solid #f3f4f6;
+}
+.chat-input-row { display:flex; align-items:center; gap:7px; }
 .chat-input {
-  flex:1; padding:12px 16px; border:2px solid rgba(245,87,108,0.2);
+  flex:1; min-width:0; padding:11px 13px; border:2px solid rgba(245,87,108,0.2);
   border-radius:14px; font-size:14px; outline:none; font-family:inherit;
   background:rgba(255,255,255,0.6); transition:border-color 0.2s;
 }
 .chat-input:focus { border-color:var(--accent); background:rgba(255,255,255,0.9); }
+.chat-icon-btn {
+  width:40px; height:40px; flex-shrink:0; border:1.5px solid #e5e7eb;
+  border-radius:12px; background:rgba(255,255,255,0.72);
+  font-size:20px; cursor:pointer;
+}
+.chat-send-btn { width:44px; height:40px; padding:0; border-radius:12px; font-size:18px; }
+.emoji-panel {
+  display:none; grid-template-columns:repeat(8,1fr); gap:4px;
+  margin-bottom:8px; padding:8px; border-radius:10px;
+  background:rgba(255,255,255,0.96); border:1px solid #e5e7eb;
+  box-shadow:0 -4px 16px rgba(0,0,0,0.08);
+}
+.emoji-panel.show { display:grid; }
+.emoji-option {
+  aspect-ratio:1; border:0; border-radius:7px; background:transparent;
+  font-size:21px; cursor:pointer;
+}
+.emoji-option:hover { background:#f3f4f6; }
+@media (max-width:640px) {
+  #tab-chat.active {
+    margin:-6px;
+    padding:6px 6px max(6px, env(safe-area-inset-bottom));
+  }
+  .chat-wrap {
+    height:var(--chat-mobile-height, calc(100dvh - 190px));
+    min-height:240px; max-height:none;
+  }
+  .chat-messages { padding-bottom:8px; }
+  .chat-compose { padding-bottom:env(safe-area-inset-bottom); }
+  .emoji-panel { grid-template-columns:repeat(7,1fr); max-height:132px; overflow-y:auto; }
+  .chat-bubble-wrap { max-width:84%; }
+}
 
 /* ── 王一博照片条 ── */
 @keyframes wybScroll {
@@ -746,9 +789,13 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
         <div class="chat-messages" id="chatMessages">
           <div class="chat-empty">还没有消息，说点什么吧 💬</div>
         </div>
-        <div class="chat-input-row">
-          <input type="text" id="chatInput" class="chat-input" placeholder="说点什么...">
-          <button class="btn" id="chatSendBtn">发送 💌</button>
+        <div class="chat-compose" id="chatCompose">
+          <div class="emoji-panel" id="emojiPanel"></div>
+          <div class="chat-input-row">
+            <button class="chat-icon-btn" id="emojiToggleBtn" type="button" title="表情">😊</button>
+            <input type="text" id="chatInput" class="chat-input" placeholder="说点什么..." autocomplete="off">
+            <button class="btn chat-send-btn" id="chatSendBtn" type="button" title="发送">➤</button>
+          </div>
         </div>
       </div>
     </div>
@@ -797,6 +844,8 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
             - 新增太空与星星人星轨工作台<br>
             - 猫咪与兔子改为单任务聚焦模式<br>
             - 优化 iPhone 王一博照片显示<br>
+            - 修复移动端聊天键盘遮挡<br>
+            - 新增聊天快捷表情面板<br>
             - 设置页改为更新日志<br><br>
             数据同步：Firebase<br>
             账户：KK & Tiffany
@@ -1148,7 +1197,13 @@ window.switchTab = function(name) {
     const titleEl = document.getElementById('chatTitle');
     if (titleEl) titleEl.textContent = `💬 与 ${other} 的对话`;
     subscribeChat();
-    setTimeout(()=>{ const el=document.getElementById('chatMessages'); el.scrollTop=el.scrollHeight; },100);
+    setTimeout(()=>{
+      updateChatViewport();
+      const el=document.getElementById('chatMessages');
+      el.scrollTop=el.scrollHeight;
+    },100);
+  } else {
+    closeEmojiPanel();
   }
   if (name==='settings') {
     const el = document.getElementById('currentIdentityText');
@@ -1756,9 +1811,10 @@ function renderChat(msgs) {
   el.innerHTML = msgs.map(m => {
     const isMe = m.from === myIdentity;
     const name = USERS[m.from] || m.from;
+    const emojiClass = isEmojiOnlyMessage(m.text) ? ' emoji-only' : '';
     return `<div class="chat-bubble-wrap ${isMe?'me':'them'}">
       <div class="chat-name">${isMe ? '我' : name}</div>
-      <div class="chat-bubble">${esc(m.text)}</div>
+      <div class="chat-bubble${emojiClass}">${esc(m.text)}</div>
       <div class="chat-time">${m.time||''}</div>
     </div>`;
   }).join('');
@@ -1785,6 +1841,52 @@ window.sendMessage = async function() {
     inp.value = text;
   }
 };
+
+const CHAT_EMOJIS = [
+  '😀','😄','😂','🥰','😍','😘','😊','🥳',
+  '😭','🥺','😎','🤔','😴','😤','😡','🤭',
+  '👍','👏','🙌','🙏','💪','🤝','👌','✌️',
+  '❤️','💕','💖','💯','🔥','✨','🎉','🌹',
+  '🐱','🐰','⭐','🌙','🚀','🏍️','🎵','💌'
+];
+
+function isEmojiOnlyMessage(text) {
+  const value = String(text || '').trim();
+  if (!value || value.length > 24) return false;
+  return /^[\p{Extended_Pictographic}\p{Emoji_Presentation}\uFE0F\u200D\s]+$/u.test(value);
+}
+
+function buildEmojiPanel() {
+  const panel = document.getElementById('emojiPanel');
+  if (!panel || panel.childElementCount) return;
+  panel.innerHTML = CHAT_EMOJIS.map(emoji =>
+    `<button class="emoji-option" type="button" data-emoji="${emoji}" title="${emoji}">${emoji}</button>`
+  ).join('');
+  panel.addEventListener('click', e => {
+    const btn = e.target.closest('.emoji-option');
+    if (!btn) return;
+    const inp = document.getElementById('chatInput');
+    inp.value += btn.dataset.emoji;
+    inp.focus();
+  });
+}
+
+function closeEmojiPanel() {
+  const panel = document.getElementById('emojiPanel');
+  if (panel) panel.classList.remove('show');
+}
+
+function updateChatViewport() {
+  const tab = document.getElementById('tab-chat');
+  const wrap = tab?.querySelector('.chat-wrap');
+  if (!tab?.classList.contains('active') || !wrap || window.innerWidth > 640) return;
+  const viewport = window.visualViewport;
+  const viewportHeight = viewport?.height || window.innerHeight;
+  const viewportOffset = viewport?.offsetTop || 0;
+  const top = wrap.getBoundingClientRect().top - viewportOffset;
+  const available = Math.max(240, Math.floor(viewportHeight - top - 10));
+  wrap.style.setProperty('--chat-mobile-height', `${available}px`);
+}
 
 
 
@@ -1899,8 +2001,34 @@ chooseIdentity();
 document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('chatSendBtn');
   const inp = document.getElementById('chatInput');
+  const emojiBtn = document.getElementById('emojiToggleBtn');
   if (btn) btn.addEventListener('click', () => window.sendMessage());
-  if (inp) inp.addEventListener('keypress', e => { if(e.key==='Enter') window.sendMessage(); });
+  if (inp) {
+    inp.addEventListener('keydown', e => {
+      if(e.key==='Enter' && !e.shiftKey) {
+        e.preventDefault();
+        window.sendMessage();
+      }
+    });
+    inp.addEventListener('focus', () => {
+      setTimeout(() => {
+        updateChatViewport();
+        const el = document.getElementById('chatMessages');
+        el.scrollTop = el.scrollHeight;
+      }, 120);
+    });
+  }
+  buildEmojiPanel();
+  if (emojiBtn) {
+    emojiBtn.addEventListener('click', () => {
+      const panel = document.getElementById('emojiPanel');
+      panel.classList.toggle('show');
+      requestAnimationFrame(updateChatViewport);
+    });
+  }
+  window.addEventListener('resize', updateChatViewport);
+  window.visualViewport?.addEventListener('resize', updateChatViewport);
+  window.visualViewport?.addEventListener('scroll', updateChatViewport);
 });
 </script>
 </body>
