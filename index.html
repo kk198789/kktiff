@@ -438,10 +438,27 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
   overscroll-behavior:contain;
 }
 .chat-messages {
-  flex:1; overflow-y:auto; padding:8px 4px; display:flex; flex-direction:column; gap:8px;
+  flex:1; overflow-y:auto; padding:8px 6px 8px 4px;
+  display:flex; flex-direction:column; gap:8px;
+  scrollbar-gutter:stable;
 }
 .chat-messages::-webkit-scrollbar { width:4px; }
 .chat-messages::-webkit-scrollbar-thumb { background:#ddd; border-radius:4px; }
+.theme-layout-wyb .chat-messages {
+  scrollbar-width:thin;
+  scrollbar-color:#e94560 rgba(15,15,25,0.18);
+}
+.theme-layout-wyb .chat-messages::-webkit-scrollbar { width:8px; }
+.theme-layout-wyb .chat-messages::-webkit-scrollbar-track {
+  background:rgba(15,15,25,0.18); border-radius:8px;
+}
+.theme-layout-wyb .chat-messages::-webkit-scrollbar-thumb {
+  min-height:38px; border-radius:8px;
+  background:#e94560; border:2px solid rgba(255,255,255,0.2);
+}
+.theme-layout-wyb .chat-messages::-webkit-scrollbar-thumb:hover {
+  background:#fbbf24;
+}
 .chat-empty { text-align:center; color:#bbb; font-size:14px; margin:auto; }
 .chat-bubble-wrap { display:flex; flex-direction:column; max-width:75%; }
 .chat-bubble-wrap.me   { align-self:flex-end; align-items:flex-end; }
@@ -866,6 +883,8 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
             - 新增聊天快捷表情面板<br>
             - 缩小聊天表情面板尺寸<br>
             - 新增聊天系统通知与推送注册<br>
+            - 修复 Service Worker 首次激活失败<br>
+            - 增强王一博聊天滚动条可见性<br>
             - 设置页改为更新日志<br><br>
             数据同步：Firebase<br>
             账户：KK & Tiffany
@@ -1831,6 +1850,33 @@ function updateNotifyButton(status) {
   btn.disabled = disabled;
 }
 
+async function waitForServiceWorkerActive(registration, timeoutMs = 15000) {
+  if (registration.active) return registration;
+  const worker = registration.installing || registration.waiting;
+  if (!worker) {
+    const ready = await Promise.race([
+      navigator.serviceWorker.ready,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Service Worker 激活超时')), timeoutMs))
+    ]);
+    return ready;
+  }
+  await new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Service Worker 激活超时')), timeoutMs);
+    const checkState = () => {
+      if (worker.state === 'activated') {
+        clearTimeout(timer);
+        resolve();
+      } else if (worker.state === 'redundant') {
+        clearTimeout(timer);
+        reject(new Error('Service Worker 安装失败'));
+      }
+    };
+    worker.addEventListener('statechange', checkState);
+    checkState();
+  });
+  return navigator.serviceWorker.ready;
+}
+
 async function enablePushNotifications() {
   if (!window.isSecureContext || location.protocol === 'file:') {
     updateNotifyButton('unavailable');
@@ -1850,7 +1896,11 @@ async function enablePushNotifications() {
       updateNotifyButton('denied');
       return;
     }
-    messagingRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
+    messagingRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
+      updateViaCache: 'none'
+    });
+    await messagingRegistration.update();
+    messagingRegistration = await waitForServiceWorkerActive(messagingRegistration);
     messaging = getMessaging(app);
     const token = await getToken(messaging, {
       vapidKey: VAPID_KEY,
