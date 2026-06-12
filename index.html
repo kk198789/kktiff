@@ -418,6 +418,7 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
 
 /* ── 聊天 ── */
 .chat-toolbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.chat-toolbar-actions { display:flex; align-items:center; gap:6px; }
 .mute-btn {
   background:rgba(255,255,255,0.6); border:1.5px solid #e5e7eb;
   border-radius:10px; padding:5px 10px; font-size:16px;
@@ -425,6 +426,13 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
 }
 .mute-btn:hover { background:rgba(255,255,255,0.9); }
 .mute-btn.muted { opacity:0.45; }
+.notify-btn {
+  border:1.5px solid #e5e7eb; border-radius:9px;
+  padding:5px 9px; background:rgba(255,255,255,0.72);
+  color:#6b7280; font-size:11px; font-weight:700; cursor:pointer;
+}
+.notify-btn.on { color:#059669; border-color:#6ee7b7; background:#ecfdf5; }
+.notify-btn:disabled { opacity:0.5; cursor:not-allowed; }
 .chat-wrap {
   display:flex; flex-direction:column; height:360px; min-height:260px;
   overscroll-behavior:contain;
@@ -791,7 +799,10 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
       <div class="chat-wrap">
         <div class="chat-toolbar">
           <span style="font-size:13px;color:#9ca3af" id="chatTitle">💬 聊天</span>
-          <button class="mute-btn" id="muteBtn" onclick="toggleMute()" title="静音">🔔</button>
+          <div class="chat-toolbar-actions">
+            <button class="notify-btn" id="notifyBtn" type="button">开启通知</button>
+            <button class="mute-btn" id="muteBtn" onclick="toggleMute()" title="静音">🔔</button>
+          </div>
         </div>
         <div class="chat-messages" id="chatMessages">
           <div class="chat-empty">还没有消息，说点什么吧 💬</div>
@@ -854,6 +865,7 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
             - 修复移动端聊天键盘遮挡<br>
             - 新增聊天快捷表情面板<br>
             - 缩小聊天表情面板尺寸<br>
+            - 新增聊天系统通知与推送注册<br>
             - 设置页改为更新日志<br><br>
             数据同步：Firebase<br>
             账户：KK & Tiffany
@@ -871,6 +883,8 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getFirestore, doc, onSnapshot, setDoc, deleteDoc, getDoc,
   collection, addDoc, query, orderBy, limit, writeBatch }
   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { getMessaging, getToken, onMessage, isSupported as isMessagingSupported }
+  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js';
 
 // ── Firebase 初始化 ──
 const firebaseConfig = {
@@ -883,6 +897,9 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
+const VAPID_KEY = 'BAPaK-wJuw3UtZ_0nB9toodKSrA413xR6sni1tS86i4qCcftN_nXGqDH_zI0Nzx3Q1Wx62IKXOzdjV9t1GcLybg';
+let messaging = null;
+let messagingRegistration = null;
 
 // ── 用户配置 ──
 // 每次打开页面时选择自己的身份（存在 localStorage 里，下次自动恢复）
@@ -1788,6 +1805,105 @@ function updateMuteBtn() {
   btn.title = chatMuted ? '已静音，点击开启' : '点击静音';
 }
 
+function getPushDeviceId() {
+  const key = 'wk_push_device_id';
+  let id = localStorage.getItem(key);
+  if (!id) {
+    id = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+
+function updateNotifyButton(status) {
+  const btn = document.getElementById('notifyBtn');
+  if (!btn) return;
+  const states = {
+    on: ['通知已开启', true, false],
+    denied: ['通知被拒绝', false, true],
+    unavailable: ['需 HTTPS', false, true],
+    loading: ['正在开启...', false, true],
+    off: ['开启通知', false, false]
+  };
+  const [label, on, disabled] = states[status] || states.off;
+  btn.textContent = label;
+  btn.classList.toggle('on', on);
+  btn.disabled = disabled;
+}
+
+async function enablePushNotifications() {
+  if (!window.isSecureContext || location.protocol === 'file:') {
+    updateNotifyButton('unavailable');
+    alert('请先上传到 GitHub Pages，再通过 HTTPS 地址开启通知。');
+    return;
+  }
+  if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+    alert('当前浏览器不支持网页通知。');
+    return;
+  }
+  updateNotifyButton('loading');
+  try {
+    const supported = await isMessagingSupported();
+    if (!supported) throw new Error('当前浏览器不支持 Firebase 消息推送');
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      updateNotifyButton('denied');
+      return;
+    }
+    messagingRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js');
+    messaging = getMessaging(app);
+    const token = await getToken(messaging, {
+      vapidKey: VAPID_KEY,
+      serviceWorkerRegistration: messagingRegistration
+    });
+    if (!token) throw new Error('没有取得推送 Token');
+    const deviceId = getPushDeviceId();
+    await setDoc(userDocRef(myIdentity, 'pushTokens', deviceId), {
+      token,
+      deviceId,
+      userId: myIdentity,
+      userAgent: navigator.userAgent,
+      updatedAt: Date.now()
+    });
+    localStorage.setItem('wk_push_enabled', 'true');
+    updateNotifyButton('on');
+    onMessage(messaging, payload => {
+      const title = payload.notification?.title || payload.data?.title || '新聊天消息';
+      const body = payload.notification?.body || payload.data?.body || '';
+      showSystemNotification(title, body);
+    });
+  } catch (e) {
+    console.error('开启通知失败', e);
+    updateNotifyButton('off');
+    alert(`开启通知失败：${e.message}`);
+  }
+}
+
+function showSystemNotification(title, body) {
+  if (Notification.permission !== 'granted') return;
+  if (!document.hidden && document.getElementById('tab-chat')?.classList.contains('active')) return;
+  try {
+    const notification = new Notification(title, {
+      body,
+      tag: 'kk-tiff-chat',
+      renotify: true
+    });
+    notification.onclick = () => {
+      window.focus();
+      window.switchTab('chat');
+      notification.close();
+    };
+  } catch (e) {
+    console.warn('显示通知失败', e);
+  }
+}
+
+function notifyIncomingChat(message) {
+  if (!message || message.from === myIdentity) return;
+  const sender = USERS[message.from] || message.from;
+  showSystemNotification(`${sender} 发来新消息`, message.text || '');
+}
+
 function subscribeChat() {
   if (chatUnsubscribe) return;
   const q = collection(db, 'messages');
@@ -1798,7 +1914,10 @@ function subscribeChat() {
     const recent = msgs.slice(-100);
     if (lastChatCount > 0 && msgs.length > lastChatCount) {
       const latest = msgs[msgs.length - 1];
-      if (latest.from !== myIdentity) playBeep();
+      if (latest.from !== myIdentity) {
+        playBeep();
+        notifyIncomingChat(latest);
+      }
     }
     lastChatCount = msgs.length;
     renderChat(recent);
@@ -2010,6 +2129,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('chatSendBtn');
   const inp = document.getElementById('chatInput');
   const emojiBtn = document.getElementById('emojiToggleBtn');
+  const notifyBtn = document.getElementById('notifyBtn');
   if (btn) btn.addEventListener('click', () => window.sendMessage());
   if (inp) {
     inp.addEventListener('keydown', e => {
@@ -2034,9 +2154,20 @@ document.addEventListener('DOMContentLoaded', () => {
       requestAnimationFrame(updateChatViewport);
     });
   }
+  if (notifyBtn) notifyBtn.addEventListener('click', enablePushNotifications);
+  if (!window.isSecureContext || location.protocol === 'file:') {
+    updateNotifyButton('unavailable');
+  } else if (Notification.permission === 'denied') {
+    updateNotifyButton('denied');
+  } else if (Notification.permission === 'granted' && localStorage.getItem('wk_push_enabled') === 'true') {
+    enablePushNotifications();
+  } else {
+    updateNotifyButton('off');
+  }
   window.addEventListener('resize', updateChatViewport);
   window.visualViewport?.addEventListener('resize', updateChatViewport);
   window.visualViewport?.addEventListener('scroll', updateChatViewport);
+  if (location.hash === '#chat') setTimeout(() => window.switchTab('chat'), 150);
 });
 </script>
 </body>
