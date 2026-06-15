@@ -1839,7 +1839,7 @@ function updateNotifyButton(status) {
   if (!btn) return;
   const states = {
     on: ['通知已开启', true, false],
-    denied: ['通知被拒绝', false, true],
+    denied: ['去设置开启', false, false],
     unavailable: ['需 HTTPS', false, true],
     loading: ['正在开启...', false, true],
     off: ['开启通知', false, false]
@@ -1848,6 +1848,25 @@ function updateNotifyButton(status) {
   btn.textContent = label;
   btn.classList.toggle('on', on);
   btn.disabled = disabled;
+  btn.title = status === 'denied' ? '查看恢复通知权限的方法' : '';
+}
+
+function getNotificationPermissionHelp() {
+  const ua = navigator.userAgent;
+  const isEdge = /EdgA|EdgiOS|Edg\//i.test(ua);
+  const isChrome = /Chrome|CriOS/i.test(ua) && !isEdge;
+  const isSafari = /Safari/i.test(ua) && !/Chrome|CriOS|EdgA|EdgiOS|Edg\//i.test(ua);
+
+  if (isEdge) {
+    return 'Edge：点击地址栏旁的网站信息图标 → 权限 → 通知 → 允许。\n如果没有该入口：Edge 设置 → 网站权限 → 通知 → 找到当前网站并设为允许。';
+  }
+  if (isChrome) {
+    return 'Chrome：点击地址栏旁的网站信息图标 → 权限 → 通知 → 允许。\n如果没有该入口：Chrome 设置 → 网站设置 → 通知 → 找到当前网站并设为允许。';
+  }
+  if (isSafari) {
+    return 'Safari：打开系统“设置” → App → Safari → 通知，允许当前网站的通知。\n部分 iPhone 版本需要先把网站添加到主屏幕，再从主屏幕打开。';
+  }
+  return '请点击地址栏旁的网站信息或锁形图标 → 网站权限 → 通知 → 允许；也可以在浏览器设置的“网站权限/网站设置”中恢复。';
 }
 
 async function waitForServiceWorkerActive(registration, timeoutMs = 15000) {
@@ -1885,6 +1904,15 @@ async function enablePushNotifications() {
   }
   if (!('Notification' in window) || !('serviceWorker' in navigator)) {
     alert('当前浏览器不支持网页通知。');
+    return;
+  }
+  if (Notification.permission === 'denied') {
+    updateNotifyButton('denied');
+    alert(
+      '通知权限已被浏览器关闭，网页无法直接再次弹出授权框。\n\n' +
+      getNotificationPermissionHelp() +
+      '\n\n设置完成后返回页面并刷新，再点击“开启通知”。'
+    );
     return;
   }
   updateNotifyButton('loading');
