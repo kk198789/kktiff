@@ -649,6 +649,26 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
 }
 @keyframes spin { to { transform:rotate(360deg); } }
 .loading-text { font-size:15px; color:#6b7280; font-weight:600; }
+.permission-modal {
+  position:fixed; inset:0; z-index:1200;
+  display:flex; align-items:center; justify-content:center;
+  padding:18px; background:rgba(17,24,39,0.45);
+}
+.permission-dialog {
+  width:min(420px,100%); border-radius:14px;
+  padding:18px; background:#fff; color:#1f2937;
+  box-shadow:0 18px 55px rgba(0,0,0,0.24);
+}
+.permission-dialog h3 { margin:0 0 10px; font-size:18px; color:#111827; }
+.permission-dialog p {
+  margin:0 0 12px; line-height:1.65; font-size:14px;
+  white-space:pre-line;
+}
+.permission-dialog button {
+  width:100%; border:0; border-radius:10px;
+  padding:11px 14px; background:#111827; color:#fff;
+  font-size:14px; font-weight:700;
+}
 </style>
 </head>
 <body>
@@ -1840,7 +1860,7 @@ function updateNotifyButton(status) {
   const states = {
     on: ['通知已开启', true, false],
     denied: ['去设置开启', false, false],
-    unavailable: ['需 HTTPS', false, true],
+    unavailable: ['查看要求', false, false],
     loading: ['正在开启...', false, true],
     off: ['开启通知', false, false]
   };
@@ -1867,6 +1887,34 @@ function getNotificationPermissionHelp() {
     return 'Safari：打开系统“设置” → App → Safari → 通知，允许当前网站的通知。\n部分 iPhone 版本需要先把网站添加到主屏幕，再从主屏幕打开。';
   }
   return '请点击地址栏旁的网站信息或锁形图标 → 网站权限 → 通知 → 允许；也可以在浏览器设置的“网站权限/网站设置”中恢复。';
+}
+
+function showPermissionGuide(message) {
+  const old = document.getElementById('permissionModal');
+  if (old) old.remove();
+  const modal = document.createElement('div');
+  modal.className = 'permission-modal';
+  modal.id = 'permissionModal';
+  modal.innerHTML = `
+    <div class="permission-dialog" role="dialog" aria-modal="true" aria-labelledby="permissionTitle">
+      <h3 id="permissionTitle">通知没有开启</h3>
+      <p>${message}</p>
+      <button type="button">知道了</button>
+    </div>
+  `;
+  modal.querySelector('button').addEventListener('click', () => modal.remove());
+  modal.addEventListener('click', e => {
+    if (e.target === modal) modal.remove();
+  });
+  document.body.appendChild(modal);
+}
+
+function showNotificationPermissionGuide() {
+  showPermissionGuide(
+    '浏览器没有给网页重新弹授权框的权限。\n\n' +
+    getNotificationPermissionHelp() +
+    '\n\n设置完成后，回到这个页面并刷新，再点“开启通知”。'
+  );
 }
 
 async function waitForServiceWorkerActive(registration, timeoutMs = 15000) {
@@ -1899,20 +1947,16 @@ async function waitForServiceWorkerActive(registration, timeoutMs = 15000) {
 async function enablePushNotifications() {
   if (!window.isSecureContext || location.protocol === 'file:') {
     updateNotifyButton('unavailable');
-    alert('请先上传到 GitHub Pages，再通过 HTTPS 地址开启通知。');
+    showPermissionGuide('请先上传到 GitHub Pages，再通过 HTTPS 地址开启通知。');
     return;
   }
   if (!('Notification' in window) || !('serviceWorker' in navigator)) {
-    alert('当前浏览器不支持网页通知。');
+    showPermissionGuide('当前浏览器不支持网页通知。建议用 Android 版 Edge 或 Chrome 打开 GitHub Pages 地址。');
     return;
   }
   if (Notification.permission === 'denied') {
     updateNotifyButton('denied');
-    alert(
-      '通知权限已被浏览器关闭，网页无法直接再次弹出授权框。\n\n' +
-      getNotificationPermissionHelp() +
-      '\n\n设置完成后返回页面并刷新，再点击“开启通知”。'
-    );
+    showNotificationPermissionGuide();
     return;
   }
   updateNotifyButton('loading');
@@ -1922,6 +1966,7 @@ async function enablePushNotifications() {
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
       updateNotifyButton('denied');
+      showNotificationPermissionGuide();
       return;
     }
     messagingRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
@@ -2234,6 +2279,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (notifyBtn) notifyBtn.addEventListener('click', enablePushNotifications);
   if (!window.isSecureContext || location.protocol === 'file:') {
+    updateNotifyButton('unavailable');
+  } else if (!('Notification' in window) || !('serviceWorker' in navigator)) {
     updateNotifyButton('unavailable');
   } else if (Notification.permission === 'denied') {
     updateNotifyButton('denied');
