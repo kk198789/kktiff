@@ -426,13 +426,13 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
 }
 .mute-btn:hover { background:rgba(255,255,255,0.9); }
 .mute-btn.muted { opacity:0.45; }
-.notify-btn {
-  border:1.5px solid #e5e7eb; border-radius:9px;
-  padding:5px 9px; background:rgba(255,255,255,0.72);
-  color:#6b7280; font-size:11px; font-weight:700; cursor:pointer;
+.chat-unread-badge {
+  display:inline-flex; align-items:center; justify-content:center;
+  min-width:18px; height:18px; margin-left:4px; padding:0 5px;
+  border-radius:9px; background:#ef4444; color:#fff;
+  font-size:11px; font-weight:800; line-height:18px;
 }
-.notify-btn.on { color:#059669; border-color:#6ee7b7; background:#ecfdf5; }
-.notify-btn:disabled { opacity:0.5; cursor:not-allowed; }
+.chat-unread-badge[hidden] { display:none; }
 .chat-wrap {
   display:flex; flex-direction:column; height:360px; min-height:260px;
   overscroll-behavior:contain;
@@ -514,9 +514,10 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
     padding:6px 6px max(6px, env(safe-area-inset-bottom));
   }
   .chat-wrap {
-    height:var(--chat-mobile-height, calc(100dvh - 190px));
-    min-height:240px; max-height:none;
+    height:clamp(240px, var(--chat-mobile-height, calc(100dvh - 190px)), 620px);
+    min-height:240px; max-height:calc(100dvh - 120px);
   }
+  .chat-input { font-size:16px; }
   .chat-messages { padding-bottom:8px; }
   .chat-compose { padding-bottom:env(safe-area-inset-bottom); }
   .emoji-panel {
@@ -649,26 +650,6 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
 }
 @keyframes spin { to { transform:rotate(360deg); } }
 .loading-text { font-size:15px; color:#6b7280; font-weight:600; }
-.permission-modal {
-  position:fixed; inset:0; z-index:1200;
-  display:flex; align-items:center; justify-content:center;
-  padding:18px; background:rgba(17,24,39,0.45);
-}
-.permission-dialog {
-  width:min(420px,100%); border-radius:14px;
-  padding:18px; background:#fff; color:#1f2937;
-  box-shadow:0 18px 55px rgba(0,0,0,0.24);
-}
-.permission-dialog h3 { margin:0 0 10px; font-size:18px; color:#111827; }
-.permission-dialog p {
-  margin:0 0 12px; line-height:1.65; font-size:14px;
-  white-space:pre-line;
-}
-.permission-dialog button {
-  width:100%; border:0; border-radius:10px;
-  padding:11px 14px; background:#111827; color:#fff;
-  font-size:14px; font-weight:700;
-}
 </style>
 </head>
 <body>
@@ -771,7 +752,7 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
     <button class="tab"        onclick="switchTab('memo')"     id="tabMemo">🌙 快速备忘</button>
     <button class="tab"        onclick="switchTab('log')"      id="tabLog">🪐 工作日志</button>
     <button class="tab"        onclick="switchTab('cal')"      id="tabCal">🌌 日历</button>
-    <button class="tab"        onclick="switchTab('chat')"     id="tabChat">💬 聊天</button>
+    <button class="tab"        onclick="switchTab('chat')"     id="tabChat">💬 聊天<span class="chat-unread-badge" id="chatUnreadBadge" hidden>0</span></button>
     <button class="tab"        onclick="switchTab('settings')" id="tabSettings">🔭 设置</button>
   </div>
 
@@ -837,7 +818,6 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
         <div class="chat-toolbar">
           <span style="font-size:13px;color:#9ca3af" id="chatTitle">💬 聊天</span>
           <div class="chat-toolbar-actions">
-            <button class="notify-btn" id="notifyBtn" type="button">开启通知</button>
             <button class="mute-btn" id="muteBtn" onclick="toggleMute()" title="静音">🔔</button>
           </div>
         </div>
@@ -902,8 +882,8 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
             - 修复移动端聊天键盘遮挡<br>
             - 新增聊天快捷表情面板<br>
             - 缩小聊天表情面板尺寸<br>
-            - 新增聊天系统通知与推送注册<br>
-            - 修复 Service Worker 首次激活失败<br>
+            - 聊天改为页面内未读提示<br>
+            - 修复 iPhone 聊天输入框异常放大<br>
             - 增强王一博聊天滚动条可见性<br>
             - 设置页改为更新日志<br><br>
             数据同步：Firebase<br>
@@ -922,8 +902,6 @@ import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getFirestore, doc, onSnapshot, setDoc, deleteDoc, getDoc,
   collection, addDoc, query, orderBy, limit, writeBatch }
   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import { getMessaging, getToken, onMessage, isSupported as isMessagingSupported }
-  from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js';
 
 // ── Firebase 初始化 ──
 const firebaseConfig = {
@@ -936,9 +914,6 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db  = getFirestore(app);
-const VAPID_KEY = 'BAPaK-wJuw3UtZ_0nB9toodKSrA413xR6sni1tS86i4qCcftN_nXGqDH_zI0Nzx3Q1Wx62IKXOzdjV9t1GcLybg';
-let messaging = null;
-let messagingRegistration = null;
 
 // ── 用户配置 ──
 // 每次打开页面时选择自己的身份（存在 localStorage 里，下次自动恢复）
@@ -1134,6 +1109,7 @@ function initWithIdentity(userId) {
   migrateOldLogs('tiffany');
   subscribeUser('kk');
   subscribeUser('tiffany');
+  subscribeChat();
   // 主题应用（优先用 cache，否则用 localStorage 备份）
   const localTheme = localStorage.getItem('wk_theme_' + userId);
   if (localTheme && themes[localTheme]) applyTheme(localTheme, false);
@@ -1257,6 +1233,7 @@ window.switchTab = function(name) {
   if (name==='log') renderLog();
   if (name==='cal')  renderCal();
   if (name==='chat') {
+    clearChatUnread();
     const other = USERS[myIdentity === 'kk' ? 'tiffany' : 'kk'];
     const titleEl = document.getElementById('chatTitle');
     if (titleEl) titleEl.textContent = `💬 与 ${other} 的对话`;
@@ -1808,7 +1785,8 @@ function makeBubbles() {
 // ── 聊天 ──
 let chatUnsubscribe = null;
 let chatMuted = localStorage.getItem('wk_chat_muted') === 'true';
-let lastChatCount = 0; // 记录上次消息数量，避免初次加载触发提示音
+let latestChatTimestamp = 0;
+let chatInitialSnapshot = true;
 
 function playBeep() {
   if (chatMuted) return;
@@ -1844,187 +1822,35 @@ function updateMuteBtn() {
   btn.title = chatMuted ? '已静音，点击开启' : '点击静音';
 }
 
-function getPushDeviceId() {
-  const key = 'wk_push_device_id';
-  let id = localStorage.getItem(key);
-  if (!id) {
-    id = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    localStorage.setItem(key, id);
-  }
-  return id;
+function getChatUnreadKey() {
+  return `wk_chat_unread_${myIdentity || 'guest'}`;
 }
 
-function updateNotifyButton(status) {
-  const btn = document.getElementById('notifyBtn');
-  if (!btn) return;
-  const states = {
-    on: ['通知已开启', true, false],
-    denied: ['去设置开启', false, false],
-    unavailable: ['查看要求', false, false],
-    loading: ['正在开启...', false, true],
-    off: ['开启通知', false, false]
-  };
-  const [label, on, disabled] = states[status] || states.off;
-  btn.textContent = label;
-  btn.classList.toggle('on', on);
-  btn.disabled = disabled;
-  btn.title = status === 'denied' ? '查看恢复通知权限的方法' : '';
+function getChatReadKey() {
+  return `wk_chat_read_${myIdentity || 'guest'}`;
 }
 
-function getNotificationPermissionHelp() {
-  const ua = navigator.userAgent;
-  const isEdge = /EdgA|EdgiOS|Edg\//i.test(ua);
-  const isChrome = /Chrome|CriOS/i.test(ua) && !isEdge;
-  const isSafari = /Safari/i.test(ua) && !/Chrome|CriOS|EdgA|EdgiOS|Edg\//i.test(ua);
-
-  if (isEdge) {
-    return 'Edge：点击地址栏旁的网站信息图标 → 权限 → 通知 → 允许。\n如果没有该入口：Edge 设置 → 网站权限 → 通知 → 找到当前网站并设为允许。';
-  }
-  if (isChrome) {
-    return 'Chrome：点击地址栏旁的网站信息图标 → 权限 → 通知 → 允许。\n如果没有该入口：Chrome 设置 → 网站设置 → 通知 → 找到当前网站并设为允许。';
-  }
-  if (isSafari) {
-    return 'Safari：打开系统“设置” → App → Safari → 通知，允许当前网站的通知。\n部分 iPhone 版本需要先把网站添加到主屏幕，再从主屏幕打开。';
-  }
-  return '请点击地址栏旁的网站信息或锁形图标 → 网站权限 → 通知 → 允许；也可以在浏览器设置的“网站权限/网站设置”中恢复。';
+function getChatUnreadCount() {
+  return Number(localStorage.getItem(getChatUnreadKey())) || 0;
 }
 
-function showPermissionGuide(message) {
-  const old = document.getElementById('permissionModal');
-  if (old) old.remove();
-  const modal = document.createElement('div');
-  modal.className = 'permission-modal';
-  modal.id = 'permissionModal';
-  modal.innerHTML = `
-    <div class="permission-dialog" role="dialog" aria-modal="true" aria-labelledby="permissionTitle">
-      <h3 id="permissionTitle">通知没有开启</h3>
-      <p>${message}</p>
-      <button type="button">知道了</button>
-    </div>
-  `;
-  modal.querySelector('button').addEventListener('click', () => modal.remove());
-  modal.addEventListener('click', e => {
-    if (e.target === modal) modal.remove();
-  });
-  document.body.appendChild(modal);
+function updateChatUnreadBadge(count = getChatUnreadCount()) {
+  const badge = document.getElementById('chatUnreadBadge');
+  if (!badge) return;
+  badge.textContent = count > 99 ? '99+' : String(count);
+  badge.hidden = count < 1;
 }
 
-function showNotificationPermissionGuide() {
-  showPermissionGuide(
-    '浏览器没有给网页重新弹授权框的权限。\n\n' +
-    getNotificationPermissionHelp() +
-    '\n\n设置完成后，回到这个页面并刷新，再点“开启通知”。'
-  );
+function addChatUnread(count = 1) {
+  const next = getChatUnreadCount() + count;
+  localStorage.setItem(getChatUnreadKey(), String(next));
+  updateChatUnreadBadge(next);
 }
 
-async function waitForServiceWorkerActive(registration, timeoutMs = 15000) {
-  if (registration.active) return registration;
-  const worker = registration.installing || registration.waiting;
-  if (!worker) {
-    const ready = await Promise.race([
-      navigator.serviceWorker.ready,
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Service Worker 激活超时')), timeoutMs))
-    ]);
-    return ready;
-  }
-  await new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error('Service Worker 激活超时')), timeoutMs);
-    const checkState = () => {
-      if (worker.state === 'activated') {
-        clearTimeout(timer);
-        resolve();
-      } else if (worker.state === 'redundant') {
-        clearTimeout(timer);
-        reject(new Error('Service Worker 安装失败'));
-      }
-    };
-    worker.addEventListener('statechange', checkState);
-    checkState();
-  });
-  return navigator.serviceWorker.ready;
-}
-
-async function enablePushNotifications() {
-  if (!window.isSecureContext || location.protocol === 'file:') {
-    updateNotifyButton('unavailable');
-    showPermissionGuide('请先上传到 GitHub Pages，再通过 HTTPS 地址开启通知。');
-    return;
-  }
-  if (!('Notification' in window) || !('serviceWorker' in navigator)) {
-    showPermissionGuide('当前浏览器不支持网页通知。建议用 Android 版 Edge 或 Chrome 打开 GitHub Pages 地址。');
-    return;
-  }
-  if (Notification.permission === 'denied') {
-    updateNotifyButton('denied');
-    showNotificationPermissionGuide();
-    return;
-  }
-  updateNotifyButton('loading');
-  try {
-    const supported = await isMessagingSupported();
-    if (!supported) throw new Error('当前浏览器不支持 Firebase 消息推送');
-    const permission = await Notification.requestPermission();
-    if (permission !== 'granted') {
-      updateNotifyButton('denied');
-      showNotificationPermissionGuide();
-      return;
-    }
-    messagingRegistration = await navigator.serviceWorker.register('./firebase-messaging-sw.js', {
-      updateViaCache: 'none'
-    });
-    await messagingRegistration.update();
-    messagingRegistration = await waitForServiceWorkerActive(messagingRegistration);
-    messaging = getMessaging(app);
-    const token = await getToken(messaging, {
-      vapidKey: VAPID_KEY,
-      serviceWorkerRegistration: messagingRegistration
-    });
-    if (!token) throw new Error('没有取得推送 Token');
-    const deviceId = getPushDeviceId();
-    await setDoc(userDocRef(myIdentity, 'pushTokens', deviceId), {
-      token,
-      deviceId,
-      userId: myIdentity,
-      userAgent: navigator.userAgent,
-      updatedAt: Date.now()
-    });
-    localStorage.setItem('wk_push_enabled', 'true');
-    updateNotifyButton('on');
-    onMessage(messaging, payload => {
-      const title = payload.notification?.title || payload.data?.title || '新聊天消息';
-      const body = payload.notification?.body || payload.data?.body || '';
-      showSystemNotification(title, body);
-    });
-  } catch (e) {
-    console.error('开启通知失败', e);
-    updateNotifyButton('off');
-    alert(`开启通知失败：${e.message}`);
-  }
-}
-
-function showSystemNotification(title, body) {
-  if (Notification.permission !== 'granted') return;
-  if (!document.hidden && document.getElementById('tab-chat')?.classList.contains('active')) return;
-  try {
-    const notification = new Notification(title, {
-      body,
-      tag: 'kk-tiff-chat',
-      renotify: true
-    });
-    notification.onclick = () => {
-      window.focus();
-      window.switchTab('chat');
-      notification.close();
-    };
-  } catch (e) {
-    console.warn('显示通知失败', e);
-  }
-}
-
-function notifyIncomingChat(message) {
-  if (!message || message.from === myIdentity) return;
-  const sender = USERS[message.from] || message.from;
-  showSystemNotification(`${sender} 发来新消息`, message.text || '');
+function clearChatUnread() {
+  localStorage.removeItem(getChatUnreadKey());
+  localStorage.setItem(getChatReadKey(), String(latestChatTimestamp || Date.now()));
+  updateChatUnreadBadge(0);
 }
 
 function subscribeChat() {
@@ -2035,14 +1861,31 @@ function subscribeChat() {
     snap.forEach(d => msgs.push({ id:d.id, ...d.data() }));
     msgs.sort((a,b) => (a.ts||0) - (b.ts||0));
     const recent = msgs.slice(-100);
-    if (lastChatCount > 0 && msgs.length > lastChatCount) {
-      const latest = msgs[msgs.length - 1];
-      if (latest.from !== myIdentity) {
+    const previousTimestamp = latestChatTimestamp;
+    latestChatTimestamp = msgs.length ? (msgs[msgs.length - 1].ts || 0) : 0;
+    const chatOpen = document.getElementById('tab-chat')?.classList.contains('active') && !document.hidden;
+
+    if (chatInitialSnapshot) {
+      const lastRead = Number(localStorage.getItem(getChatReadKey())) || 0;
+      if (lastRead > 0 && !chatOpen) {
+        const unread = msgs.filter(message => message.from !== myIdentity && (message.ts || 0) > lastRead).length;
+        localStorage.setItem(getChatUnreadKey(), String(unread));
+        updateChatUnreadBadge(unread);
+      } else {
+        clearChatUnread();
+      }
+      chatInitialSnapshot = false;
+    } else if (latestChatTimestamp > previousTimestamp) {
+      const incoming = msgs.filter(message =>
+        message.from !== myIdentity &&
+        (message.ts || 0) > previousTimestamp
+      );
+      if (incoming.length) {
         playBeep();
-        notifyIncomingChat(latest);
+        if (chatOpen) clearChatUnread();
+        else addChatUnread(incoming.length);
       }
     }
-    lastChatCount = msgs.length;
     renderChat(recent);
     updateMuteBtn();
   }, err => {
@@ -2129,13 +1972,24 @@ function closeEmojiPanel() {
 function updateChatViewport() {
   const tab = document.getElementById('tab-chat');
   const wrap = tab?.querySelector('.chat-wrap');
-  if (!tab?.classList.contains('active') || !wrap || window.innerWidth > 640) return;
+  if (!wrap) return;
+  if (window.innerWidth > 640) {
+    wrap.style.removeProperty('--chat-mobile-height');
+    return;
+  }
+  if (!tab?.classList.contains('active')) return;
   const viewport = window.visualViewport;
   const viewportHeight = viewport?.height || window.innerHeight;
   const viewportOffset = viewport?.offsetTop || 0;
   const top = wrap.getBoundingClientRect().top - viewportOffset;
-  const available = Math.max(240, Math.floor(viewportHeight - top - 10));
+  const available = Math.min(620, Math.max(240, Math.floor(viewportHeight - Math.max(0, top) - 10)));
   wrap.style.setProperty('--chat-mobile-height', `${available}px`);
+}
+
+function settleChatViewport() {
+  updateChatViewport();
+  setTimeout(updateChatViewport, 160);
+  setTimeout(updateChatViewport, 420);
 }
 
 
@@ -2252,7 +2106,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const btn = document.getElementById('chatSendBtn');
   const inp = document.getElementById('chatInput');
   const emojiBtn = document.getElementById('emojiToggleBtn');
-  const notifyBtn = document.getElementById('notifyBtn');
   if (btn) btn.addEventListener('click', () => window.sendMessage());
   if (inp) {
     inp.addEventListener('keydown', e => {
@@ -2268,6 +2121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         el.scrollTop = el.scrollHeight;
       }, 120);
     });
+    inp.addEventListener('blur', settleChatViewport);
   }
   buildEmojiPanel();
   if (emojiBtn) {
@@ -2277,21 +2131,17 @@ document.addEventListener('DOMContentLoaded', () => {
       requestAnimationFrame(updateChatViewport);
     });
   }
-  if (notifyBtn) notifyBtn.addEventListener('click', enablePushNotifications);
-  if (!window.isSecureContext || location.protocol === 'file:') {
-    updateNotifyButton('unavailable');
-  } else if (!('Notification' in window) || !('serviceWorker' in navigator)) {
-    updateNotifyButton('unavailable');
-  } else if (Notification.permission === 'denied') {
-    updateNotifyButton('denied');
-  } else if (Notification.permission === 'granted' && localStorage.getItem('wk_push_enabled') === 'true') {
-    enablePushNotifications();
-  } else {
-    updateNotifyButton('off');
-  }
+  updateChatUnreadBadge();
   window.addEventListener('resize', updateChatViewport);
   window.visualViewport?.addEventListener('resize', updateChatViewport);
   window.visualViewport?.addEventListener('scroll', updateChatViewport);
+  window.addEventListener('orientationchange', settleChatViewport);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && document.getElementById('tab-chat')?.classList.contains('active')) {
+      clearChatUnread();
+      settleChatViewport();
+    }
+  });
   if (location.hash === '#chat') setTimeout(() => window.switchTab('chat'), 150);
 });
 </script>
