@@ -24,6 +24,37 @@ body {
   position: relative;
   overflow-x: hidden;
 }
+body[data-theme]:not([data-theme="wyb"]) {
+  background:linear-gradient(145deg,var(--bg1) 0%,var(--bg2) 32%,var(--bg3) 58%,var(--bg4) 78%,var(--bg5) 100%);
+  background-size:220% 220%;
+  animation-duration:24s;
+}
+body[data-theme]:not([data-theme="wyb"]) .bubble {
+  opacity:0.3;
+  filter:saturate(0.65);
+}
+body[data-theme]:not([data-theme="wyb"]) .card {
+  border:1px solid rgba(255,255,255,0.62);
+  box-shadow:0 14px 38px rgba(15,23,42,0.18);
+}
+body[data-theme]:not([data-theme="wyb"]) .stat-card,
+body[data-theme]:not([data-theme="wyb"]) .overview-panel,
+body[data-theme]:not([data-theme="wyb"]) .focus-main,
+body[data-theme]:not([data-theme="wyb"]) .focus-side {
+  border:1px solid rgba(255,255,255,0.66);
+  box-shadow:0 8px 24px rgba(15,23,42,0.12);
+}
+body[data-theme]:not([data-theme="wyb"]) .overview-count {
+  background:rgba(15,23,42,0.07);
+}
+body[data-theme]:not([data-theme="wyb"]) .tab {
+  background:rgba(255,255,255,0.14);
+  border:1px solid rgba(255,255,255,0.18);
+}
+body[data-theme]:not([data-theme="wyb"]) .tab.active {
+  background:rgba(255,255,255,0.96);
+  border-color:rgba(255,255,255,0.82);
+}
 
 @keyframes gradMove {
   0%{background-position:0% 50%}
@@ -151,9 +182,9 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
 .cosmic-progress { height:7px; overflow:hidden; border-radius:999px; background:rgba(255,255,255,0.14); }
 .cosmic-progress-fill {
   width:0; height:100%; border-radius:inherit; transition:width 0.3s ease;
-  background:linear-gradient(90deg,#22d3ee,#fbbf24);
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
 }
-.cosmic-progress-text { min-width:34px; font-size:11px; font-weight:800; color:#fbbf24; text-align:right; }
+.cosmic-progress-text { min-width:34px; font-size:11px; font-weight:800; color:#e5e7eb; text-align:right; }
 .cosmic-calendar-btn {
   border:0; border-radius:7px; padding:5px 9px; cursor:pointer;
   background:rgba(255,255,255,0.1); color:#e0e7ff; font-size:11px; font-weight:700;
@@ -164,8 +195,8 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
   background:linear-gradient(145deg,rgba(255,255,255,0.88),rgba(238,242,255,0.86));
 }
 .theme-layout-cosmic .overview-index { border-radius:6px; }
-.theme-layout-star .cosmic-orbit { background:rgba(55,38,108,0.78); }
-.theme-layout-star .cosmic-progress-fill { background:linear-gradient(90deg,#f093fb,#4facfe,#fbbf24); }
+.theme-layout-star .cosmic-orbit { background:rgba(26,31,46,0.84); }
+.theme-layout-star .cosmic-progress-fill { background:linear-gradient(90deg,#8fa6c9,#f0c674); }
 .focus-dashboard {
   display:none; grid-column:1 / -1;
   grid-template-columns:minmax(0,1.55fr) minmax(210px,0.75fr);
@@ -199,8 +230,8 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
   padding:9px 10px; border-radius:8px; background:rgba(255,255,255,0.75);
   font-size:12px; line-height:1.45; color:#6b7280; word-break:break-word; cursor:pointer;
 }
-.theme-layout-cat .focus-main { background:linear-gradient(145deg,rgba(255,255,255,0.92),rgba(255,238,244,0.9)); }
-.theme-layout-bunny .focus-main { background:linear-gradient(145deg,rgba(255,255,255,0.92),rgba(239,253,244,0.9)); }
+.theme-layout-cat .focus-main { background:linear-gradient(145deg,rgba(255,255,255,0.96),rgba(239,234,236,0.92)); }
+.theme-layout-bunny .focus-main { background:linear-gradient(145deg,rgba(255,255,255,0.96),rgba(232,239,234,0.92)); }
 .theme-layout-cat .focus-kicker::before { content:'🐾 '; }
 .theme-layout-bunny .focus-kicker::before { content:'🥕 '; }
 .theme-layout-wyb .daily-overview {
@@ -652,7 +683,7 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
 .loading-text { font-size:15px; color:#6b7280; font-weight:600; }
 </style>
 </head>
-<body>
+<body data-theme="space">
 
 <div class="bubbles" id="bubbles"></div>
 
@@ -677,16 +708,16 @@ body::after  { width:300px; height:300px; background:white; bottom:-80px; left:-
 
   <!-- 主题选择器（紧贴标题下方） -->
   <div class="theme-selector">
-    <button class="theme-btn active" data-theme="space"   title="太空探险">🚀</button>
-    <button class="theme-btn"        data-theme="dino"    title="小恐龙森林">🦕</button>
-    <button class="theme-btn"        data-theme="star"    title="星星人">⭐</button>
-    <button class="theme-btn"        data-theme="giraffe" title="可爱长颈鹿">🦒</button>
-    <button class="theme-btn"        data-theme="zoo"     title="可爱动物园">🦁</button>
-    <button class="theme-btn"        data-theme="cat"     title="慵懒猫咪">🐱</button>
-    <button class="theme-btn"        data-theme="bunny"   title="兔子花园">🐰</button>
-    <button class="theme-btn"        data-theme="penguin" title="企鹅冰雪">🐧</button>
-    <button class="theme-btn"        data-theme="fox"     title="小狐狸">🦊</button>
-    <button class="theme-btn"        data-theme="ocean"   title="海洋小动物">🐙</button>
+    <button class="theme-btn active" data-theme="space"   title="深空工作台">🚀</button>
+    <button class="theme-btn"        data-theme="dino"    title="远古森林">🦕</button>
+    <button class="theme-btn"        data-theme="star"    title="星轨工作台">⭐</button>
+    <button class="theme-btn"        data-theme="giraffe" title="旷野长颈鹿">🦒</button>
+    <button class="theme-btn"        data-theme="zoo"     title="自然观察室">🦁</button>
+    <button class="theme-btn"        data-theme="cat"     title="夜猫工作室">🐱</button>
+    <button class="theme-btn"        data-theme="bunny"   title="白兔花园">🐰</button>
+    <button class="theme-btn"        data-theme="penguin" title="极地工作站">🐧</button>
+    <button class="theme-btn"        data-theme="fox"     title="赤狐森林">🦊</button>
+    <button class="theme-btn"        data-theme="ocean"   title="深海工作室">🐙</button>
     <button class="theme-btn"        data-theme="wyb"     title="王一博❤️">🏍️</button>
   </div>
 
@@ -935,16 +966,16 @@ const unsubscribers = {};
 
 // ── 主题配置 ──
 const themes = {
-  space:   { name:'太空探险',    bg:['#f093fb','#f5576c','#fda085','#f6d365','#96fbc4'], accent:'#f5576c', accent2:'#f093fb', title:'🚀 工作小助手', subtitle:'🧑‍🚀 记住每一件小事，让工作井井有条 🛸', icons:['🚀','🛸','⭐','🌙','💫','🪐','🌟','🛰️','✨','🌌'], statDone:'🚀 今日完成', statPending:'🛸 待办事项', statMemo:'⭐ 备忘数量', tabTodo:'🛸 待办事项', tabMemo:'🌙 快速备忘', tabLog:'🪐 工作日志', tabCal:'🌌 日历', tabSettings:'🔭 设置', btnAdd:'🚀 添加', btnClear:'🛰️ 清除已完成', btnMemo:'🌟 记下', calStar:'🚀' },
-  dino:    { name:'小恐龙森林',  bg:['#a8e063','#56ab2f','#f7971e','#ffd200','#a8e063'], accent:'#56ab2f', accent2:'#a8e063', title:'🦕 小恐龙工作窝', subtitle:'🌿 慢慢来，一步一步完成任务 🌳', icons:['🦕','🌿','🦖','🌳','🥚','🌱','🍃','🦎','🌴','🥥'], statDone:'🥚 今日孵化', statPending:'🦕 待办事项', statMemo:'🌿 备忘叶子', tabTodo:'🦕 待办事项', tabMemo:'🌿 快速备忘', tabLog:'🌳 工作日志', tabCal:'🌴 日历', tabSettings:'🦎 设置', btnAdd:'🦕 添加', btnClear:'🌱 清除已完成', btnMemo:'🌿 记下', calStar:'🦕' },
-  star:    { name:'星星人',      bg:['#667eea','#764ba2','#f093fb','#f5576c','#4facfe'], accent:'#667eea', accent2:'#764ba2', title:'⭐ 星星人工作台', subtitle:'✨ 闪闪发光的每一天 🌟', icons:['⭐','🌟','✨','💫','🌠','🔮','💎','🌙','🪐','💜'], statDone:'⭐ 今日闪耀', statPending:'🌟 待办星星', statMemo:'💫 备忘光芒', tabTodo:'⭐ 待办事项', tabMemo:'✨ 快速备忘', tabLog:'🌟 工作日志', tabCal:'🌠 日历', tabSettings:'🔮 设置', btnAdd:'⭐ 添加', btnClear:'✨ 清除已完成', btnMemo:'🌟 记下', calStar:'⭐' },
-  giraffe: { name:'可爱长颈鹿',  bg:['#ffecd2','#fcb69f','#ff9a9e','#fecfef','#ffecd2'], accent:'#fcb69f', accent2:'#ff9a9e', title:'🦒 长颈鹿小站', subtitle:'🌤️ 站得高看得远，慢慢完成任务 🌸', icons:['🦒','🌸','🌿','🌺','🦓','🍃','🌻','🥥','🌴','🌼'], statDone:'🌸 今日完成', statPending:'🦒 待办事项', statMemo:'🌿 备忘叶子', tabTodo:'🦒 待办事项', tabMemo:'🌸 快速备忘', tabLog:'🌺 工作日志', tabCal:'🌻 日历', tabSettings:'🦓 设置', btnAdd:'🦒 添加', btnClear:'🌸 清除已完成', btnMemo:'🌺 记下', calStar:'🦒' },
-  zoo:     { name:'可爱动物园',  bg:['#ffecd2','#a1c4fd','#fcb69f','#c2e9fb','#d4fc79'], accent:'#fcb69f', accent2:'#a1c4fd', title:'🦁 动物园工作间', subtitle:'🐼 和小动物们一起快乐工作 🐘', icons:['🦁','🐼','🐨','🐯','🦊','🐰','🐻','🐸','🐵','🦉'], statDone:'🦁 今日完成', statPending:'🐼 待办事项', statMemo:'🐨 备忘事项', tabTodo:'🦁 待办事项', tabMemo:'🐼 快速备忘', tabLog:'🐯 工作日志', tabCal:'🦊 日历', tabSettings:'🐻 设置', btnAdd:'🦁 添加', btnClear:'🐼 清除已完成', btnMemo:'🐨 记下', calStar:'🦁' },
-  cat:     { name:'慵懒猫咪',    bg:['#ffecd2','#fcb69f','#a8edea','#fed6e3','#d299c2'], accent:'#fcb69f', accent2:'#a8edea', title:'🐱 猫咪小窝', subtitle:'😴 慵懒地完成每一件事 🐾', icons:['🐱','😺','😸','🐈','🐾','🐟','🧶','💤','🥛','🎀'], statDone:'🐱 今日喵完', statPending:'😺 待办喵事', statMemo:'🐾 备忘喵', tabTodo:'🐱 待办喵事', tabMemo:'😺 快速备忘', tabLog:'😸 喵喵日志', tabCal:'🐈 日历', tabSettings:'🐾 设置', btnAdd:'🐱 添加', btnClear:'😺 清除已完成', btnMemo:'🐾 记下', calStar:'🐱' },
-  bunny:   { name:'兔子花园',    bg:['#ffecd2','#fcb69f','#a8edea','#fed6e3','#d4fc79'], accent:'#fcb69f', accent2:'#a8edea', title:'🐰 兔子花园', subtitle:'🥕 蹦蹦跳跳完成任务 🌷', icons:['🐰','🐇','🥕','🌷','🌸','🥬','🌻','🥒','🍃','🥝'], statDone:'🥕 今日收获', statPending:'🐰 待办事项', statMemo:'🌷 备忘花朵', tabTodo:'🐰 待办事项', tabMemo:'🥕 快速备忘', tabLog:'🌷 工作日志', tabCal:'🌸 日历', tabSettings:'🌻 设置', btnAdd:'🐰 添加', btnClear:'🥕 清除已完成', btnMemo:'🌷 记下', calStar:'🐰' },
-  penguin: { name:'企鹅冰雪',    bg:['#a1c4fd','#c2e9fb','#e0c3fc','#8ec5fc','#667eea'], accent:'#667eea', accent2:'#a1c4fd', title:'🐧 企鹅冰雪站', subtitle:'❄️ 在冰雪世界里快乐工作 🌨️', icons:['🐧','❄️','🌨️','⛄','🧊','🐟','🌊','💎','🦭','🌨️'], statDone:'❄️ 今日完成', statPending:'🐧 待办事项', statMemo:'🧊 备忘冰块', tabTodo:'🐧 待办事项', tabMemo:'❄️ 快速备忘', tabLog:'🌨️ 工作日志', tabCal:'⛄ 日历', tabSettings:'🧊 设置', btnAdd:'🐧 添加', btnClear:'❄️ 清除已完成', btnMemo:'🧊 记下', calStar:'🐧' },
-  fox:     { name:'小狐狸',      bg:['#ffecd2','#fcb69f','#ff9a9e','#fad0c4','#a18cd1'], accent:'#ff9a9e', accent2:'#fcb69f', title:'🦊 狐狸小屋', subtitle:'🍂 在森林里悄悄完成任务 🌰', icons:['🦊','🍂','🌰','🍁','🌲','🍄','🦔','🌙','⭐','🌿'], statDone:'🌰 今日收获', statPending:'🦊 待办事项', statMemo:'🍂 备忘叶子', tabTodo:'🦊 待办事项', tabMemo:'🍂 快速备忘', tabLog:'🍁 工作日志', tabCal:'🌲 日历', tabSettings:'🍄 设置', btnAdd:'🦊 添加', btnClear:'🍂 清除已完成', btnMemo:'🌰 记下', calStar:'🦊' },
-  ocean:   { name:'海洋小动物',  bg:['#667eea','#764ba2','#00c6fb','#005bea','#64f38c'], accent:'#00c6fb', accent2:'#667eea', title:'🐙 海洋小窝', subtitle:'🌊 在海底世界里畅游工作 🐚', icons:['🐙','🦀','🐡','🐠','🐟','🦐','🐚','🌊','🦑','🐬'], statDone:'🐚 今日收获', statPending:'🐙 待办事项', statMemo:'🌊 备忘海浪', tabTodo:'🐙 待办事项', tabMemo:'🐚 快速备忘', tabLog:'🦀 工作日志', tabCal:'🐠 日历', tabSettings:'🦐 设置', btnAdd:'🐙 添加', btnClear:'🐚 清除已完成', btnMemo:'🌊 记下', calStar:'🐙' },
+  space:   { name:'深空工作台',  bg:['#080b12','#101827','#172033','#121923','#263447'], accent:'#34778a', accent2:'#806e34', title:'🚀 深空工作台', subtitle:'保持航向，处理今天真正重要的事', icons:['🚀','🛰️','🌙','✨'], statDone:'🚀 今日完成', statPending:'🛸 待办事项', statMemo:'⭐ 备忘数量', tabTodo:'🛸 待办事项', tabMemo:'🌙 快速备忘', tabLog:'🪐 工作日志', tabCal:'🌌 日历', tabSettings:'🔭 设置', btnAdd:'🚀 添加', btnClear:'🛰️ 清除已完成', btnMemo:'🌟 记下', calStar:'🚀' },
+  dino:    { name:'远古森林',    bg:['#132019','#22342a','#35483b','#263029','#4d5848'], accent:'#4f765b', accent2:'#806844', title:'🦕 远古森林', subtitle:'稳稳向前，把复杂的事情逐步完成', icons:['🦕','🌿','🌳','🍃'], statDone:'🥚 今日孵化', statPending:'🦕 待办事项', statMemo:'🌿 备忘叶子', tabTodo:'🦕 待办事项', tabMemo:'🌿 快速备忘', tabLog:'🌳 工作日志', tabCal:'🌴 日历', tabSettings:'🦎 设置', btnAdd:'🦕 添加', btnClear:'🌱 清除已完成', btnMemo:'🌿 记下', calStar:'🦕' },
+  star:    { name:'星轨工作台',  bg:['#10131b','#1b2030','#292a3b','#18202b','#343345'], accent:'#596f93', accent2:'#80682f', title:'⭐ 星轨工作台', subtitle:'让每一次完成都留下清晰轨迹', icons:['⭐','🌙','✨','🪐'], statDone:'⭐ 今日闪耀', statPending:'🌟 待办星星', statMemo:'💫 备忘光芒', tabTodo:'⭐ 待办事项', tabMemo:'✨ 快速备忘', tabLog:'🌟 工作日志', tabCal:'🌠 日历', tabSettings:'🔮 设置', btnAdd:'⭐ 添加', btnClear:'✨ 清除已完成', btnMemo:'🌟 记下', calStar:'⭐' },
+  giraffe: { name:'旷野长颈鹿',  bg:['#292a28','#3d3a34','#5a5145','#353a3d','#6b655b'], accent:'#80672f', accent2:'#596a74', title:'🦒 旷野工作台', subtitle:'抬高视线，也不忽略眼前的一步', icons:['🦒','🌾','🌿','☀️'], statDone:'🌾 今日完成', statPending:'🦒 待办事项', statMemo:'🌿 备忘事项', tabTodo:'🦒 待办事项', tabMemo:'🌾 快速备忘', tabLog:'🌿 工作日志', tabCal:'☀️ 日历', tabSettings:'🦓 设置', btnAdd:'🦒 添加', btnClear:'🌾 清除已完成', btnMemo:'🌿 记下', calStar:'🦒' },
+  zoo:     { name:'自然观察室',  bg:['#20282b','#314047','#3d4b43','#293236','#53615c'], accent:'#875637', accent2:'#4e7377', title:'🦁 自然观察室', subtitle:'保持好奇，也保持今天的工作秩序', icons:['🦁','🦉','🌿','🐾'], statDone:'🦁 今日完成', statPending:'🐼 待办事项', statMemo:'🦉 备忘事项', tabTodo:'🦁 待办事项', tabMemo:'🐼 快速备忘', tabLog:'🐯 工作日志', tabCal:'🦉 日历', tabSettings:'🐻 设置', btnAdd:'🦁 添加', btnClear:'🐼 清除已完成', btnMemo:'🦉 记下', calStar:'🦁' },
+  cat:     { name:'夜猫工作室',  bg:['#222225','#313137','#40363a','#292d31','#51464b'], accent:'#894956', accent2:'#5e6f7c', title:'🐱 夜猫工作室', subtitle:'安静专注，完成手边这一件事', icons:['🐱','🌙','🐾','✨'], statDone:'🐱 今日完成', statPending:'🌙 待办事项', statMemo:'🐾 备忘事项', tabTodo:'🐱 待办事项', tabMemo:'🌙 快速备忘', tabLog:'🐾 工作日志', tabCal:'✨ 日历', tabSettings:'🐈 设置', btnAdd:'🐱 添加', btnClear:'🌙 清除已完成', btnMemo:'🐾 记下', calStar:'🐱' },
+  bunny:   { name:'白兔花园',    bg:['#202c26','#304038','#3d4943','#29332e','#4f5953'], accent:'#567b57', accent2:'#806a4c', title:'🐰 白兔花园', subtitle:'轻一点，也可以把事情做得很扎实', icons:['🐰','🌿','🥕','🌙'], statDone:'🥕 今日完成', statPending:'🐰 待办事项', statMemo:'🌿 备忘事项', tabTodo:'🐰 待办事项', tabMemo:'🥕 快速备忘', tabLog:'🌿 工作日志', tabCal:'🌙 日历', tabSettings:'🐇 设置', btnAdd:'🐰 添加', btnClear:'🥕 清除已完成', btnMemo:'🌿 记下', calStar:'🐰' },
+  penguin: { name:'极地工作站',  bg:['#0c1823','#153047','#23465c','#1a2635','#355a68'], accent:'#32768d', accent2:'#607381', title:'🐧 极地工作站', subtitle:'冷静梳理，清楚完成每一项任务', icons:['🐧','❄️','🧊','🌊'], statDone:'❄️ 今日完成', statPending:'🐧 待办事项', statMemo:'🧊 备忘事项', tabTodo:'🐧 待办事项', tabMemo:'❄️ 快速备忘', tabLog:'🌨️ 工作日志', tabCal:'🧊 日历', tabSettings:'🐧 设置', btnAdd:'🐧 添加', btnClear:'❄️ 清除已完成', btnMemo:'🧊 记下', calStar:'🐧' },
+  fox:     { name:'赤狐森林',    bg:['#241f1b','#393029','#4c382f','#2c322d','#59463a'], accent:'#8d4628', accent2:'#566f52', title:'🦊 赤狐森林', subtitle:'敏锐判断，然后安静地向目标推进', icons:['🦊','🍂','🌲','🌙'], statDone:'🍂 今日完成', statPending:'🦊 待办事项', statMemo:'🌲 备忘事项', tabTodo:'🦊 待办事项', tabMemo:'🍂 快速备忘', tabLog:'🌲 工作日志', tabCal:'🌙 日历', tabSettings:'🦊 设置', btnAdd:'🦊 添加', btnClear:'🍂 清除已完成', btnMemo:'🌲 记下', calStar:'🦊' },
+  ocean:   { name:'深海工作室',  bg:['#07191f','#0b2b34','#12434c','#15313a','#24545a'], accent:'#277a76', accent2:'#5d7883', title:'🐙 深海工作室', subtitle:'降低噪音，把注意力放回重要的事', icons:['🐙','🌊','🐚','🐟'], statDone:'🐚 今日完成', statPending:'🐙 待办事项', statMemo:'🌊 备忘事项', tabTodo:'🐙 待办事项', tabMemo:'🐚 快速备忘', tabLog:'🌊 工作日志', tabCal:'🐟 日历', tabSettings:'🐙 设置', btnAdd:'🐙 添加', btnClear:'🐚 清除已完成', btnMemo:'🌊 记下', calStar:'🐙' },
   wyb:     { name:'王一博❤️',     bg:['#1a1a2e','#16213e','#0f3460','#533483','#e94560'], accent:'#e94560', accent2:'#533483', title:'🏍️ 一博工作台', subtitle:'💫 无所畏惧，乘风破浪，今天也要加油！✨', icons:['⚡','🏍️','🎵','🎤','🌙','💫','🔥','🖤','👑','✨'], statDone:'⚡ 今日完成', statPending:'🔥 待办事项', statMemo:'🌙 备忘事项', tabTodo:'🔥 待办事项', tabMemo:'🌙 快速备忘', tabLog:'⚡ 工作日志', tabCal:'🌙 日历', tabSettings:'👑 设置', btnAdd:'⚡ 添加', btnClear:'🖤 清除已完成', btnMemo:'🌙 记下', calStar:'⚡' },
 };
 
@@ -1180,6 +1211,7 @@ async function applyTheme(themeName, save = true) {
   if (!t) return;
   currentTheme = themeName;
   const layout = themeLayouts[themeName] || 'standard';
+  document.body.dataset.theme = themeName;
   document.body.classList.toggle('theme-layout-wyb', layout === 'support');
   document.body.classList.toggle('theme-layout-cosmic', layout === 'achievement');
   document.body.classList.toggle('theme-layout-star', themeName === 'star');
@@ -1773,7 +1805,8 @@ function makeBubbles() {
   const t     = themes[currentTheme];
   const icons = t.icons;
   const sizes = [18,22,26,20,24,16,28,20,18,22];
-  for (let i=0;i<15;i++) {
+  const bubbleCount = currentTheme === 'wyb' ? 15 : 7;
+  for (let i=0;i<bubbleCount;i++) {
     const b=document.createElement('div'); b.className='bubble';
     const s=sizes[i%sizes.length];
     b.style.cssText=`width:${s*2}px;height:${s*2}px;left:${Math.random()*100}%;font-size:${s}px;display:flex;align-items:center;justify-content:center;background:transparent;animation-duration:${10+Math.random()*14}s;animation-delay:${Math.random()*10}s;`;
