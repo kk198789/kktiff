@@ -8,10 +8,12 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 
 :root {
-  --bg1: #f093fb; --bg2: #f5576c; --bg3: #fda085; --bg4: #f6d365; --bg5: #96fbc4;
-  --accent: #f5576c; --accent2: #f093fb;
+  --bg1: #f3f8fd; --bg2: #edf5fc; --bg3: #e7f1fa; --bg4: #f8fbfe; --bg5: #eef6fc;
+  --accent: #2368ad; --accent2: #1c568f;
   --card-bg: rgba(255,255,255,0.95);
   --text: #374151;
+  --muted: #6b7280; --theme-border: #d7dde1; --surface-2: #edf1f3;
+  --accent-soft: #e4ece9; --secondary: #a6573f; --secondary-soft: #f3e2dc;
 }
 
 body {
@@ -39,27 +41,72 @@ body[data-theme]:not([data-theme="wyb"])::after {
   display:none;
 }
 body[data-theme]:not([data-theme="wyb"]) .card {
-  border:1px solid rgba(255,255,255,0.62);
-  box-shadow:0 14px 38px rgba(15,23,42,0.18);
+  background:rgba(255,255,255,0.97);
+  border:1px solid var(--theme-border);
+  box-shadow:0 14px 38px rgba(31,45,58,0.1);
 }
 body[data-theme]:not([data-theme="wyb"]) .stat-card,
 body[data-theme]:not([data-theme="wyb"]) .overview-panel,
 body[data-theme]:not([data-theme="wyb"]) .focus-main,
 body[data-theme]:not([data-theme="wyb"]) .focus-side {
-  border:1px solid rgba(255,255,255,0.66);
+  background:#fff;
+  border:1px solid var(--theme-border);
   box-shadow:0 8px 24px rgba(15,23,42,0.12);
 }
 body[data-theme]:not([data-theme="wyb"]) .overview-count {
-  background:rgba(15,23,42,0.07);
+  background:var(--accent-soft);
 }
 body[data-theme]:not([data-theme="wyb"]) .tab {
-  background:rgba(255,255,255,0.14);
-  border:1px solid rgba(255,255,255,0.18);
+  background:rgba(255,255,255,0.58);
+  border:1px solid var(--theme-border);
+  color:var(--text);
 }
 body[data-theme]:not([data-theme="wyb"]) .tab.active {
-  background:rgba(255,255,255,0.96);
-  border-color:rgba(255,255,255,0.82);
+  background:#fff;
+  border-color:var(--accent);
+  color:var(--accent);
+  box-shadow:0 4px 12px rgba(31,45,58,0.1);
 }
+body[data-theme]:not([data-theme="wyb"]) .header {
+  color:var(--text); text-shadow:none;
+}
+body[data-theme]:not([data-theme="wyb"]) .header p { color:var(--muted); opacity:1; }
+body[data-theme]:not([data-theme="wyb"]) .theme-btn {
+  background:rgba(255,255,255,0.66); border-color:var(--theme-border);
+}
+body[data-theme]:not([data-theme="wyb"]) .theme-btn:hover {
+  background:#fff; border-color:var(--accent);
+}
+body[data-theme]:not([data-theme="wyb"]) .theme-btn.active {
+  background:#fff; border-color:var(--accent); box-shadow:0 4px 12px rgba(31,45,58,0.12);
+}
+body[data-theme]:not([data-theme="wyb"]) .user-btn {
+  background:rgba(255,255,255,0.64); border-color:var(--theme-border); color:var(--text);
+}
+body[data-theme]:not([data-theme="wyb"]) .user-btn:hover { background:#fff; }
+body[data-theme]:not([data-theme="wyb"]) .user-btn.active {
+  background:var(--accent); border-color:var(--accent); color:#fff;
+}
+body[data-theme]:not([data-theme="wyb"]) .top-shell {
+  border-bottom-color:var(--theme-border);
+}
+body[data-theme]:not([data-theme="wyb"]) .focus-action.secondary,
+body[data-theme]:not([data-theme="wyb"]) .focus-memo {
+  background:var(--surface-2); color:var(--muted);
+}
+body[data-theme]:not([data-theme="wyb"]) .memo {
+  border-left-color:var(--secondary); background:var(--secondary-soft);
+}
+body[data-theme]:not([data-theme="wyb"]) .cosmic-orbit {
+  background:#fff; border-color:var(--theme-border); box-shadow:0 6px 18px rgba(31,45,58,0.08);
+}
+body[data-theme]:not([data-theme="wyb"]) .cosmic-orbit-label { color:var(--text); }
+body[data-theme]:not([data-theme="wyb"]) .cosmic-progress { background:var(--surface-2); }
+body[data-theme]:not([data-theme="wyb"]) .cosmic-progress-text { color:var(--accent); }
+body[data-theme]:not([data-theme="wyb"]) .cosmic-calendar-btn {
+  background:var(--accent-soft); color:var(--accent);
+}
+body[data-theme]:not([data-theme="wyb"]) .cosmic-calendar-btn:hover { background:var(--surface-2); }
 
 @keyframes gradMove {
   0%{background-position:0% 50%}
@@ -153,6 +200,10 @@ body[data-theme="wyb"] .theme-btn:hover { transform:scale(1.15); border-color:wh
 body[data-theme="wyb"] .theme-btn.active {
   border-color:white; box-shadow:0 0 0 3px rgba(255,255,255,0.5); transform:scale(1.1);
 }
+body[data-theme="wyb"] .btn:hover { box-shadow:0 6px 18px rgba(245,87,108,0.4); }
+body[data-theme="wyb"] .todo-item:hover {
+  background:rgba(255,240,248,0.9); border-color:rgba(245,87,108,0.2);
+}
 
 @media (min-width:900px) {
   body[data-theme]:not([data-theme="wyb"]) .top-shell {
@@ -196,7 +247,7 @@ body[data-theme="wyb"] .theme-btn.active {
 }
 .overview-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
 .overview-title { font-size:13px; font-weight:800; color:var(--text); }
-.overview-count { font-size:12px; font-weight:800; color:var(--accent); background:rgba(245,87,108,0.1); padding:3px 8px; border-radius:999px; }
+.overview-count { font-size:12px; font-weight:800; color:var(--accent); background:var(--accent-soft); padding:3px 8px; border-radius:999px; }
 .overview-list { display:flex; flex-direction:column; gap:6px; }
 .overview-item { display:flex; align-items:flex-start; gap:8px; min-height:22px; }
 .overview-index {
@@ -268,10 +319,8 @@ body[data-theme="wyb"] .theme-btn.active {
   padding:9px 10px; border-radius:8px; background:rgba(255,255,255,0.75);
   font-size:12px; line-height:1.45; color:#6b7280; word-break:break-word; cursor:pointer;
 }
-.theme-layout-cat .focus-main { background:linear-gradient(145deg,rgba(255,255,255,0.96),rgba(239,234,236,0.92)); }
-.theme-layout-bunny .focus-main { background:linear-gradient(145deg,rgba(255,255,255,0.96),rgba(232,239,234,0.92)); }
+.theme-layout-cat .focus-main { background:linear-gradient(145deg,#fff,var(--accent-soft)); }
 .theme-layout-cat .focus-kicker::before { content:'🐾 '; }
-.theme-layout-bunny .focus-kicker::before { content:'🥕 '; }
 .theme-layout-wyb .daily-overview {
   grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
   gap:8px; margin-bottom:12px;
@@ -352,16 +401,16 @@ body[data-theme="wyb"] .theme-btn.active {
 .input-row { display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; }
 .input-row input, .input-row textarea {
   flex:1; min-width:180px; padding:12px 16px;
-  border:2px solid rgba(245,87,108,0.2); border-radius:14px;
+  border:2px solid var(--theme-border); border-radius:14px;
   font-size:14px; outline:none; transition:border-color 0.2s;
   font-family:inherit; background:rgba(255,255,255,0.6);
 }
 .input-row input:focus, .input-row textarea:focus {
-  border-color:var(--accent); box-shadow:0 0 0 3px rgba(245,87,108,0.1);
+  border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft);
   background:rgba(255,255,255,0.9);
 }
 .input-row select {
-  padding:12px 14px; border:2px solid rgba(245,87,108,0.2); border-radius:14px;
+  padding:12px 14px; border:2px solid var(--theme-border); border-radius:14px;
   font-size:13px; outline:none; cursor:pointer; font-family:inherit;
   background:rgba(255,255,255,0.6);
 }
@@ -372,7 +421,7 @@ body[data-theme="wyb"] .theme-btn.active {
   font-size:14px; font-weight:700; cursor:pointer;
   transition:all 0.2s; white-space:nowrap;
 }
-.btn:hover  { transform:translateY(-2px); box-shadow:0 6px 18px rgba(245,87,108,0.4); }
+.btn:hover  { transform:translateY(-2px); box-shadow:0 6px 18px rgba(31,45,58,0.18); }
 .btn-sm    { padding:8px 16px; font-size:12px; border-radius:10px; }
 .btn-gray  { background:linear-gradient(135deg,#6b7280,#9ca3af); }
 .btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none; }
@@ -392,7 +441,7 @@ body[data-theme="wyb"] .theme-btn.active {
   background:rgba(255,250,252,0.7); border-radius:14px;
   margin-bottom:7px; transition:all 0.2s; border:1.5px solid transparent;
 }
-.todo-item:hover { background:rgba(255,240,248,0.9); border-color:rgba(245,87,108,0.2); }
+.todo-item:hover { background:var(--accent-soft); border-color:var(--theme-border); }
 .todo-item.done  { opacity:0.55; }
 .todo-item.done .todo-text { text-decoration:line-through; color:#aaa; }
 .chkbox {
@@ -550,7 +599,7 @@ body[data-theme="wyb"] .theme-btn.active {
 }
 .chat-input-row { display:flex; align-items:center; gap:7px; }
 .chat-input {
-  flex:1; min-width:0; padding:11px 13px; border:2px solid rgba(245,87,108,0.2);
+  flex:1; min-width:0; padding:11px 13px; border:2px solid var(--theme-border);
   border-radius:14px; font-size:14px; outline:none; font-family:inherit;
   background:rgba(255,255,255,0.6); transition:border-color 0.2s;
 }
@@ -749,13 +798,7 @@ body[data-theme="wyb"] .theme-btn.active {
       <button class="theme-btn active" data-theme="space"   title="深空工作台">🚀</button>
       <button class="theme-btn"        data-theme="dino"    title="远古森林">🦕</button>
       <button class="theme-btn"        data-theme="star"    title="星轨工作台">⭐</button>
-      <button class="theme-btn"        data-theme="giraffe" title="旷野长颈鹿">🦒</button>
-      <button class="theme-btn"        data-theme="zoo"     title="自然观察室">🦁</button>
       <button class="theme-btn"        data-theme="cat"     title="夜猫工作室">🐱</button>
-      <button class="theme-btn"        data-theme="bunny"   title="白兔花园">🐰</button>
-      <button class="theme-btn"        data-theme="penguin" title="极地工作站">🐧</button>
-      <button class="theme-btn"        data-theme="fox"     title="赤狐森林">🦊</button>
-      <button class="theme-btn"        data-theme="ocean"   title="深海工作室">🐙</button>
       <button class="theme-btn"        data-theme="wyb"     title="王一博❤️">🏍️</button>
     </div>
 
@@ -1005,25 +1048,23 @@ const unsubscribers = {};
 
 // ── 主题配置 ──
 const themes = {
-  space:   { name:'深空工作台',  bg:['#080b12','#101827','#172033','#121923','#263447'], accent:'#34778a', accent2:'#806e34', title:'🚀 深空工作台', subtitle:'保持航向，处理今天真正重要的事', icons:['🚀','🛰️','🌙','✨'], statDone:'🚀 今日完成', statPending:'🛸 待办事项', statMemo:'⭐ 备忘数量', tabTodo:'🛸 待办事项', tabMemo:'🌙 快速备忘', tabLog:'🪐 工作日志', tabCal:'🌌 日历', tabSettings:'🔭 设置', btnAdd:'🚀 添加', btnClear:'🛰️ 清除已完成', btnMemo:'🌟 记下', calStar:'🚀' },
-  dino:    { name:'远古森林',    bg:['#132019','#22342a','#35483b','#263029','#4d5848'], accent:'#4f765b', accent2:'#806844', title:'🦕 远古森林', subtitle:'稳稳向前，把复杂的事情逐步完成', icons:['🦕','🌿','🌳','🍃'], statDone:'🥚 今日孵化', statPending:'🦕 待办事项', statMemo:'🌿 备忘叶子', tabTodo:'🦕 待办事项', tabMemo:'🌿 快速备忘', tabLog:'🌳 工作日志', tabCal:'🌴 日历', tabSettings:'🦎 设置', btnAdd:'🦕 添加', btnClear:'🌱 清除已完成', btnMemo:'🌿 记下', calStar:'🦕' },
-  star:    { name:'星轨工作台',  bg:['#10131b','#1b2030','#292a3b','#18202b','#343345'], accent:'#596f93', accent2:'#80682f', title:'⭐ 星轨工作台', subtitle:'让每一次完成都留下清晰轨迹', icons:['⭐','🌙','✨','🪐'], statDone:'⭐ 今日闪耀', statPending:'🌟 待办星星', statMemo:'💫 备忘光芒', tabTodo:'⭐ 待办事项', tabMemo:'✨ 快速备忘', tabLog:'🌟 工作日志', tabCal:'🌠 日历', tabSettings:'🔮 设置', btnAdd:'⭐ 添加', btnClear:'✨ 清除已完成', btnMemo:'🌟 记下', calStar:'⭐' },
-  giraffe: { name:'旷野长颈鹿',  bg:['#292a28','#3d3a34','#5a5145','#353a3d','#6b655b'], accent:'#80672f', accent2:'#596a74', title:'🦒 旷野工作台', subtitle:'抬高视线，也不忽略眼前的一步', icons:['🦒','🌾','🌿','☀️'], statDone:'🌾 今日完成', statPending:'🦒 待办事项', statMemo:'🌿 备忘事项', tabTodo:'🦒 待办事项', tabMemo:'🌾 快速备忘', tabLog:'🌿 工作日志', tabCal:'☀️ 日历', tabSettings:'🦓 设置', btnAdd:'🦒 添加', btnClear:'🌾 清除已完成', btnMemo:'🌿 记下', calStar:'🦒' },
-  zoo:     { name:'自然观察室',  bg:['#20282b','#314047','#3d4b43','#293236','#53615c'], accent:'#875637', accent2:'#4e7377', title:'🦁 自然观察室', subtitle:'保持好奇，也保持今天的工作秩序', icons:['🦁','🦉','🌿','🐾'], statDone:'🦁 今日完成', statPending:'🐼 待办事项', statMemo:'🦉 备忘事项', tabTodo:'🦁 待办事项', tabMemo:'🐼 快速备忘', tabLog:'🐯 工作日志', tabCal:'🦉 日历', tabSettings:'🐻 设置', btnAdd:'🦁 添加', btnClear:'🐼 清除已完成', btnMemo:'🦉 记下', calStar:'🦁' },
-  cat:     { name:'夜猫工作室',  bg:['#222225','#313137','#40363a','#292d31','#51464b'], accent:'#894956', accent2:'#5e6f7c', title:'🐱 夜猫工作室', subtitle:'安静专注，完成手边这一件事', icons:['🐱','🌙','🐾','✨'], statDone:'🐱 今日完成', statPending:'🌙 待办事项', statMemo:'🐾 备忘事项', tabTodo:'🐱 待办事项', tabMemo:'🌙 快速备忘', tabLog:'🐾 工作日志', tabCal:'✨ 日历', tabSettings:'🐈 设置', btnAdd:'🐱 添加', btnClear:'🌙 清除已完成', btnMemo:'🐾 记下', calStar:'🐱' },
-  bunny:   { name:'白兔花园',    bg:['#202c26','#304038','#3d4943','#29332e','#4f5953'], accent:'#567b57', accent2:'#806a4c', title:'🐰 白兔花园', subtitle:'轻一点，也可以把事情做得很扎实', icons:['🐰','🌿','🥕','🌙'], statDone:'🥕 今日完成', statPending:'🐰 待办事项', statMemo:'🌿 备忘事项', tabTodo:'🐰 待办事项', tabMemo:'🥕 快速备忘', tabLog:'🌿 工作日志', tabCal:'🌙 日历', tabSettings:'🐇 设置', btnAdd:'🐰 添加', btnClear:'🥕 清除已完成', btnMemo:'🌿 记下', calStar:'🐰' },
-  penguin: { name:'极地工作站',  bg:['#0c1823','#153047','#23465c','#1a2635','#355a68'], accent:'#32768d', accent2:'#607381', title:'🐧 极地工作站', subtitle:'冷静梳理，清楚完成每一项任务', icons:['🐧','❄️','🧊','🌊'], statDone:'❄️ 今日完成', statPending:'🐧 待办事项', statMemo:'🧊 备忘事项', tabTodo:'🐧 待办事项', tabMemo:'❄️ 快速备忘', tabLog:'🌨️ 工作日志', tabCal:'🧊 日历', tabSettings:'🐧 设置', btnAdd:'🐧 添加', btnClear:'❄️ 清除已完成', btnMemo:'🧊 记下', calStar:'🐧' },
-  fox:     { name:'赤狐森林',    bg:['#241f1b','#393029','#4c382f','#2c322d','#59463a'], accent:'#8d4628', accent2:'#566f52', title:'🦊 赤狐森林', subtitle:'敏锐判断，然后安静地向目标推进', icons:['🦊','🍂','🌲','🌙'], statDone:'🍂 今日完成', statPending:'🦊 待办事项', statMemo:'🌲 备忘事项', tabTodo:'🦊 待办事项', tabMemo:'🍂 快速备忘', tabLog:'🌲 工作日志', tabCal:'🌙 日历', tabSettings:'🦊 设置', btnAdd:'🦊 添加', btnClear:'🍂 清除已完成', btnMemo:'🌲 记下', calStar:'🦊' },
-  ocean:   { name:'深海工作室',  bg:['#07191f','#0b2b34','#12434c','#15313a','#24545a'], accent:'#277a76', accent2:'#5d7883', title:'🐙 深海工作室', subtitle:'降低噪音，把注意力放回重要的事', icons:['🐙','🌊','🐚','🐟'], statDone:'🐚 今日完成', statPending:'🐙 待办事项', statMemo:'🌊 备忘事项', tabTodo:'🐙 待办事项', tabMemo:'🐚 快速备忘', tabLog:'🌊 工作日志', tabCal:'🐟 日历', tabSettings:'🐙 设置', btnAdd:'🐙 添加', btnClear:'🐚 清除已完成', btnMemo:'🌊 记下', calStar:'🐙' },
-  wyb:     { name:'王一博❤️',     bg:['#1a1a2e','#16213e','#0f3460','#533483','#e94560'], accent:'#e94560', accent2:'#533483', title:'🏍️ 一博工作台', subtitle:'💫 无所畏惧，乘风破浪，今天也要加油！✨', icons:['⚡','🏍️','🎵','🎤','🌙','💫','🔥','🖤','👑','✨'], statDone:'⚡ 今日完成', statPending:'🔥 待办事项', statMemo:'🌙 备忘事项', tabTodo:'🔥 待办事项', tabMemo:'🌙 快速备忘', tabLog:'⚡ 工作日志', tabCal:'🌙 日历', tabSettings:'👑 设置', btnAdd:'⚡ 添加', btnClear:'🖤 清除已完成', btnMemo:'🌙 记下', calStar:'⚡' },
+  space:   { name:'深空工作台', bg:['#f3f8fd','#edf5fc','#e7f1fa','#f8fbfe','#eef6fc'], accent:'#2368ad', accent2:'#1c568f', text:'#172536', muted:'#607185', border:'#ccdeee', surface2:'#e3eef9', accentSoft:'#dbeafb', secondary:'#d07a29', secondarySoft:'#fae8d6', title:'🚀 深空工作台', subtitle:'保持航向，处理今天真正重要的事', icons:['🚀','🛰️','🌙','✨'], statDone:'🚀 今日完成', statPending:'🛸 待办事项', statMemo:'⭐ 备忘数量', tabTodo:'🛸 待办事项', tabMemo:'🌙 快速备忘', tabLog:'🪐 工作日志', tabCal:'🌌 日历', tabSettings:'🔭 设置', btnAdd:'🚀 添加', btnClear:'🛰️ 清除已完成', btnMemo:'🌟 记下', calStar:'🚀' },
+  dino:    { name:'远古森林', bg:['#f4faf8','#edf8f4','#e5f2ed','#f9fcfb','#edf7f3'], accent:'#087a67', accent2:'#066353', text:'#172522', muted:'#61716c', border:'#cfe2dc', surface2:'#e4f1ed', accentSoft:'#d8eee7', secondary:'#c35f35', secondarySoft:'#f7e2d8', title:'🦕 远古森林', subtitle:'稳稳向前，把复杂的事情逐步完成', icons:['🦕','🌿','🌳','🍃'], statDone:'🥚 今日孵化', statPending:'🦕 待办事项', statMemo:'🌿 备忘叶子', tabTodo:'🦕 待办事项', tabMemo:'🌿 快速备忘', tabLog:'🌳 工作日志', tabCal:'🌴 日历', tabSettings:'🦎 设置', btnAdd:'🦕 添加', btnClear:'🌱 清除已完成', btnMemo:'🌿 记下', calStar:'🦕' },
+  star:    { name:'星轨工作台', bg:['#f5f7fd','#eef2fb','#e7edf9','#fafbfe','#f0f3fb'], accent:'#3d5fa9', accent2:'#304c8b', text:'#1c2638', muted:'#667087', border:'#d2daed', surface2:'#e7ecf7', accentSoft:'#dfe6f7', secondary:'#b8801f', secondarySoft:'#f7ecd2', title:'⭐ 星轨工作台', subtitle:'让每一次完成都留下清晰轨迹', icons:['⭐','🌙','✨','🪐'], statDone:'⭐ 今日闪耀', statPending:'🌟 待办星星', statMemo:'💫 备忘光芒', tabTodo:'⭐ 待办事项', tabMemo:'✨ 快速备忘', tabLog:'🌟 工作日志', tabCal:'🌠 日历', tabSettings:'🔮 设置', btnAdd:'⭐ 添加', btnClear:'✨ 清除已完成', btnMemo:'🌟 记下', calStar:'⭐' },
+  cat:     { name:'夜猫工作室', bg:['#fcf6f8','#faf0f3','#f5e8ed','#fefafb','#f9eef2'], accent:'#a63859', accent2:'#862d48', text:'#2b2025', muted:'#75666d', border:'#ead6dd', surface2:'#f4e7eb', accentSoft:'#f4dce4', secondary:'#267c78', secondarySoft:'#d9eeec', title:'🐱 夜猫工作室', subtitle:'安静专注，完成手边这一件事', icons:['🐱','🌙','🐾','✨'], statDone:'🐱 今日完成', statPending:'🌙 待办事项', statMemo:'🐾 备忘事项', tabTodo:'🐱 待办事项', tabMemo:'🌙 快速备忘', tabLog:'🐾 工作日志', tabCal:'✨ 日历', tabSettings:'🐈 设置', btnAdd:'🐱 添加', btnClear:'🌙 清除已完成', btnMemo:'🐾 记下', calStar:'🐱' },
+  wyb:     { name:'王一博❤️', bg:['#1a1a2e','#16213e','#0f3460','#533483','#e94560'], accent:'#e94560', accent2:'#533483', text:'#374151', muted:'#6b7280', border:'rgba(245,87,108,0.2)', surface2:'#f3f4f6', accentSoft:'rgba(245,87,108,0.1)', secondary:'#533483', secondarySoft:'rgba(83,52,131,0.1)', title:'🏍️ 一博工作台', subtitle:'💫 无所畏惧，乘风破浪，今天也要加油！✨', icons:['⚡','🏍️','🎵','🎤','🌙','💫','🔥','🖤','👑','✨'], statDone:'⚡ 今日完成', statPending:'🔥 待办事项', statMemo:'🌙 备忘事项', tabTodo:'🔥 待办事项', tabMemo:'🌙 快速备忘', tabLog:'⚡ 工作日志', tabCal:'🌙 日历', tabSettings:'👑 设置', btnAdd:'⚡ 添加', btnClear:'🖤 清除已完成', btnMemo:'🌙 记下', calStar:'⚡' },
 };
 
 const themeLayouts = {
   space:'achievement', star:'achievement',
-  cat:'focus', bunny:'focus',
+  cat:'focus',
   wyb:'support',
-  dino:'standard', giraffe:'standard', zoo:'standard',
-  penguin:'standard', fox:'standard', ocean:'standard'
+  dino:'standard'
+};
+
+const themeAliases = {
+  giraffe:'dino', zoo:'dino', fox:'dino',
+  bunny:'cat', penguin:'space', ocean:'space'
 };
 
 let currentTheme = 'space';
@@ -1182,7 +1223,7 @@ function initWithIdentity(userId) {
   subscribeChat();
   // 主题应用（优先用 cache，否则用 localStorage 备份）
   const localTheme = localStorage.getItem('wk_theme_' + userId);
-  if (localTheme && themes[localTheme]) applyTheme(localTheme, false);
+  if (localTheme && (themes[localTheme] || themeAliases[localTheme])) applyTheme(localTheme, false);
   else makeBubbles();
   initSettings();
   checkReminderOnLoad();
@@ -1246,6 +1287,7 @@ function refreshAll() {
 
 // ── 主题 ──
 async function applyTheme(themeName, save = true) {
+  themeName = themeAliases[themeName] || themeName;
   const t = themes[themeName];
   if (!t) return;
   currentTheme = themeName;
@@ -1256,7 +1298,6 @@ async function applyTheme(themeName, save = true) {
   document.body.classList.toggle('theme-layout-star', themeName === 'star');
   document.body.classList.toggle('theme-layout-focus', layout === 'focus');
   document.body.classList.toggle('theme-layout-cat', themeName === 'cat');
-  document.body.classList.toggle('theme-layout-bunny', themeName === 'bunny');
   focusTaskOffset = 0;
   document.documentElement.style.setProperty('--bg1', t.bg[0]);
   document.documentElement.style.setProperty('--bg2', t.bg[1]);
@@ -1265,6 +1306,13 @@ async function applyTheme(themeName, save = true) {
   document.documentElement.style.setProperty('--bg5', t.bg[4]);
   document.documentElement.style.setProperty('--accent',  t.accent);
   document.documentElement.style.setProperty('--accent2', t.accent2);
+  document.documentElement.style.setProperty('--text', t.text || '#374151');
+  document.documentElement.style.setProperty('--muted', t.muted || '#6b7280');
+  document.documentElement.style.setProperty('--theme-border', t.border || '#d7dde1');
+  document.documentElement.style.setProperty('--surface-2', t.surface2 || '#edf1f3');
+  document.documentElement.style.setProperty('--accent-soft', t.accentSoft || 'rgba(15,23,42,0.07)');
+  document.documentElement.style.setProperty('--secondary', t.secondary || t.accent2);
+  document.documentElement.style.setProperty('--secondary-soft', t.secondarySoft || 'rgba(15,23,42,0.07)');
   document.getElementById('mainTitle').textContent    = (isReadonly ? '👀 ' : '') + t.title;
   document.getElementById('mainSubtitle').textContent = isReadonly
     ? `正在查看 ${USERS[viewingUser]} 的工作台` : t.subtitle;
@@ -1360,13 +1408,7 @@ function renderDailyOverview() {
     space: ['今日完成航线', '待办任务舱'],
     dino: ['今日孵化清单', '森林待办'],
     star: ['今日闪耀记录', '待办星轨'],
-    giraffe: ['今日完成视野', '高处待办'],
-    zoo: ['今日完成巡游', '动物园待办'],
     cat: ['今日喵完', '待办喵事'],
-    bunny: ['今日收获', '花园待办'],
-    penguin: ['今日冰面记录', '冰雪待办'],
-    fox: ['今日收获', '森林待办'],
-    ocean: ['今日海浪记录', '海底待办'],
     wyb: ['今日打卡', '待办燃点']
   };
   const copy = overviewCopy[currentTheme] || ['今日完成', '待办事项'];
