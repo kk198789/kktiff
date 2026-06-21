@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
-<title>深空工作台 PWA v1.1 ✨ KK & Tiffany</title>
+<title>深空工作台 PWA v1.2 ✨ KK & Tiffany</title>
 
 <meta name="theme-color" content="#2368ad">
 <meta name="application-name" content="深空工作台">
@@ -1347,16 +1347,41 @@ body {
   body.mobile-subpage-mode .card { display:block; }
 }
 
-/* ── PWA v1.1：移动端专线聊天与底部导航避让 ── */
+/* ── PWA v1.2：专线页进入聊天模式，隐藏底部导航，避免键盘三明治 ── */
 @media (max-width:640px) {
-  #tab-chat.active .chat-wrap {
-    height:clamp(240px, var(--chat-mobile-height, calc(100dvh - 280px)), 620px);
-    max-height:calc(100dvh - 160px);
+  body.mobile-chat-mode {
+    padding-bottom:max(8px, env(safe-area-inset-bottom));
   }
-  #tab-chat.active .chat-compose {
-    padding-bottom:4px;
-    background:rgba(255,255,255,0.72);
+  body.mobile-chat-mode .mobile-bottom-nav,
+  body.mobile-chat-mode .mobile-settings-fab,
+  body.mobile-chat-mode .mobile-quick-overlay,
+  body.mobile-chat-mode .mobile-quick-sheet {
+    display:none !important;
+  }
+  body.mobile-chat-mode .card {
+    padding:10px;
+    border-radius:18px;
+  }
+  body.mobile-chat-mode #tab-chat.active {
+    margin:0;
+    padding:0;
+  }
+  body.mobile-chat-mode #tab-chat.active .chat-wrap {
+    height:var(--chat-mobile-height, calc(100dvh - 190px));
+    min-height:240px;
+    max-height:none;
+  }
+  body.mobile-chat-mode #tab-chat.active .chat-messages {
+    padding-bottom:10px;
+  }
+  body.mobile-chat-mode #tab-chat.active .chat-compose {
+    margin-top:8px;
+    padding:8px 0 0;
+    background:rgba(255,255,255,0.86);
     border-radius:14px;
+  }
+  body.mobile-chat-mode .chat-input-row {
+    gap:7px;
   }
 }
 
@@ -1799,6 +1824,10 @@ body {
             - 修复 iPhone 聊天输入框异常放大<br>
             - 增强王一博聊天滚动条可见性<br>
             - 设置页改为更新日志<br><br>
+            2026-06-21 · PWA v1.2<br>
+            - 修复专线页键盘弹出时底部导航夹在输入框和键盘之间<br>
+            - 专线聊天页进入沉浸模式，隐藏底部导航和设置浮钮<br>
+            - 优化移动端聊天可视高度计算<br><br>
             数据同步：Firebase<br>
             账户：KK & Tiffany
           </p>
@@ -2299,6 +2328,11 @@ function updateLineLabels() {
 function setMobileHomeMode(isHome) {
   document.body.classList.toggle('mobile-subpage-mode', !isHome);
 }
+function setMobileChatMode(isChat) {
+  const active = !!isChat && window.innerWidth <= 640;
+  document.body.classList.toggle('mobile-chat-mode', active);
+  if (!active) document.body.classList.remove('mobile-chat-focused');
+}
 function updateMobileNav(activeName) {
   const map = { chat:'chat', todo:'todo', summary:'summary' };
   const key = activeName === 'home' ? 'home' : (map[activeName] || '');
@@ -2339,6 +2373,7 @@ window.switchTab = function(name) {
     document.body.classList.add('desktop-home-mode');
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.getElementById('tabHome')?.classList.add('active');
+    setMobileChatMode(false);
     updateMobileNav('home');
     renderMobileHome();
     closeEmojiPanel();
@@ -2346,6 +2381,7 @@ window.switchTab = function(name) {
     return;
   }
   setMobileHomeMode(false);
+  setMobileChatMode(name === 'chat');
   document.body.classList.remove('desktop-home-mode');
   if (isReadonly && name === 'settings') return;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -3862,18 +3898,18 @@ function updateChatViewport() {
   if (!wrap) return;
   if (window.innerWidth > 640) {
     wrap.style.removeProperty('--chat-mobile-height');
+    setMobileChatMode(false);
     return;
   }
-  if (!tab?.classList.contains('active')) return;
+  const isChatActive = !!tab?.classList.contains('active');
+  setMobileChatMode(isChatActive);
+  if (!isChatActive) return;
   const viewport = window.visualViewport;
   const viewportHeight = viewport?.height || window.innerHeight;
   const viewportOffset = viewport?.offsetTop || 0;
   const top = wrap.getBoundingClientRect().top - viewportOffset;
-  const bottomNav = document.getElementById('mobileBottomNav');
-  const navHeight = bottomNav && getComputedStyle(bottomNav).display !== 'none'
-    ? bottomNav.getBoundingClientRect().height
-    : 0;
-  const available = Math.min(620, Math.max(240, Math.floor(viewportHeight - Math.max(0, top) - navHeight - 14)));
+  const bottomGap = document.body.classList.contains('mobile-chat-mode') ? 10 : 14;
+  const available = Math.min(720, Math.max(240, Math.floor(viewportHeight - Math.max(0, top) - bottomGap)));
   wrap.style.setProperty('--chat-mobile-height', `${available}px`);
 }
 
@@ -4009,13 +4045,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
     inp.addEventListener('focus', () => {
+      document.body.classList.add('mobile-chat-focused');
       setTimeout(() => {
         updateChatViewport();
         const el = document.getElementById('chatMessages');
         el.scrollTop = el.scrollHeight;
       }, 120);
     });
-    inp.addEventListener('blur', settleChatViewport);
+    inp.addEventListener('blur', () => { document.body.classList.remove('mobile-chat-focused'); settleChatViewport(); });
   }
   buildEmojiPanel();
   if (emojiBtn) {
