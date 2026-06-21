@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
-<title>深空工作台 PWA v1.3 ✨ KK & Tiffany</title>
+<title>深空工作台 PWA v1.4 ✨ KK & Tiffany</title>
 
 <meta name="theme-color" content="#2368ad">
 <meta name="application-name" content="深空工作台">
@@ -1387,7 +1387,7 @@ body {
 
 
 
-/* ── PWA v1.3：专线全屏聊天模式，输入框跟随键盘 ── */
+/* ── PWA v1.4：专线全屏聊天模式，输入框跟随键盘 ── */
 @media (max-width:640px) {
   body.mobile-chat-mode {
     padding:0 !important;
@@ -1471,6 +1471,27 @@ body {
   }
   body.mobile-chat-mode .emoji-panel {
     bottom:calc(100% + 8px) !important;
+  }
+}
+
+
+
+/* ── PWA v1.4：iOS/安卓键盘高度兜底，减少专线输入框上方大空白 ── */
+@media (max-width:640px) {
+  body.mobile-chat-mode.mobile-chat-focused .card {
+    height: var(--chat-focused-height, var(--chat-vvh, 100dvh)) !important;
+  }
+  body.mobile-chat-mode.mobile-chat-focused #tab-chat.active .chat-wrap {
+    height: 100% !important;
+  }
+  body.mobile-chat-mode.mobile-chat-focused .chat-messages {
+    padding-bottom: 12px !important;
+  }
+  body.mobile-chat-mode.mobile-chat-focused .chat-compose {
+    margin-top: 4px !important;
+  }
+  body.mobile-chat-mode .chat-compose {
+    box-shadow: 0 -6px 18px rgba(15,23,42,0.06);
   }
 }
 
@@ -1913,7 +1934,7 @@ body {
             - 修复 iPhone 聊天输入框异常放大<br>
             - 增强王一博聊天滚动条可见性<br>
             - 设置页改为更新日志<br><br>
-            2026-06-21 · PWA v1.3<br>
+            2026-06-21 · PWA v1.4<br>
             - 专线页改为移动端全屏聊天模式<br>
             - 键盘弹出时输入框贴近键盘上方<br>
             - 修复专线页输入区上方大面积空白<br>
@@ -3994,23 +4015,35 @@ function updateChatViewport() {
     wrap.style.removeProperty('--chat-mobile-height');
     document.documentElement.style.removeProperty('--chat-vvh');
     document.documentElement.style.removeProperty('--chat-vvtop');
+    document.documentElement.style.removeProperty('--chat-focused-height');
     setMobileChatMode(false);
     return;
   }
   const isChatActive = !!tab?.classList.contains('active');
   setMobileChatMode(isChatActive);
   const viewport = window.visualViewport;
-  const viewportHeight = viewport?.height || window.innerHeight;
+  const layoutHeight = window.innerHeight || viewport?.height || 640;
+  const viewportHeight = viewport?.height || layoutHeight;
   const viewportOffset = viewport?.offsetTop || 0;
+  const isFocused = document.body.classList.contains('mobile-chat-focused') || document.activeElement?.id === 'chatInput';
   if (isChatActive) {
-    const fixedHeight = Math.max(320, Math.floor(viewportHeight));
-    document.documentElement.style.setProperty('--chat-vvh', `${fixedHeight}px`);
+    // iOS PWA / Safari 在键盘弹出时 visualViewport.height 有时会偏小，
+    // 导致输入框被推到屏幕中上部。这里给专线页一个“键盘模式最低高度”兜底，
+    // 让输入框更接近键盘上方，同时安卓 Edge 仍优先尊重 visualViewport。
+    const baseHeight = Math.max(360, Math.floor(layoutHeight));
+    const focusedMinHeight = Math.floor(baseHeight * 0.66);
+    const activeHeight = isFocused
+      ? Math.min(baseHeight, Math.max(Math.floor(viewportHeight), focusedMinHeight))
+      : baseHeight;
+    document.documentElement.style.setProperty('--chat-vvh', `${baseHeight}px`);
+    document.documentElement.style.setProperty('--chat-focused-height', `${activeHeight}px`);
     document.documentElement.style.setProperty('--chat-vvtop', `${Math.max(0, Math.floor(viewportOffset))}px`);
     wrap.style.setProperty('--chat-mobile-height', '100%');
     return;
   }
   document.documentElement.style.removeProperty('--chat-vvh');
   document.documentElement.style.removeProperty('--chat-vvtop');
+  document.documentElement.style.removeProperty('--chat-focused-height');
   const top = wrap.getBoundingClientRect().top - viewportOffset;
   const available = Math.min(720, Math.max(240, Math.floor(viewportHeight - Math.max(0, top) - 14)));
   wrap.style.setProperty('--chat-mobile-height', `${available}px`);

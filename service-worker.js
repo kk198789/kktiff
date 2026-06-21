@@ -1,4 +1,4 @@
-const CACHE_NAME = 'deep-space-workbench-github-pwa-v1-3';
+const CACHE_NAME = 'deep-space-workbench-github-pwa-v1-4';
 const APP_SHELL = [
   './',
   './index.html',
