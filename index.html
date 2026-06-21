@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
-<title>深空工作台 PWA v1 ✨ KK & Tiffany</title>
+<title>深空工作台 PWA v1.1 ✨ KK & Tiffany</title>
 
 <meta name="theme-color" content="#2368ad">
 <meta name="application-name" content="深空工作台">
@@ -1347,6 +1347,19 @@ body {
   body.mobile-subpage-mode .card { display:block; }
 }
 
+/* ── PWA v1.1：移动端专线聊天与底部导航避让 ── */
+@media (max-width:640px) {
+  #tab-chat.active .chat-wrap {
+    height:clamp(240px, var(--chat-mobile-height, calc(100dvh - 280px)), 620px);
+    max-height:calc(100dvh - 160px);
+  }
+  #tab-chat.active .chat-compose {
+    padding-bottom:4px;
+    background:rgba(255,255,255,0.72);
+    border-radius:14px;
+  }
+}
+
 </style>
 </head>
 <body data-theme="space" class="desktop-home-mode">
@@ -1702,10 +1715,12 @@ body {
         <div class="update-log-panel">
           <h3>更新日志</h3>
           <p>
-            <span class="log-version">2026-06-21 · 6.0 PWA App 化展示版 · GitHub Pages</span><br>
+            <span class="log-version">2026-06-21 · 6.0 PWA App 化展示版 · GitHub Pages v1.1</span><br>
             - 新增 manifest.webmanifest、Service Worker 和 App 图标<br>
             - 支持添加到主屏幕，独立窗口打开时更像手机 App<br>
             - 新增设置页“App 化”安装入口和安装说明<br>
+            - 修复 PWA 脚本被当成页面文字显示的问题<br>
+            - 优化移动端专线聊天高度，避免底部导航遮挡输入区<br>
             - 不改 Firebase、GitHub 和现有数据结构，仅增强展示方式<br><br>
             <span class="log-version">2026-06-21 · Stable v2.1 清理工具版</span><br>
             - 新增“清空旧测试数据（保留快速备忘）”按钮<br>
@@ -1832,7 +1847,90 @@ setTimeout(function() {
 }, 9000);
 </script>
 
-\n<script>\n// ── 6.0 PWA App 化：安装提示与 Service Worker 注册 ──\nlet deferredPwaPrompt = null;\n\nfunction isStandaloneMode() {\n  return window.matchMedia?.('(display-mode: standalone)')?.matches || window.navigator.standalone === true;\n}\n\nfunction setPwaStatus(text) {\n  const el = document.getElementById('pwaStatus');\n  if (el) el.textContent = 'PWA 状态：' + text;\n}\n\nwindow.addEventListener('beforeinstallprompt', event => {\n  event.preventDefault();\n  deferredPwaPrompt = event;\n  setPwaStatus('可以安装到主屏幕');\n  const btn = document.getElementById('installPwaBtn');\n  if (btn) btn.disabled = false;\n});\n\nwindow.installPwa = async function() {\n  if (isStandaloneMode()) {\n    alert('已经是 App 模式打开了。');\n    return;\n  }\n  if (deferredPwaPrompt) {\n    deferredPwaPrompt.prompt();\n    const choice = await deferredPwaPrompt.userChoice.catch(() => null);\n    deferredPwaPrompt = null;\n    setPwaStatus(choice?.outcome === 'accepted' ? '已发送安装请求' : '已取消安装');\n    return;\n  }\n  showPwaHelp();\n};\n\nwindow.showPwaHelp = function() {\n  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);\n  const isSecure = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';\n  const lines = [];\n  if (isIOS) {\n    lines.push('iPhone 安装方式：');\n    lines.push('1. 用 Safari 打开这个页面');\n    lines.push('2. 点底部“分享”按钮');\n    lines.push('3. 选择“添加到主屏幕”');\n    lines.push('4. 名称可设为“深空工作台”');\n  } else {\n    lines.push('Android / 桌面浏览器安装方式：');\n    lines.push('1. 用 Chrome / Edge 打开页面');\n    lines.push('2. 地址栏或菜单中选择“安装应用 / 添加到主屏幕”');\n  }\n  if (!isSecure) {\n    lines.push('');\n    lines.push('提示：当前是局域网 http 地址，可能只能当普通主屏幕快捷方式；完整 PWA 缓存能力建议部署到 HTTPS，或在 Mac 本机用 localhost 测试。');\n  }\n  alert(lines.join('\\n'));\n};\n\n(function registerPwaServiceWorker(){\n  const isSecure = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';\n  if (isStandaloneMode()) setPwaStatus('正在以 App 模式运行');\n  if (!('serviceWorker' in navigator)) {\n    setPwaStatus('当前浏览器不支持 Service Worker');\n    return;\n  }\n  if (!isSecure) {\n    setPwaStatus('当前地址不是 HTTPS / localhost，Service Worker 暂不注册');\n    return;\n  }\n  window.addEventListener('load', () => {\n    navigator.serviceWorker.register('./service-worker.js', { scope: './' })\n      .then(() => setPwaStatus(isStandaloneMode() ? 'App 模式运行中' : 'Service Worker 已注册，可添加到主屏幕'))\n      .catch(err => {\n        console.warn('Service Worker 注册失败', err);\n        setPwaStatus('Service Worker 注册失败，页面仍可正常使用');\n      });\n  });\n})();\n</script>\n
+
+<script>
+// ── 6.0 PWA App 化：安装提示与 Service Worker 注册 ──
+let deferredPwaPrompt = null;
+
+function isStandaloneMode() {
+  return window.matchMedia?.('(display-mode: standalone)')?.matches || window.navigator.standalone === true;
+}
+
+function setPwaStatus(text) {
+  const el = document.getElementById('pwaStatus');
+  if (el) el.textContent = 'PWA 状态：' + text;
+}
+
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  deferredPwaPrompt = event;
+  setPwaStatus('可以安装到主屏幕');
+  const btn = document.getElementById('installPwaBtn');
+  if (btn) btn.disabled = false;
+});
+
+window.installPwa = async function() {
+  if (isStandaloneMode()) {
+    alert('已经是 App 模式打开了。');
+    return;
+  }
+  if (deferredPwaPrompt) {
+    deferredPwaPrompt.prompt();
+    const choice = await deferredPwaPrompt.userChoice.catch(() => null);
+    deferredPwaPrompt = null;
+    setPwaStatus(choice?.outcome === 'accepted' ? '已发送安装请求' : '已取消安装');
+    return;
+  }
+  showPwaHelp();
+};
+
+window.showPwaHelp = function() {
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isSecure = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  const lines = [];
+  if (isIOS) {
+    lines.push('iPhone 安装方式：');
+    lines.push('1. 用 Safari 打开这个页面');
+    lines.push('2. 点底部“分享”按钮');
+    lines.push('3. 选择“添加到主屏幕”');
+    lines.push('4. 名称可设为“深空工作台”');
+  } else {
+    lines.push('Android / 桌面浏览器安装方式：');
+    lines.push('1. 用 Chrome / Edge 打开页面');
+    lines.push('2. 地址栏或菜单中选择“安装应用 / 添加到主屏幕”');
+  }
+  if (!isSecure) {
+    lines.push('');
+    lines.push('提示：当前是局域网 http 地址，可能只能当普通主屏幕快捷方式；完整 PWA 缓存能力建议部署到 HTTPS，或在 Mac 本机用 localhost 测试。');
+  }
+  alert(lines.join('\\n'));
+};
+
+(function registerPwaServiceWorker(){
+  const isSecure = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  if (isStandaloneMode()) setPwaStatus('正在以 App 模式运行');
+  if (!('serviceWorker' in navigator)) {
+    setPwaStatus('当前浏览器不支持 Service Worker');
+    return;
+  }
+  if (!isSecure) {
+    setPwaStatus('当前地址不是 HTTPS / localhost，Service Worker 暂不注册');
+    return;
+  }
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js', { scope: './' })
+      .then(reg => {
+        reg.update?.();
+        setPwaStatus(isStandaloneMode() ? 'App 模式运行中' : 'Service Worker 已注册，可添加到主屏幕');
+      })
+      .catch(err => {
+        console.warn('Service Worker 注册失败', err);
+        setPwaStatus('Service Worker 注册失败，页面仍可正常使用');
+      });
+  });
+})();
+</script>
+
 <!-- Firebase SDK -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
@@ -3771,7 +3869,11 @@ function updateChatViewport() {
   const viewportHeight = viewport?.height || window.innerHeight;
   const viewportOffset = viewport?.offsetTop || 0;
   const top = wrap.getBoundingClientRect().top - viewportOffset;
-  const available = Math.min(620, Math.max(240, Math.floor(viewportHeight - Math.max(0, top) - 10)));
+  const bottomNav = document.getElementById('mobileBottomNav');
+  const navHeight = bottomNav && getComputedStyle(bottomNav).display !== 'none'
+    ? bottomNav.getBoundingClientRect().height
+    : 0;
+  const available = Math.min(620, Math.max(240, Math.floor(viewportHeight - Math.max(0, top) - navHeight - 14)));
   wrap.style.setProperty('--chat-mobile-height', `${available}px`);
 }
 
