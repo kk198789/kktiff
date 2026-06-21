@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
-<title>深空工作台 PWA v1.4 ✨ KK & Tiffany</title>
+<title>深空工作台 PWA v1.5 ✨ KK & Tiffany</title>
 
 <meta name="theme-color" content="#2368ad">
 <meta name="application-name" content="深空工作台">
@@ -1495,6 +1495,173 @@ body {
   }
 }
 
+
+
+/* ── PWA v1.5：专线独立聊天壳（真正脱离工作台卡片布局） ── */
+@media (max-width:640px) {
+  html.mobile-chat-root,
+  html.mobile-chat-root body {
+    height:100% !important;
+    overflow:hidden !important;
+    overscroll-behavior:none !important;
+  }
+  body.mobile-chat-mode {
+    padding:0 !important;
+    margin:0 !important;
+    height:100% !important;
+    min-height:0 !important;
+    overflow:hidden !important;
+    background:#fff !important;
+  }
+  body.mobile-chat-mode .bubbles,
+  body.mobile-chat-mode .top-shell,
+  body.mobile-chat-mode #wyb-strip,
+  body.mobile-chat-mode .readonly-banner,
+  body.mobile-chat-mode .mobile-home,
+  body.mobile-chat-mode .daily-overview,
+  body.mobile-chat-mode .focus-dashboard,
+  body.mobile-chat-mode .tabs,
+  body.mobile-chat-mode .mobile-bottom-nav,
+  body.mobile-chat-mode .mobile-settings-fab,
+  body.mobile-chat-mode .mobile-quick-overlay,
+  body.mobile-chat-mode .mobile-quick-sheet {
+    display:none !important;
+  }
+  body.mobile-chat-mode .wrap {
+    position:fixed !important;
+    inset:0 !important;
+    width:100vw !important;
+    height:100dvh !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:hidden !important;
+    z-index:900 !important;
+  }
+  body.mobile-chat-mode .card {
+    position:fixed !important;
+    inset:0 !important;
+    width:100vw !important;
+    height:100dvh !important;
+    min-height:0 !important;
+    max-height:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    background:transparent !important;
+    overflow:visible !important;
+    z-index:910 !important;
+  }
+  body.mobile-chat-mode .tab-content:not(#tab-chat) {
+    display:none !important;
+  }
+  body.mobile-chat-mode #tab-chat.active {
+    display:block !important;
+    position:fixed !important;
+    left:0 !important;
+    right:0 !important;
+    top:0 !important;
+    bottom:0 !important;
+    width:100vw !important;
+    height:100dvh !important;
+    margin:0 !important;
+    padding:0 !important;
+    background:#fff !important;
+    overflow:hidden !important;
+    z-index:920 !important;
+  }
+  body.mobile-chat-mode .chat-wrap {
+    display:block !important;
+    position:fixed !important;
+    left:0 !important;
+    right:0 !important;
+    top:0 !important;
+    bottom:0 !important;
+    width:100vw !important;
+    height:100dvh !important;
+    min-height:0 !important;
+    max-height:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:hidden !important;
+    background:#fff !important;
+  }
+  body.mobile-chat-mode .chat-toolbar {
+    position:fixed !important;
+    left:0 !important;
+    right:0 !important;
+    top:0 !important;
+    min-height:52px !important;
+    margin:0 !important;
+    padding:calc(env(safe-area-inset-top) + 10px) 14px 8px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    background:rgba(255,255,255,0.98) !important;
+    border-bottom:1px solid rgba(229,231,235,0.9) !important;
+    z-index:940 !important;
+    -webkit-backdrop-filter:blur(12px);
+    backdrop-filter:blur(12px);
+  }
+  body.mobile-chat-mode .chat-messages {
+    position:fixed !important;
+    left:0 !important;
+    right:0 !important;
+    top:var(--chat-toolbar-bottom, 64px) !important;
+    bottom:calc(var(--chat-keyboard-inset, 0px) + var(--chat-compose-height, 78px) - var(--chat-compose-nudge, 0px)) !important;
+    min-height:0 !important;
+    height:auto !important;
+    max-height:none !important;
+    margin:0 !important;
+    padding:12px 12px 16px !important;
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+    display:flex !important;
+    flex-direction:column !important;
+    gap:8px !important;
+    background:#fff !important;
+    z-index:930 !important;
+    scrollbar-gutter:auto !important;
+  }
+  body.mobile-chat-mode .chat-compose {
+    position:fixed !important;
+    left:0 !important;
+    right:0 !important;
+    bottom:var(--chat-keyboard-inset, 0px) !important;
+    margin:0 !important;
+    padding:8px 10px max(8px, env(safe-area-inset-bottom)) !important;
+    border-top:1px solid rgba(229,231,235,0.95) !important;
+    border-radius:0 !important;
+    background:rgba(255,255,255,0.99) !important;
+    box-shadow:0 -8px 22px rgba(15,23,42,0.08) !important;
+    transform:translateY(var(--chat-compose-nudge, 0px)) !important;
+    z-index:950 !important;
+  }
+  body.mobile-chat-mode .chat-input-row {
+    gap:8px !important;
+    align-items:center !important;
+  }
+  body.mobile-chat-mode .chat-input {
+    font-size:16px !important;
+    min-height:44px !important;
+  }
+  body.mobile-chat-mode .chat-icon-btn,
+  body.mobile-chat-mode .chat-send-btn {
+    width:44px !important;
+    height:44px !important;
+    border-radius:14px !important;
+  }
+  body.mobile-chat-mode .emoji-panel {
+    position:absolute !important;
+    left:10px !important;
+    bottom:calc(100% + 8px) !important;
+    max-width:calc(100vw - 20px) !important;
+    z-index:960 !important;
+  }
+}
+
 </style>
 </head>
 <body data-theme="space" class="desktop-home-mode">
@@ -1934,11 +2101,14 @@ body {
             - 修复 iPhone 聊天输入框异常放大<br>
             - 增强王一博聊天滚动条可见性<br>
             - 设置页改为更新日志<br><br>
+            2026-06-21 · PWA v1.5<br>
+            - 重写专线手机端为独立聊天壳<br>
+            - 输入区根据 visualViewport 实测位置贴近键盘<br>
+            - 删除“猜高度”式补丁，改为测量输入框与键盘边界<br>
+            - Service Worker 缓存升级到 v1.5<br><br>
             2026-06-21 · PWA v1.4<br>
-            - 专线页改为移动端全屏聊天模式<br>
-            - 键盘弹出时输入框贴近键盘上方<br>
-            - 修复专线页输入区上方大面积空白<br>
-            - Service Worker 缓存升级到 v1.3<br><br>
+            - 专线页尝试移动端全屏聊天模式<br>
+            - 修复不彻底，已由 v1.5 独立聊天壳替代<br><br>
             2026-06-21 · PWA v1.2<br>
             - 修复专线页键盘弹出时底部导航夹在输入框和键盘之间<br>
             - 专线聊天页进入沉浸模式，隐藏底部导航和设置浮钮<br>
@@ -2446,7 +2616,11 @@ function setMobileHomeMode(isHome) {
 function setMobileChatMode(isChat) {
   const active = !!isChat && window.innerWidth <= 640;
   document.body.classList.toggle('mobile-chat-mode', active);
-  if (!active) document.body.classList.remove('mobile-chat-focused');
+  document.documentElement.classList.toggle('mobile-chat-root', active);
+  if (!active) {
+    document.body.classList.remove('mobile-chat-focused');
+    ['--chat-keyboard-inset','--chat-compose-nudge','--chat-compose-height','--chat-toolbar-bottom','--chat-vvh','--chat-vvtop','--chat-focused-height'].forEach(k => document.documentElement.style.removeProperty(k));
+  }
 }
 function updateMobileNav(activeName) {
   const map = { chat:'chat', todo:'todo', summary:'summary' };
@@ -4011,42 +4185,61 @@ function updateChatViewport() {
   const tab = document.getElementById('tab-chat');
   const wrap = tab?.querySelector('.chat-wrap');
   if (!wrap) return;
-  if (window.innerWidth > 640) {
+  const isChatActive = !!tab?.classList.contains('active');
+  if (window.innerWidth > 640 || !isChatActive) {
     wrap.style.removeProperty('--chat-mobile-height');
-    document.documentElement.style.removeProperty('--chat-vvh');
-    document.documentElement.style.removeProperty('--chat-vvtop');
-    document.documentElement.style.removeProperty('--chat-focused-height');
     setMobileChatMode(false);
     return;
   }
-  const isChatActive = !!tab?.classList.contains('active');
-  setMobileChatMode(isChatActive);
+
+  setMobileChatMode(true);
+  const root = document.documentElement;
   const viewport = window.visualViewport;
   const layoutHeight = window.innerHeight || viewport?.height || 640;
-  const viewportHeight = viewport?.height || layoutHeight;
-  const viewportOffset = viewport?.offsetTop || 0;
-  const isFocused = document.body.classList.contains('mobile-chat-focused') || document.activeElement?.id === 'chatInput';
-  if (isChatActive) {
-    // iOS PWA / Safari 在键盘弹出时 visualViewport.height 有时会偏小，
-    // 导致输入框被推到屏幕中上部。这里给专线页一个“键盘模式最低高度”兜底，
-    // 让输入框更接近键盘上方，同时安卓 Edge 仍优先尊重 visualViewport。
-    const baseHeight = Math.max(360, Math.floor(layoutHeight));
-    const focusedMinHeight = Math.floor(baseHeight * 0.66);
-    const activeHeight = isFocused
-      ? Math.min(baseHeight, Math.max(Math.floor(viewportHeight), focusedMinHeight))
-      : baseHeight;
-    document.documentElement.style.setProperty('--chat-vvh', `${baseHeight}px`);
-    document.documentElement.style.setProperty('--chat-focused-height', `${activeHeight}px`);
-    document.documentElement.style.setProperty('--chat-vvtop', `${Math.max(0, Math.floor(viewportOffset))}px`);
-    wrap.style.setProperty('--chat-mobile-height', '100%');
-    return;
-  }
-  document.documentElement.style.removeProperty('--chat-vvh');
-  document.documentElement.style.removeProperty('--chat-vvtop');
-  document.documentElement.style.removeProperty('--chat-focused-height');
-  const top = wrap.getBoundingClientRect().top - viewportOffset;
-  const available = Math.min(720, Math.max(240, Math.floor(viewportHeight - Math.max(0, top) - 14)));
-  wrap.style.setProperty('--chat-mobile-height', `${available}px`);
+  const viewportTop = Math.max(0, Math.floor(viewport?.offsetTop || 0));
+  const viewportHeight = Math.floor(viewport?.height || layoutHeight);
+  const viewportBottom = viewportTop + viewportHeight;
+
+  root.style.setProperty('--chat-vvh', `${layoutHeight}px`);
+  root.style.setProperty('--chat-vvtop', `${viewportTop}px`);
+  // 先归零，让浏览器按固定底部摆放；下一帧再根据实际测量微调。
+  root.style.setProperty('--chat-keyboard-inset', '0px');
+  root.style.setProperty('--chat-compose-nudge', '0px');
+
+  requestAnimationFrame(() => {
+    const toolbar = document.querySelector('#tab-chat.active .chat-toolbar');
+    const compose = document.getElementById('chatCompose');
+    const messages = document.getElementById('chatMessages');
+    if (!toolbar || !compose || !messages) return;
+
+    const toolbarBottom = Math.max(52, Math.ceil(toolbar.getBoundingClientRect().bottom));
+    const composeHeight = Math.max(62, Math.ceil(compose.getBoundingClientRect().height));
+    root.style.setProperty('--chat-toolbar-bottom', `${toolbarBottom}px`);
+    root.style.setProperty('--chat-compose-height', `${composeHeight}px`);
+
+    // 核心：不再猜键盘高度，而是测量输入区和 visualViewport 底部的关系。
+    // 1) 如果输入区被键盘盖住：增加 bottom inset，把它抬上来。
+    // 2) 如果输入区离键盘太远：用 translateY 微调下移，消除大空白。
+    const composeRect = compose.getBoundingClientRect();
+    let inset = 0;
+    let nudge = 0;
+    const visibleBottom = viewport ? viewportBottom : layoutHeight;
+    if (composeRect.bottom > visibleBottom - 2) {
+      inset = Math.ceil(composeRect.bottom - visibleBottom + 2);
+    } else if (document.activeElement?.id === 'chatInput' && composeRect.bottom < visibleBottom - 10) {
+      nudge = Math.floor(Math.min(120, visibleBottom - composeRect.bottom - 6));
+    }
+    root.style.setProperty('--chat-keyboard-inset', `${Math.max(0, inset)}px`);
+    root.style.setProperty('--chat-compose-nudge', `${Math.max(0, nudge)}px`);
+
+    // 再测一次最终 compose 高度，确保消息区底部不被输入区压住。
+    const finalComposeHeight = Math.max(62, Math.ceil(compose.getBoundingClientRect().height));
+    root.style.setProperty('--chat-compose-height', `${finalComposeHeight}px`);
+
+    if (messages.scrollHeight - messages.scrollTop - messages.clientHeight < 140) {
+      messages.scrollTop = messages.scrollHeight;
+    }
+  });
 }
 
 function settleChatViewport() {
