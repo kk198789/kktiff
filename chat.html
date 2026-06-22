@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#2368ad">
+<title>💌 专线聊天 · KK & Tiffany</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<style>
+:root {
+  --accent:#2368ad;
+  --accent2:#1c568f;
+  --bg:#eef6fc;
+  --surface:#ffffff;
+  --text:#172536;
+  --muted:#8a98aa;
+  --border:#dbe7f3;
+  --mine:#2368ad;
+  --mine2:#1c568f;
+  --other:#ffffff;
+  --app-vh:100dvh;
+  --app-vtop:0px;
+}
+* { box-sizing:border-box; }
+html, body {
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+  -webkit-text-size-adjust:100%;
+  touch-action:manipulation;
+}
+button, input { font:inherit; }
+button { -webkit-tap-highlight-color:transparent; }
+.chat-app {
+  position:fixed;
+  left:0;
+  right:0;
+  top:var(--app-vtop, 0px);
+  height:var(--app-vh, 100dvh);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  background:linear-gradient(180deg,#ffffff 0%, var(--bg) 48%, #ffffff 100%);
+}
+.chat-header {
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(150,170,190,0.16);
+  z-index:3;
+}
+.header-left { display:flex; align-items:center; gap:9px; min-width:0; }
+.back-btn,
+.icon-btn {
+  border:1px solid rgba(0,0,0,0.08);
+  background:rgba(255,255,255,0.92);
+  color:var(--text);
+  border-radius:14px;
+  min-width:42px;
+  height:42px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 8px 22px rgba(20,50,90,0.08);
+}
+.back-btn { padding:0 12px; font-weight:700; color:var(--accent); }
+.title-wrap { min-width:0; }
+.chat-title { font-size:16px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.chat-subtitle { margin-top:2px; color:var(--muted); font-size:11px; }
+.chat-status { color:var(--muted); font-size:12px; padding:0 2px; }
+.chat-messages {
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:14px 18px 12px;
+  scroll-behavior:smooth;
+}
+.chat-empty { margin:auto; text-align:center; color:#a5b0bd; font-size:14px; line-height:1.7; }
+.bubble-wrap { max-width:78%; display:flex; flex-direction:column; }
+.bubble-wrap.me { align-self:flex-end; align-items:flex-end; }
+.bubble-wrap.them { align-self:flex-start; align-items:flex-start; }
+.chat-name { font-size:11px; color:#a3aebc; margin:0 4px 3px; }
+.bubble {
+  padding:10px 13px;
+  border-radius:17px;
+  line-height:1.45;
+  word-break:break-word;
+  white-space:pre-wrap;
+  box-shadow:0 10px 24px rgba(20,50,90,0.08);
+  font-size:15px;
+}
+.bubble.emoji-only { font-size:30px; line-height:1.1; padding:8px 10px; background:transparent !important; box-shadow:none !important; }
+.me .bubble { color:#fff; background:linear-gradient(135deg,var(--mine),var(--mine2)); border-bottom-right-radius:5px; }
+.them .bubble { background:rgba(255,255,255,0.95); color:var(--text); border:1px solid rgba(0,0,0,0.06); border-bottom-left-radius:5px; }
+.chat-time { font-size:10px; color:#b7bec8; margin:3px 4px 0; }
+.chat-compose {
+  flex:0 0 auto;
+  padding:8px 12px calc(env(safe-area-inset-bottom) + 8px);
+  background:rgba(255,255,255,0.94);
+  border-top:1px solid rgba(150,170,190,0.16);
+  box-shadow:0 -12px 28px rgba(20,50,90,0.06);
+  z-index:4;
+}
+.emoji-panel {
+  display:none;
+  grid-template-columns:repeat(8, 1fr);
+  gap:6px;
+  max-height:178px;
+  overflow:auto;
+  margin:0 0 8px;
+  padding:10px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.96);
+  border:1px solid rgba(0,0,0,0.06);
+  box-shadow:0 10px 24px rgba(20,50,90,0.10);
+}
+.emoji-panel.show { display:grid; }
+.emoji-option {
+  border:0;
+  background:transparent;
+  border-radius:12px;
+  font-size:23px;
+  height:34px;
+}
+.emoji-option:active { background:rgba(0,0,0,0.06); }
+.input-row { display:flex; align-items:center; gap:8px; }
+.input-icon,
+.send-btn {
+  flex:0 0 auto;
+  width:48px;
+  height:48px;
+  border-radius:16px;
+  border:1px solid rgba(0,0,0,0.08);
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  box-shadow:0 8px 20px rgba(20,50,90,0.08);
+}
+.input-icon { color:var(--accent); }
+.send-btn {
+  border:0;
+  color:#fff;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  font-weight:900;
+}
+.chat-input {
+  flex:1 1 auto;
+  min-width:0;
+  height:48px;
+  border-radius:18px;
+  border:2px solid var(--accent);
+  background:rgba(255,255,255,0.96);
+  padding:0 14px;
+  outline:none;
+  font-size:16px;
+  color:var(--text);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,0.3);
+}
+.chat-input::placeholder { color:#b4bbc5; }
+.identity-modal {
+  position:fixed;
+  inset:0;
+  z-index:20;
+  display:none;
+  place-items:center;
+  padding:24px;
+  background:linear-gradient(135deg,rgba(238,246,252,.96),rgba(255,255,255,.96));
+}
+.identity-card {
+  width:min(360px,100%);
+  background:#fff;
+  border-radius:24px;
+  border:1px solid rgba(0,0,0,0.06);
+  box-shadow:0 18px 50px rgba(20,50,90,0.16);
+  padding:22px;
+  text-align:center;
+}
+.identity-card h1 { margin:0 0 8px; font-size:22px; }
+.identity-card p { margin:0 0 18px; color:var(--muted); font-size:14px; line-height:1.6; }
+.identity-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.identity-actions button {
+  border:0;
+  border-radius:16px;
+  padding:13px 10px;
+  color:#fff;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  font-weight:800;
+}
+.toast {
+  position:fixed;
+  left:50%;
+  bottom:calc(env(safe-area-inset-bottom) + 86px);
+  transform:translateX(-50%);
+  background:rgba(20,30,44,0.88);
+  color:#fff;
+  padding:9px 13px;
+  border-radius:999px;
+  font-size:13px;
+  z-index:30;
+  opacity:0;
+  pointer-events:none;
+  transition:.2s ease;
+}
+.toast.show { opacity:1; }
+@media (min-width: 720px) {
+  body { background:#dfeaf5; }
+  .chat-app { left:50%; width:min(720px,100%); transform:translateX(-50%); border-left:1px solid var(--border); border-right:1px solid var(--border); }
+}
+</style>
+</head>
+<body>
+  <main class="chat-app" id="chatApp">
+    <header class="chat-header">
+      <div class="header-left">
+        <button class="back-btn" id="backBtn" type="button">‹ 返回</button>
+        <div class="title-wrap">
+          <div class="chat-title" id="chatTitle">💌 专线</div>
+          <div class="chat-subtitle" id="chatSubtitle">独立聊天页 · v2.0</div>
+        </div>
+      </div>
+      <button class="icon-btn" id="muteBtn" type="button" title="点击静音">🔔</button>
+    </header>
+
+    <section class="chat-messages" id="chatMessages" aria-live="polite">
+      <div class="chat-empty">连接专线中…</div>
+    </section>
+
+    <section class="chat-compose" id="chatCompose">
+      <div class="emoji-panel" id="emojiPanel"></div>
+      <div class="input-row">
+        <button class="input-icon" id="emojiToggleBtn" type="button" title="表情">😊</button>
+        <input class="chat-input" id="chatInput" type="text" placeholder="说点什么..." autocomplete="off" autocorrect="off" autocapitalize="sentences" spellcheck="false" inputmode="text">
+        <button class="send-btn" id="sendBtn" type="button" title="发送">➤</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="identity-modal" id="identityModal">
+    <div class="identity-card">
+      <h1>先确认身份</h1>
+      <p>专线要知道你是谁，才能把消息标成「我」和对方。</p>
+      <div class="identity-actions">
+        <button type="button" data-id="kk">我是 KK</button>
+        <button type="button" data-id="tiffany">我是 Tiffany</button>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getFirestore, collection, addDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCwChifMIU5WH0HFNqXWkQs3Tcx4bxSGho",
+  authDomain: "kk-tiff.firebaseapp.com",
+  projectId: "kk-tiff",
+  storageBucket: "kk-tiff.firebasestorage.app",
+  messagingSenderId: "176147798745",
+  appId: "1:176147798745:web:c93ab8458377c63f43bcc8"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const USERS = { kk:'KK', tiffany:'Tiffany' };
+const LOCAL_IDENTITY_KEY = 'wk_identity';
+const THEMES = {
+  space:{ accent:'#2368ad', accent2:'#1c568f', bg:'#eef6fc', text:'#172536', muted:'#607185', border:'#ccdeee' },
+  dino:{ accent:'#087a67', accent2:'#066353', bg:'#edf8f4', text:'#172522', muted:'#61716c', border:'#cfe2dc' },
+  star:{ accent:'#3d5fa9', accent2:'#304c8b', bg:'#eef2fb', text:'#1c2638', muted:'#667087', border:'#d2daed' },
+  cat:{ accent:'#a63859', accent2:'#862d48', bg:'#faf0f3', text:'#2b2025', muted:'#75666d', border:'#ead6dd' },
+  wyb:{ accent:'#e94560', accent2:'#533483', bg:'#f7edf3', text:'#2b2025', muted:'#6b7280', border:'#ead6dd' }
+};
+const CHAT_EMOJIS = [
+  '😀','😄','😂','🥰','😍','😘','😊','🥳',
+  '😭','🥺','😎','🤔','😴','😤','😡','🤭',
+  '👍','👏','🙌','🙏','💪','🤝','👌','✌️',
+  '❤️','💕','💖','💯','🔥','✨','🎉','🌹',
+  '🐱','🐰','⭐','🌙','🚀','🏍️','🎵','💌'
+];
+
+let myIdentity = localStorage.getItem(LOCAL_IDENTITY_KEY) || null;
+let chatMuted = localStorage.getItem('wk_chat_muted') === 'true';
+let unsubscribe = null;
+let latestTs = 0;
+let firstSnapshot = true;
+
+const $ = id => document.getElementById(id);
+const messagesEl = $('chatMessages');
+const inputEl = $('chatInput');
+const emojiPanel = $('emojiPanel');
+const muteBtn = $('muteBtn');
+
+function esc(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmt(d) { return `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
+function targetId() { return myIdentity === 'kk' ? 'tiffany' : 'kk'; }
+function targetName() { return USERS[targetId()] || 'Tiffany'; }
+function lineLabel() { return `💌 ${targetName()} 专线`; }
+function readKey() { return `wk_chat_read_${myIdentity || 'guest'}`; }
+function unreadKey() { return `wk_chat_unread_${myIdentity || 'guest'}`; }
+function isEmojiOnly(text) {
+  const value = String(text || '').trim();
+  if (!value || value.length > 24) return false;
+  return /^[\p{Extended_Pictographic}\p{Emoji_Presentation}\uFE0F\u200D\s]+$/u.test(value);
+}
+function toast(text) {
+  const el = $('toast');
+  el.textContent = text;
+  el.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => el.classList.remove('show'), 1800);
+}
+function applyTheme() {
+  const key = localStorage.getItem('wk_theme_' + (myIdentity || 'kk')) || 'space';
+  const t = THEMES[key] || THEMES.space;
+  const root = document.documentElement;
+  root.style.setProperty('--accent', t.accent);
+  root.style.setProperty('--accent2', t.accent2);
+  root.style.setProperty('--mine', t.accent);
+  root.style.setProperty('--mine2', t.accent2);
+  root.style.setProperty('--bg', t.bg);
+  root.style.setProperty('--text', t.text);
+  root.style.setProperty('--muted', t.muted);
+  root.style.setProperty('--border', t.border);
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t.accent);
+}
+function updateTitle() {
+  $('chatTitle').textContent = lineLabel();
+  $('chatSubtitle').textContent = `${USERS[myIdentity] || '未选择'} 正在使用 · 独立聊天页 v2.0`;
+}
+function updateMuteBtn() {
+  muteBtn.textContent = chatMuted ? '🔇' : '🔔';
+  muteBtn.title = chatMuted ? '已静音，点击开启' : '点击静音';
+}
+function playBeep() {
+  if (chatMuted) return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    gain.gain.setValueAtTime(0.22, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.14);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.14);
+  } catch(e) {}
+}
+function atBottom() {
+  return messagesEl.scrollHeight - messagesEl.scrollTop - messagesEl.clientHeight < 80;
+}
+function scrollBottom(force = false) {
+  if (force || atBottom()) {
+    requestAnimationFrame(() => { messagesEl.scrollTop = messagesEl.scrollHeight; });
+  }
+}
+function renderMessages(msgs) {
+  const shouldStick = atBottom() || firstSnapshot;
+  if (!msgs.length) {
+    messagesEl.innerHTML = '<div class="chat-empty">还没有消息，说点什么吧 💬</div>';
+    return;
+  }
+  messagesEl.innerHTML = msgs.map(m => {
+    const isMe = m.from === myIdentity;
+    const name = isMe ? '我' : (USERS[m.from] || m.from || '对方');
+    const emojiClass = isEmojiOnly(m.text) ? ' emoji-only' : '';
+    return `<div class="bubble-wrap ${isMe ? 'me' : 'them'}">
+      <div class="chat-name">${esc(name)}</div>
+      <div class="bubble${emojiClass}">${esc(m.text)}</div>
+      <div class="chat-time">${esc(m.time || '')}</div>
+    </div>`;
+  }).join('');
+  if (shouldStick) scrollBottom(true);
+}
+function markRead(ts) {
+  if (!myIdentity) return;
+  localStorage.setItem(readKey(), String(ts || Date.now()));
+  localStorage.setItem(unreadKey(), '0');
+}
+function subscribeChat() {
+  if (unsubscribe || !myIdentity) return;
+  messagesEl.innerHTML = '<div class="chat-empty">连接专线中…</div>';
+  unsubscribe = onSnapshot(collection(db, 'messages'), snap => {
+    const all = [];
+    snap.forEach(d => all.push({ id:d.id, ...d.data() }));
+    all.sort((a,b) => (a.ts || 0) - (b.ts || 0));
+    const recent = all.slice(-120);
+    const previousTs = latestTs;
+    latestTs = all.length ? (all[all.length - 1].ts || 0) : 0;
+    const incoming = !firstSnapshot && all.some(m => m.from !== myIdentity && (m.ts || 0) > previousTs);
+    renderMessages(recent);
+    if (incoming) playBeep();
+    if (latestTs) markRead(latestTs);
+    firstSnapshot = false;
+    $('chatSubtitle').textContent = `${USERS[myIdentity]} 正在使用 · 已连接`;
+    setTimeout(() => applyViewport(true), 40);
+  }, err => {
+    console.error('聊天监听失败', err);
+    $('chatSubtitle').textContent = '连接失败，请检查网络';
+    messagesEl.innerHTML = '<div class="chat-empty">聊天连接失败。<br>先检查网络 / Firebase / GitHub 缓存。</div>';
+    unsubscribe = null;
+  });
+}
+async function sendMessage() {
+  if (!myIdentity) { showIdentityModal(); return; }
+  const text = inputEl.value.trim();
+  if (!text) return;
+  inputEl.value = '';
+  closeEmojiPanel();
+  try {
+    await addDoc(collection(db, 'messages'), {
+      from: myIdentity,
+      text,
+      time: fmt(new Date()),
+      ts: Date.now()
+    });
+    setTimeout(() => scrollBottom(true), 80);
+  } catch(e) {
+    console.error('发送失败', e);
+    inputEl.value = text;
+    toast('发送失败，检查网络');
+  }
+}
+function buildEmojiPanel() {
+  emojiPanel.innerHTML = CHAT_EMOJIS.map(emoji => `<button class="emoji-option" type="button" data-emoji="${emoji}">${emoji}</button>`).join('');
+}
+function closeEmojiPanel() { emojiPanel.classList.remove('show'); applyViewport(true); }
+function toggleEmojiPanel() {
+  emojiPanel.classList.toggle('show');
+  setTimeout(() => { applyViewport(true); scrollBottom(true); }, 30);
+}
+function applyViewport(forceScroll = false) {
+  const vv = window.visualViewport;
+  const height = Math.floor(vv?.height || window.innerHeight || document.documentElement.clientHeight || 640);
+  const top = Math.max(0, Math.floor(vv?.offsetTop || 0));
+  document.documentElement.style.setProperty('--app-vh', `${height}px`);
+  document.documentElement.style.setProperty('--app-vtop', `${top}px`);
+  if (forceScroll) setTimeout(() => scrollBottom(true), 60);
+}
+function showIdentityModal() { $('identityModal').style.display = 'grid'; }
+function hideIdentityModal() { $('identityModal').style.display = 'none'; }
+function chooseIdentity(id) {
+  myIdentity = id;
+  localStorage.setItem(LOCAL_IDENTITY_KEY, id);
+  hideIdentityModal();
+  applyTheme();
+  updateTitle();
+  subscribeChat();
+  setTimeout(() => scrollBottom(true), 120);
+}
+function goBack() {
+  closeEmojiPanel();
+  inputEl.blur();
+  const url = new URL('./index.html', window.location.href);
+  url.searchParams.set('v', '2.0');
+  window.location.href = url.toString();
+}
+
+$('backBtn').addEventListener('click', goBack);
+$('sendBtn').addEventListener('click', sendMessage);
+$('emojiToggleBtn').addEventListener('click', toggleEmojiPanel);
+muteBtn.addEventListener('click', () => {
+  chatMuted = !chatMuted;
+  localStorage.setItem('wk_chat_muted', chatMuted);
+  updateMuteBtn();
+});
+inputEl.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+});
+inputEl.addEventListener('focus', () => {
+  closeEmojiPanel();
+  setTimeout(() => applyViewport(true), 60);
+  setTimeout(() => applyViewport(true), 220);
+});
+inputEl.addEventListener('blur', () => setTimeout(() => applyViewport(false), 120));
+messagesEl.addEventListener('click', () => closeEmojiPanel());
+$('identityModal').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-id]');
+  if (btn) chooseIdentity(btn.dataset.id);
+});
+window.addEventListener('resize', () => applyViewport(false));
+window.addEventListener('orientationchange', () => setTimeout(() => applyViewport(true), 220));
+if (window.visualViewport) {
+  window.visualViewport.addEventListener('resize', () => applyViewport(false));
+  window.visualViewport.addEventListener('scroll', () => applyViewport(false));
+}
+document.body.addEventListener('touchmove', e => {
+  if (!e.target.closest('#chatMessages') && !e.target.closest('#emojiPanel')) e.preventDefault();
+}, { passive:false });
+
+buildEmojiPanel();
+applyViewport(false);
+applyTheme();
+updateMuteBtn();
+if (!myIdentity || !USERS[myIdentity]) {
+  showIdentityModal();
+  $('chatSubtitle').textContent = '请选择身份后进入专线';
+} else {
+  updateTitle();
+  subscribeChat();
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(err => console.warn('SW 注册失败', err));
+  });
+}
+</script>
+</body>
+</html>

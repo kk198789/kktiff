@@ -1,7 +1,8 @@
-const CACHE_NAME = 'deep-space-workbench-github-pwa-v1-5';
+const CACHE_NAME = 'deep-space-workbench-github-pwa-v2-0-split-chat';
 const APP_SHELL = [
   './',
   './index.html',
+  './chat.html',
   './manifest.webmanifest',
   './icons/icon-192.png',
   './icons/icon-512.png'

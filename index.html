@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
-<title>深空工作台 PWA v1.5 ✨ KK & Tiffany</title>
+<title>深空工作台 PWA v2.0 ✨ KK & Tiffany</title>
 
 <meta name="theme-color" content="#2368ad">
 <meta name="application-name" content="深空工作台">
@@ -1497,7 +1497,7 @@ body {
 
 
 
-/* ── PWA v1.5：专线独立聊天壳（真正脱离工作台卡片布局） ── */
+/* ── PWA v2.0：专线独立聊天壳（真正脱离工作台卡片布局） ── */
 @media (max-width:640px) {
   html.mobile-chat-root,
   html.mobile-chat-root body {
@@ -1791,7 +1791,7 @@ body {
     <button class="tab" data-mobile="待办"        onclick="switchTab('todo')"     id="tabTodo">✅ 待办管理</button>
     <button class="tab" data-mobile="备忘"        onclick="switchTab('memo')"     id="tabMemo">🌙 备忘记录</button>
     <button class="tab" data-mobile="总结"        onclick="switchTab('summary')"  id="tabSummary">📊 工作总结</button>
-    <button class="tab" data-mobile="专线"        onclick="switchTab('chat')"     id="tabChat">💌 Tiffany 专线<span class="chat-unread-badge" id="chatUnreadBadge" hidden>0</span></button>
+    <button class="tab" data-mobile="专线"        onclick="openChatPage()"     id="tabChat">💌 Tiffany 专线<span class="chat-unread-badge" id="chatUnreadBadge" hidden>0</span></button>
     <button class="tab" data-mobile="设置"        onclick="switchTab('settings')" id="tabSettings">⚙️ 设置</button>
     <button class="tab legacy-hidden-tab" data-mobile="日志" onclick="switchTab('log')" id="tabLog">🪐 工作日志</button>
     <button class="tab legacy-hidden-tab" data-mobile="日历" onclick="switchTab('cal')" id="tabCal">📅 记录日历</button>
@@ -2101,7 +2101,7 @@ body {
             - 修复 iPhone 聊天输入框异常放大<br>
             - 增强王一博聊天滚动条可见性<br>
             - 设置页改为更新日志<br><br>
-            2026-06-21 · PWA v1.5<br>
+            2026-06-21 · PWA v2.0<br>
             - 重写专线手机端为独立聊天壳<br>
             - 输入区根据 visualViewport 实测位置贴近键盘<br>
             - 删除“猜高度”式补丁，改为测量输入框与键盘边界<br>
@@ -2139,7 +2139,7 @@ body {
   <button class="mobile-nav-btn" type="button" data-mobile-nav="todo" onclick="switchTab('todo')"><span class="ico">✅</span><span>待办</span></button>
   <button class="mobile-nav-plus" type="button" aria-label="快速记录" onclick="toggleMobileQuickMenu()">＋</button>
   <button class="mobile-nav-btn" type="button" data-mobile-nav="summary" onclick="switchTab('summary')"><span class="ico">📊</span><span>总结</span></button>
-  <button class="mobile-nav-btn" type="button" data-mobile-nav="chat" onclick="switchTab('chat')"><span class="ico">💌</span><span id="mobileLineLabel">专线</span><span class="mobile-line-badge" id="mobileChatUnreadBadge" hidden>0</span></button>
+  <button class="mobile-nav-btn" type="button" data-mobile-nav="chat" onclick="openChatPage()"><span class="ico">💌</span><span id="mobileLineLabel">专线</span><span class="mobile-line-badge" id="mobileChatUnreadBadge" hidden>0</span></button>
 </nav>
 <button class="mobile-settings-fab" type="button" onclick="switchTab('settings')" aria-label="设置">⚙️</button>
 
@@ -2598,6 +2598,12 @@ function getLineTargetName() {
 function getLineLabel(short = false) {
   return short ? '专线' : `💌 ${getLineTargetName()} 专线`;
 }
+
+window.openChatPage = function() {
+  const url = new URL('./chat.html', window.location.href);
+  url.searchParams.set('v', '2.0');
+  window.location.href = url.toString();
+};
 function updateLineLabels() {
   const tab = document.getElementById('tabChat');
   if (tab) {
@@ -4403,7 +4409,7 @@ document.addEventListener('DOMContentLoaded', () => {
       settleChatViewport();
     }
   });
-  if (location.hash === '#chat') setTimeout(() => window.switchTab('chat'), 150);
+  if (location.hash === '#chat') setTimeout(() => window.openChatPage(), 150);
 });
 </script>
 </body>

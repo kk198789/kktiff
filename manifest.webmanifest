@@ -1,7 +1,7 @@
 {
-  "name": "深空工作台 · KK & Tiffany",
+  "name": "深空工作台 · 独立专线",
   "short_name": "深空工作台",
-  "description": "日常记录、待办管理、工作总结与 Tiffany 专线。",
+  "description": "日常记录、待办管理、工作总结与独立 Tiffany 专线。",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
