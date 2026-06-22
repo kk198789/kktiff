@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
-<title>深空工作台 PWA v2.0 ✨ KK & Tiffany</title>
+<title>深空工作台 PWA v2.1 ✨ KK & Tiffany</title>
 
 <meta name="theme-color" content="#2368ad">
 <meta name="application-name" content="深空工作台">
@@ -600,6 +600,30 @@ body[data-theme="wyb"] .todo-item:hover {
 .log-text-wrap { flex:1; min-width:0; display:flex; flex-direction:column; gap:5px; }
 .log-detail { display:flex; align-items:center; gap:6px; flex-wrap:wrap; font-size:11px; color:#9ca3af; }
 .log-note { font-size:12px; color:#6b7280; line-height:1.45; background:#f9fafb; border-radius:8px; padding:6px 8px; }
+
+/* ── PWA v2.1：完成记录编辑 / 删除 ── */
+.log-actions { display:flex; align-items:center; gap:4px; margin-left:4px; flex-shrink:0; }
+.log-action-btn {
+  height:26px; padding:0 8px; border:0; border-radius:8px;
+  background:#f3f4f6; color:#6b7280; font-size:11px; font-weight:800;
+  cursor:pointer; transition:all .15s;
+}
+.log-action-btn:hover { background:var(--accent-soft); color:var(--accent); }
+.log-action-btn.danger:hover { background:#fee2e2; color:#dc2626; }
+.mobile-item-actions { display:flex; align-items:center; gap:5px; margin-left:auto; flex-shrink:0; }
+.mobile-mini-action {
+  border:0; border-radius:999px; padding:5px 8px;
+  background:#f3f4f6; color:#6b7280; font-size:11px; font-weight:900;
+  cursor:pointer;
+}
+.mobile-mini-action.danger { color:#dc2626; background:#fef2f2; }
+.summary-log-action { margin-left:6px; border:0; border-radius:999px; padding:2px 7px; font-size:11px; font-weight:800; cursor:pointer; background:#eef2ff; color:#4f46e5; }
+.summary-log-action.danger { background:#fef2f2; color:#dc2626; }
+@media (max-width:640px) {
+  .log-item { gap:7px; }
+  .log-actions { flex-direction:column; gap:3px; }
+  .log-action-btn { height:24px; padding:0 7px; }
+}
 .cal-note { display:block; margin-top:2px; font-size:9px; color:#c4b5fd; opacity:0.9; }
 @media (max-width:640px) {
   .task-fields .date-field, .task-fields select, .task-fields .btn { flex:1 1 100%; max-width:none; }
@@ -2017,7 +2041,11 @@ body {
         <div class="update-log-panel">
           <h3>更新日志</h3>
           <p>
-            <span class="log-version">2026-06-21 · 6.0 PWA App 化展示版 · GitHub Pages v1.1</span><br>
+            <span class="log-version">2026-06-22 · PWA v2.1 完成记录可编辑</span><br>
+            - 补记完成记录支持编辑事项、日期、优先级、分类和完成说明<br>
+            - 今日首页、工作日志、工作总结每日记录中增加编辑入口<br>
+            - 支持删除补记记录；待办完成记录删除时会同步改回未完成<br>
+            - 不改专线 chat.html，继续保留 v2.0 独立聊天页稳定结构<br><br>            <span class="log-version">2026-06-21 · 6.0 PWA App 化展示版 · GitHub Pages v1.1</span><br>
             - 新增 manifest.webmanifest、Service Worker 和 App 图标<br>
             - 支持添加到主屏幕，独立窗口打开时更像手机 App<br>
             - 新增设置页“App 化”安装入口和安装说明<br>
@@ -2761,6 +2789,10 @@ function renderMobileHome() {
     const shownDone = doneToday.slice(0, 3);
     doneList.innerHTML = shownDone.length ? shownDone.map(l => {
       const cat = getCategoryInfo(l.category);
+      const actions = (!isReadonly && l._docId) ? `<div class="mobile-item-actions">
+        <button class="mobile-mini-action" type="button" onclick="event.stopPropagation(); editLog('${l._docId}')">编辑</button>
+        <button class="mobile-mini-action danger" type="button" onclick="event.stopPropagation(); deleteLog('${l._docId}')">删</button>
+      </div>` : '';
       return `<div class="mobile-item">
         <div class="mobile-done-dot">✓</div>
         <div class="mobile-item-body">
@@ -2768,6 +2800,7 @@ function renderMobileHome() {
           <div class="mobile-item-meta"><span class="cat-tag ${cat.cls}">${cat.lbl}</span></div>
           ${l.completeNote ? `<div class="mobile-done-time">${esc(l.completeNote)}</div>` : `<div class="mobile-done-time">${l.time || ''}</div>`}
         </div>
+        ${actions}
       </div>`;
     }).join('') : '<div class="mobile-empty">今天还没有完成记录，先从一件小事开始</div>';
   }
@@ -2822,6 +2855,119 @@ window.mobileQuickLogDone = async function() {
   if (logId && d && !d.logs.some(l => l._docId === logId)) d.logs.push({ ...payload, _docId: logId });
   renderLog(); renderCal(); updateStats();
   alert('已补记完成 ✓');
+};
+
+
+// ── PWA v2.1：完成记录编辑 / 删除 ──
+function refreshAfterLogChange(date) {
+  currentLogDate = date || currentLogDate || localDate();
+  try { summaryCalSelected = date || summaryCalSelected || currentLogDate; } catch(e) {}
+  renderTodos();
+  renderLog();
+  renderCal();
+  updateStats();
+  if (typeof renderWorkSummary === 'function') renderWorkSummary(false);
+}
+
+window.editLog = async function(id) {
+  if (isReadonly) return;
+  const d = get();
+  const l = d.logs.find(x => x._docId === id);
+  if (!l) { alert('没有找到这条完成记录，可能已经同步删除。'); return; }
+
+  const textInput = prompt('修改完成事项：', l.text || '');
+  if (textInput === null) return;
+  const text = textInput.trim();
+  if (!text) { alert('完成事项不能为空'); return; }
+
+  const dateInput = prompt('完成日期（格式：YYYY-MM-DD）：', l.date || localDate());
+  if (dateInput === null) return;
+  const date = dateInput.trim();
+  if (!isValidOptionalDate(date)) { alert('日期格式错误，请使用 YYYY-MM-DD 格式'); return; }
+
+  const priorityInput = prompt('优先级代码：urgent=紧急，important=重要，normal=普通，low=低优', l.priority || 'normal');
+  if (priorityInput === null) return;
+  const priority = priMap[priorityInput] ? priorityInput : 'normal';
+
+  const categoryInput = prompt('分类代码：daily=日常，material=材料，data=数据，meeting=会议，asset=固定资产，system=系统，temp=临时，other=其他', l.category || 'temp');
+  if (categoryInput === null) return;
+  const category = catMap[categoryInput] ? categoryInput : 'other';
+
+  const noteInput = prompt('完成说明（可不填，会进入工作总结素材）：', l.completeNote || '');
+  if (noteInput === null) return;
+  const completeNote = noteInput.trim();
+
+  const { _docId, ...oldData } = l;
+  const updated = {
+    ...oldData,
+    date,
+    text,
+    priority,
+    category,
+    completeNote,
+    time: l.time || fmt(new Date()),
+    updatedAt: Date.now()
+  };
+
+  await cloudSet(userDocRef(myIdentity, 'logs', id), updated);
+  const idx = d.logs.findIndex(x => x._docId === id);
+  if (idx >= 0) d.logs[idx] = { ...updated, _docId:id };
+
+  // 如果这条记录来自“待办完成”，同步回对应待办，避免待办和总结对不上。
+  if (l.todoDocId) {
+    const t = d.todos.find(x => x._docId === l.todoDocId);
+    if (t) {
+      const { _docId: todoId, ...todoData } = t;
+      const updatedTodo = {
+        ...todoData,
+        text,
+        priority,
+        category,
+        doneDate: date,
+        completeNote,
+        updatedAt: Date.now()
+      };
+      await cloudSet(userDocRef(myIdentity, 'todos', l.todoDocId), updatedTodo);
+      const tidx = d.todos.findIndex(x => x._docId === l.todoDocId);
+      if (tidx >= 0) d.todos[tidx] = { ...updatedTodo, _docId:l.todoDocId };
+    }
+  }
+
+  refreshAfterLogChange(date);
+  alert('完成记录已更新 ✓');
+};
+
+window.deleteLog = async function(id) {
+  if (isReadonly) return;
+  const d = get();
+  const l = d.logs.find(x => x._docId === id);
+  if (!l) { alert('没有找到这条完成记录，可能已经同步删除。'); return; }
+
+  if (l.todoDocId) {
+    if (!confirm('这条记录来自一个已完成待办。删除完成记录后，对应待办会改回“未完成”。继续吗？')) return;
+    const t = d.todos.find(x => x._docId === l.todoDocId);
+    if (t) {
+      const { _docId: todoId, ...todoData } = t;
+      const updatedTodo = {
+        ...todoData,
+        done:false,
+        doneTime:null,
+        doneDate:null,
+        completeNote:null,
+        completedAt:null,
+        updatedAt:Date.now()
+      };
+      await cloudSet(userDocRef(myIdentity, 'todos', l.todoDocId), updatedTodo);
+      const tidx = d.todos.findIndex(x => x._docId === l.todoDocId);
+      if (tidx >= 0) d.todos[tidx] = { ...updatedTodo, _docId:l.todoDocId };
+    }
+  } else {
+    if (!confirm('删除这条补记完成记录？')) return;
+  }
+
+  await cloudDelete(userDocRef(myIdentity, 'logs', id));
+  cache[viewingUser].logs = d.logs.filter(x => x._docId !== id);
+  refreshAfterLogChange(l.date || localDate());
 };
 
 
@@ -2969,7 +3115,8 @@ window.renderWorkSummary = function(showAlert = false) {
           ${items.map(l => {
             const cat = getCategoryInfo(l.category);
             const note = l.completeNote ? `<span class="summary-note-inline"> — ${esc(l.completeNote)}</span>` : '';
-            return `<li>${esc(l.text)} <span class="cat-tag ${cat.cls}">${cat.lbl}</span>${note}</li>`;
+            const actions = (!isReadonly && l._docId) ? `<button class="summary-log-action" type="button" onclick="editLog('${l._docId}')">编辑</button><button class="summary-log-action danger" type="button" onclick="deleteLog('${l._docId}')">删</button>` : '';
+            return `<li>${esc(l.text)} <span class="cat-tag ${cat.cls}">${cat.lbl}</span>${note}${actions}</li>`;
           }).join('')}
         </ol>
       </div>`).join('') : '<div class="summary-empty">这个范围内还没有完成记录</div>';
@@ -3556,6 +3703,10 @@ function renderLog() {
       const cat = getCategoryInfo(l.category);
       const due = getDueInfo(l.dueDate, true);
       const note = l.completeNote ? `<div class="log-note">完成说明：${esc(l.completeNote)}</div>` : '';
+      const actions = (!isReadonly && l._docId) ? `<div class="log-actions">
+        <button class="log-action-btn" type="button" onclick="editLog('${l._docId}')">编辑</button>
+        <button class="log-action-btn danger" type="button" onclick="deleteLog('${l._docId}')">删除</button>
+      </div>` : '';
       return `<div class="log-item">
         <span class="log-num">${i+1}.</span>
         <span class="pri-tag ${p.cls}" style="flex-shrink:0">${p.lbl}</span>
@@ -3565,6 +3716,7 @@ function renderLog() {
           ${note}
         </div>
         <span class="log-time">${l.time}</span>
+        ${actions}
       </div>`;
     }).join('');
   }
@@ -3635,10 +3787,11 @@ function renderCalDetail(ds) {
     (logs.length ? logs.map((l,i)=>{
       const cat = getCategoryInfo(l.category);
       const note = l.completeNote ? `<span class="cal-note">${esc(l.completeNote)}</span>` : '';
+      const actions = (!isReadonly && l._docId) ? `<button class="summary-log-action" type="button" onclick="editLog('${l._docId}')">编辑</button>` : '';
       return `<div class="cal-log-item">
         <span class="dot">${t.icons[i%t.icons.length]}</span>
         <span class="txt"><span class="cat-tag ${cat.cls}" style="padding:1px 5px;font-size:8px;margin-right:3px">${cat.lbl}</span>${esc(l.text)}${note}</span>
-        <span class="tm">${l.time}</span>
+        <span class="tm">${l.time}</span>${actions}
       </div>`;
     }).join('')
     : '<div style="font-size:13px;color:#c4b5fd;padding:8px 4px">这天还没有完成的任务 🌱</div>');
