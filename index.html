@@ -2089,7 +2089,7 @@ body {
       <div class="desktop-hero-main">
         <div class="desktop-kicker" id="desktopRolePill">KK@Tiff · v2.7</div>
         <h2 class="desktop-title" id="desktopHomeTitle">深空工作台</h2>
-        <p class="desktop-subtitle" id="desktopHomeSubtitle">电脑版首页增强：左边看任务航线，右边看今日进度；手机端继续保持轻量入口，不挤小屏幕。</p>
+        <p class="desktop-subtitle" id="desktopHomeSubtitle">今日任务、完成记录、备忘与专线入口集中呈现。</p>
         <div class="desktop-hero-actions">
           <button class="desktop-primary-btn" type="button" onclick="openChatPage()" id="desktopLineBtn">💌 Tiffany 专线</button>
           <button class="desktop-secondary-btn" type="button" onclick="switchTab('todo')">✅ 管理待办</button>
@@ -3708,10 +3708,10 @@ function renderDesktopWorkbench() {
   const identityName = USERS[myIdentity] || myIdentity || 'KK@Tiff';
 
   setDesktopText('desktopRolePill', isReadonly ? `👀 正在查看 ${viewerName}` : `🧑‍🚀 ${identityName} · v2.7 desktop`);
-  setDesktopText('desktopHomeTitle', currentTheme === 'wyb' ? '一博工作台 · 电脑版' : '深空工作台 · 电脑版');
+  setDesktopText('desktopHomeTitle', currentTheme === 'wyb' ? '一博工作台' : '深空工作台');
   setDesktopText('desktopHomeSubtitle', isReadonly
     ? `当前是只读浏览 ${viewerName} 的工作台。你可以查看任务、完成记录和备忘，但不会误改对方数据。`
-    : '电脑屏幕就别再委屈成手机版了：今日任务、完成记录、备忘和专线入口都放在一屏里，真正像个工作台。');
+    : '今日任务、完成记录、备忘与专线入口集中呈现，方便快速查看和继续处理。');
   setDesktopText('desktopLineBtn', getLineLabel(false));
   setDesktopText('desktopShortcutLine', getLineLabel(false));
   setDesktopText('desktopProgressNum', `${progress}%`);
