@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
-<meta name="theme-color" content="#2368ad">
-<title>💌 专线聊天 · KK & Tiffany</title>
+<meta name="theme-color" content="#0f8a73">
+<meta name="application-name" content="KK@Tiff">
+<meta name="apple-mobile-web-app-title" content="KK@Tiff">
+<title>💌 专线聊天 · KK@Tiff</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <style>
@@ -251,7 +253,7 @@ button { -webkit-tap-highlight-color:transparent; }
         <button class="back-btn" id="backBtn" type="button">‹ 返回</button>
         <div class="title-wrap">
           <div class="chat-title" id="chatTitle">💌 专线</div>
-          <div class="chat-subtitle" id="chatSubtitle">独立聊天页 · v2.2</div>
+          <div class="chat-subtitle" id="chatSubtitle">独立聊天页 · v2.3</div>
         </div>
       </div>
       <button class="icon-btn" id="muteBtn" type="button" title="点击静音">🔔</button>
@@ -541,23 +543,13 @@ function goBack() {
 
 $('backBtn').addEventListener('click', goBack);
 $('sendBtn').addEventListener('click', sendMessage);
-let lastEmojiPickAt = 0;
-function handleEmojiPick(e) {
-  const btn = e.target.closest('button[data-emoji]');
-  if (!btn) return;
-  e.preventDefault();
-  e.stopPropagation();
-  const now = Date.now();
-  if (now - lastEmojiPickAt < 240) return;
-  lastEmojiPickAt = now;
-  insertEmoji(btn.dataset.emoji || btn.textContent || '');
-}
 emojiToggleBtn.addEventListener('click', toggleEmojiPanel);
 emojiToggleBtn.addEventListener('touchend', toggleEmojiPanel, { passive:false });
-emojiPanel.addEventListener('click', handleEmojiPick);
-emojiPanel.addEventListener('pointerup', handleEmojiPick);
-emojiPanel.addEventListener('touchend', handleEmojiPick, { passive:false });
-emojiPanel.addEventListener('touchstart', e => e.stopPropagation(), { passive:true });
+emojiPanel.addEventListener('click', e => {
+  e.stopPropagation();
+  const btn = e.target.closest('button[data-emoji]');
+  if (btn) insertEmoji(btn.dataset.emoji || btn.textContent || '');
+});
 emojiPanel.addEventListener('touchmove', e => e.stopPropagation(), { passive:false });
 muteBtn.addEventListener('click', () => {
   chatMuted = !chatMuted;
