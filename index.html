@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
-<title>深空工作台 PWA v2.7 电脑版增强 ✨ KK@Tiff</title>
+<title>深空工作台 PWA v2.8 自动化准备版 ✨ KK@Tiff</title>
 
 <meta name="theme-color" content="#2368ad">
 <meta name="application-name" content="KK@Tiff">
@@ -1687,350 +1687,126 @@ body {
 }
 
 
-
-/* ── PWA v2.7：电脑版增强首页，手机版保持 v2.6 结构不变 ── */
-.desktop-workbench { display:none; }
-
-@media (min-width:900px) {
-  body.desktop-home-mode .desktop-workbench {
-    display:block;
-    margin:0 0 18px;
-  }
-  body.desktop-home-mode .daily-overview {
-    display:none !important;
-  }
-  body.desktop-home-mode .tabs {
-    margin-top:10px;
-    margin-bottom:14px;
-    justify-content:center;
-  }
-  body.desktop-home-mode .tab {
-    border-radius:16px;
-    padding:12px 18px;
-  }
-  .desktop-hero {
-    position:relative;
-    overflow:hidden;
-    display:grid;
-    grid-template-columns:minmax(0,1.45fr) minmax(320px,0.8fr);
-    gap:18px;
-    padding:24px;
-    border-radius:26px;
-    background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(236,244,252,0.92));
-    border:1px solid var(--theme-border);
-    box-shadow:0 22px 55px rgba(15,23,42,0.14);
-    -webkit-backdrop-filter:blur(14px);
-    backdrop-filter:blur(14px);
-  }
-  .desktop-hero::before {
-    content:'';
-    position:absolute;
-    width:340px;
-    height:340px;
-    right:-120px;
-    top:-160px;
-    border-radius:50%;
-    background:radial-gradient(circle,rgba(35,104,173,0.18),rgba(35,104,173,0));
-    pointer-events:none;
-  }
-  .desktop-hero-main,
-  .desktop-hero-side { position:relative; z-index:1; min-width:0; }
-  .desktop-kicker {
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    margin-bottom:12px;
-    padding:6px 10px;
-    border-radius:999px;
-    background:var(--accent-soft);
-    color:var(--accent);
-    font-size:12px;
-    font-weight:900;
-  }
-  .desktop-title {
-    font-size:38px;
-    line-height:1.1;
-    color:var(--text);
-    letter-spacing:-0.04em;
-    margin-bottom:10px;
-  }
-  .desktop-subtitle {
-    max-width:660px;
-    color:var(--muted);
-    font-size:15px;
-    line-height:1.8;
-  }
-  .desktop-hero-actions {
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-top:20px;
-  }
-  .desktop-primary-btn,
-  .desktop-secondary-btn {
-    border:0;
-    border-radius:15px;
-    padding:12px 16px;
-    font:inherit;
-    font-size:14px;
-    font-weight:900;
-    cursor:pointer;
-    transition:transform .18s ease, box-shadow .18s ease;
-  }
-  .desktop-primary-btn {
-    color:#fff;
-    background:linear-gradient(135deg,var(--accent),var(--accent2));
-    box-shadow:0 10px 24px rgba(31,45,58,0.16);
-  }
-  .desktop-secondary-btn {
-    color:var(--accent);
-    background:var(--accent-soft);
-    border:1px solid rgba(35,104,173,0.08);
-  }
-  .desktop-primary-btn:hover,
-  .desktop-secondary-btn:hover { transform:translateY(-2px); }
-  .desktop-hero-side {
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-  }
-  .desktop-progress-card {
-    padding:16px;
-    border-radius:20px;
-    background:#fff;
-    border:1px solid var(--theme-border);
-    box-shadow:0 10px 28px rgba(15,23,42,0.08);
-  }
-  .desktop-progress-head {
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:12px;
-    color:var(--text);
-    font-size:13px;
-    font-weight:900;
-    margin-bottom:10px;
-  }
-  .desktop-progress-num {
-    font-size:26px;
-    font-weight:950;
-    color:var(--accent);
-  }
-  .desktop-progress-track {
-    height:10px;
-    border-radius:999px;
-    overflow:hidden;
-    background:var(--surface-2);
-  }
-  .desktop-progress-fill {
-    width:0%;
-    height:100%;
-    border-radius:inherit;
-    background:linear-gradient(90deg,var(--accent),var(--accent2));
-    transition:width .25s ease;
-  }
-  .desktop-today-line {
-    margin-top:10px;
-    color:var(--muted);
-    font-size:12px;
-    line-height:1.6;
-  }
-  .desktop-kpi-grid {
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
-  }
-  .desktop-kpi {
-    padding:13px 10px;
-    border-radius:18px;
-    background:rgba(255,255,255,0.9);
-    border:1px solid var(--theme-border);
-    text-align:center;
-  }
-  .desktop-kpi-num {
-    font-size:25px;
-    font-weight:950;
-    color:var(--accent);
-  }
-  .desktop-kpi-label {
-    margin-top:3px;
-    color:var(--muted);
-    font-size:12px;
-    font-weight:800;
-  }
-  .desktop-grid {
-    display:grid;
-    grid-template-columns:1.08fr 1fr 0.78fr;
-    gap:14px;
-    margin-top:14px;
-  }
-  .desktop-panel {
-    min-width:0;
-    border-radius:22px;
-    padding:16px;
-    background:rgba(255,255,255,0.95);
-    border:1px solid var(--theme-border);
-    box-shadow:0 14px 36px rgba(15,23,42,0.1);
-  }
-  .desktop-panel.wide { grid-column:span 2; }
-  .desktop-panel-head {
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    margin-bottom:12px;
-  }
-  .desktop-panel-title {
-    font-size:15px;
-    font-weight:950;
-    color:var(--text);
-  }
-  .desktop-panel-link {
-    border:0;
-    background:transparent;
-    color:var(--accent);
-    cursor:pointer;
-    font:inherit;
-    font-size:12px;
-    font-weight:900;
-  }
-  .desktop-list {
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-  }
-  .desktop-list-item {
-    display:flex;
-    align-items:flex-start;
-    gap:10px;
-    padding:10px;
-    border-radius:14px;
-    background:#f8fafc;
-    border:1px solid #e5e7eb;
-  }
-  .desktop-list-index {
-    width:24px;
-    height:24px;
-    flex:0 0 24px;
-    border-radius:9px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#fff;
-    background:linear-gradient(135deg,var(--accent),var(--accent2));
-    font-size:12px;
-    font-weight:950;
-  }
-  .desktop-list-body { min-width:0; flex:1; }
-  .desktop-list-title {
-    color:var(--text);
-    font-size:14px;
-    font-weight:850;
-    line-height:1.45;
-    word-break:break-word;
-  }
-  .desktop-list-meta {
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-    margin-top:6px;
-  }
-  .desktop-empty {
-    padding:22px 14px;
-    text-align:center;
-    border-radius:16px;
-    background:#f8fafc;
-    border:1px dashed #d1d5db;
-    color:#9ca3af;
-    font-size:13px;
-    line-height:1.6;
-  }
-  .desktop-memo-item {
-    padding:10px 11px;
-    border-radius:14px;
-    background:var(--accent-soft);
-    color:var(--text);
-    font-size:13px;
-    line-height:1.55;
-    word-break:break-word;
-  }
-  .desktop-memo-time {
-    margin-top:5px;
-    color:var(--muted);
-    font-size:11px;
-  }
-  .desktop-shortcuts {
-    display:grid;
-    grid-template-columns:1fr;
-    gap:9px;
-  }
-  .desktop-shortcut {
-    width:100%;
-    border:1px solid var(--theme-border);
-    border-radius:16px;
-    padding:13px 12px;
-    background:#fff;
-    color:var(--text);
-    cursor:pointer;
-    font:inherit;
-    text-align:left;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    transition:transform .16s ease, border-color .16s ease;
-  }
-  .desktop-shortcut:hover {
-    transform:translateY(-2px);
-    border-color:var(--accent);
-  }
-  .desktop-shortcut strong {
-    display:block;
-    font-size:14px;
-    font-weight:950;
-  }
-  .desktop-shortcut span {
-    display:block;
-    margin-top:3px;
-    color:var(--muted);
-    font-size:12px;
-  }
-  .desktop-shortcut-arrow {
-    color:var(--accent);
-    font-size:18px;
-    font-weight:950;
-  }
-  .theme-layout-wyb .desktop-hero,
-  body[data-theme="wyb"] .desktop-panel,
-  body[data-theme="wyb"] .desktop-progress-card,
-  body[data-theme="wyb"] .desktop-kpi,
-  body[data-theme="wyb"] .desktop-shortcut {
-    border-color:rgba(255,255,255,0.12);
-    background:rgba(12,12,20,0.78);
-  }
-  body[data-theme="wyb"] .desktop-title,
-  body[data-theme="wyb"] .desktop-panel-title,
-  body[data-theme="wyb"] .desktop-list-title,
-  body[data-theme="wyb"] .desktop-shortcut strong,
-  body[data-theme="wyb"] .desktop-progress-head { color:#f9fafb; }
-  body[data-theme="wyb"] .desktop-subtitle,
-  body[data-theme="wyb"] .desktop-today-line,
-  body[data-theme="wyb"] .desktop-kpi-label,
-  body[data-theme="wyb"] .desktop-shortcut span,
-  body[data-theme="wyb"] .desktop-memo-time { color:#cbd5e1; }
-  body[data-theme="wyb"] .desktop-list-item,
-  body[data-theme="wyb"] .desktop-empty { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.12); }
-  body[data-theme="wyb"] .desktop-memo-item { background:rgba(233,69,96,0.16); color:#f8fafc; }
+/* ── PWA v2.8：自动化准备版 - 完成记录表单化 ── */
+.record-modal {
+  position:fixed; inset:0; z-index:980;
+  display:none; align-items:center; justify-content:center;
+  padding:18px;
 }
-
-@media (min-width:900px) and (max-width:1080px) {
-  .desktop-hero { grid-template-columns:1fr; }
-  .desktop-grid { grid-template-columns:1fr 1fr; }
-  .desktop-panel.wide { grid-column:span 2; }
+.record-modal.show { display:flex; }
+.record-modal-backdrop {
+  position:absolute; inset:0;
+  background:rgba(15,23,42,0.38);
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
 }
-
-@media (max-width:899px) {
-  .desktop-workbench { display:none !important; }
+.record-sheet {
+  position:relative; z-index:1;
+  width:min(560px,100%);
+  max-height:min(86vh,760px);
+  overflow:auto;
+  border-radius:24px;
+  background:rgba(255,255,255,0.98);
+  border:1px solid rgba(209,213,219,0.92);
+  box-shadow:0 28px 70px rgba(15,23,42,0.26);
+  padding:18px;
+}
+.record-head {
+  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+  margin-bottom:14px;
+}
+.record-kicker {
+  font-size:12px; font-weight:900; color:var(--accent);
+  letter-spacing:.04em; margin-bottom:4px;
+}
+.record-title {
+  font-size:20px; font-weight:950; color:var(--text); line-height:1.25;
+}
+.record-subtitle {
+  margin-top:5px; font-size:13px; line-height:1.55; color:var(--muted);
+}
+.record-close {
+  width:36px; height:36px; border:0; border-radius:13px;
+  background:#f3f4f6; color:#6b7280; cursor:pointer;
+  font-size:20px; line-height:1; font-weight:900;
+}
+.record-close:hover { background:#fee2e2; color:#dc2626; }
+.record-form { display:flex; flex-direction:column; gap:12px; }
+.record-field { display:flex; flex-direction:column; gap:6px; }
+.record-field label,
+.record-label {
+  font-size:12px; font-weight:900; color:var(--text);
+}
+.record-field input,
+.record-field textarea,
+.record-field select {
+  width:100%; min-width:0;
+  padding:11px 12px;
+  border:2px solid var(--theme-border);
+  border-radius:14px;
+  background:#fff;
+  color:var(--text);
+  font:inherit; font-size:14px;
+  outline:none;
+}
+.record-field textarea { min-height:92px; resize:vertical; line-height:1.65; }
+.record-field input:focus,
+.record-field textarea:focus,
+.record-field select:focus {
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft);
+}
+.record-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.record-meta-card {
+  display:none;
+  padding:10px 12px;
+  border-radius:15px;
+  background:#f8fafc;
+  border:1px solid #e5e7eb;
+  color:var(--muted);
+  font-size:12px; line-height:1.6;
+}
+.record-meta-card.show { display:block; }
+.record-actions {
+  display:flex; justify-content:flex-end; gap:10px;
+  padding-top:4px;
+}
+.record-actions .btn { min-width:96px; }
+.record-hint {
+  padding:9px 11px; border-radius:14px;
+  background:rgba(35,104,173,0.08);
+  color:var(--muted); font-size:12px; line-height:1.6;
+}
+.summary-focus-list { display:flex; flex-direction:column; gap:8px; }
+.summary-focus-item {
+  display:flex; align-items:flex-start; gap:9px;
+  padding:10px 11px;
+  border-radius:13px;
+  background:#f8fafc;
+  border:1px solid #e5e7eb;
+}
+.summary-focus-rank {
+  width:22px; height:22px; flex:0 0 22px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:8px;
+  color:#fff; background:linear-gradient(135deg,var(--accent),var(--accent2));
+  font-size:12px; font-weight:950;
+}
+.summary-focus-body { flex:1; min-width:0; }
+.summary-focus-text { font-size:13px; font-weight:900; color:var(--text); line-height:1.45; word-break:break-word; }
+.summary-focus-meta { display:flex; flex-wrap:wrap; gap:5px; margin-top:6px; }
+.summary-focus-note { margin-top:6px; color:var(--muted); font-size:12px; line-height:1.55; }
+@media (max-width:640px) {
+  .record-modal { align-items:flex-end; padding:0; }
+  .record-sheet {
+    width:100%; max-height:88vh;
+    border-radius:24px 24px 0 0;
+    padding:16px 14px max(16px, env(safe-area-inset-bottom));
+  }
+  .record-title { font-size:18px; }
+  .record-grid { grid-template-columns:1fr; }
+  .record-actions { display:grid; grid-template-columns:1fr 1fr; }
+  .record-actions .btn { width:100%; min-width:0; }
 }
 
 </style>
@@ -2082,83 +1858,6 @@ body {
   </div>
 
   <div class="readonly-banner" id="readonlyBanner">👀 正在浏览对方的数据（只读）</div>
-
-  <!-- PWA v2.7：电脑版增强首页（只在宽屏显示，手机版继续使用 mobile-home） -->
-  <section class="desktop-workbench" id="desktopWorkbench" aria-label="电脑版深空工作台首页">
-    <div class="desktop-hero">
-      <div class="desktop-hero-main">
-        <div class="desktop-kicker" id="desktopRolePill">KK@Tiff · v2.7</div>
-        <h2 class="desktop-title" id="desktopHomeTitle">深空工作台</h2>
-        <p class="desktop-subtitle" id="desktopHomeSubtitle">今日任务、完成记录、备忘与专线入口集中呈现。</p>
-        <div class="desktop-hero-actions">
-          <button class="desktop-primary-btn" type="button" onclick="openChatPage()" id="desktopLineBtn">💌 Tiffany 专线</button>
-          <button class="desktop-secondary-btn" type="button" onclick="switchTab('todo')">✅ 管理待办</button>
-          <button class="desktop-secondary-btn" type="button" onclick="switchTab('summary')">📊 生成总结</button>
-        </div>
-      </div>
-      <aside class="desktop-hero-side">
-        <div class="desktop-progress-card">
-          <div class="desktop-progress-head">
-            <span id="desktopTodayLabel">今日进度</span>
-            <span class="desktop-progress-num" id="desktopProgressNum">0%</span>
-          </div>
-          <div class="desktop-progress-track"><div class="desktop-progress-fill" id="desktopProgressFill"></div></div>
-          <div class="desktop-today-line" id="desktopTodayLine">等待同步今日数据...</div>
-        </div>
-        <div class="desktop-kpi-grid">
-          <div class="desktop-kpi"><div class="desktop-kpi-num" id="desktopPendingNum">0</div><div class="desktop-kpi-label">待办</div></div>
-          <div class="desktop-kpi"><div class="desktop-kpi-num" id="desktopDoneNum">0</div><div class="desktop-kpi-label">今日完成</div></div>
-          <div class="desktop-kpi"><div class="desktop-kpi-num" id="desktopMemoNum">0</div><div class="desktop-kpi-label">备忘</div></div>
-        </div>
-      </aside>
-    </div>
-
-    <div class="desktop-grid">
-      <section class="desktop-panel wide">
-        <div class="desktop-panel-head">
-          <div class="desktop-panel-title">🛰️ 今日任务航线</div>
-          <button class="desktop-panel-link" type="button" onclick="switchTab('todo')">查看全部</button>
-        </div>
-        <div class="desktop-list" id="desktopTodoList"></div>
-      </section>
-
-      <section class="desktop-panel">
-        <div class="desktop-panel-head">
-          <div class="desktop-panel-title">⚡ 快捷入口</div>
-        </div>
-        <div class="desktop-shortcuts">
-          <button class="desktop-shortcut" type="button" onclick="openChatPage()"><div><strong id="desktopShortcutLine">💌 专线</strong><span>打开独立聊天页</span></div><b class="desktop-shortcut-arrow">›</b></button>
-          <button class="desktop-shortcut" type="button" onclick="switchTab('memo')"><div><strong>🌙 备忘记录</strong><span>随手记一条</span></div><b class="desktop-shortcut-arrow">›</b></button>
-          <button class="desktop-shortcut" type="button" onclick="switchTab('settings')"><div><strong>⚙️ 设置与备份</strong><span>PWA / 数据 / 身份</span></div><b class="desktop-shortcut-arrow">›</b></button>
-        </div>
-      </section>
-
-      <section class="desktop-panel">
-        <div class="desktop-panel-head">
-          <div class="desktop-panel-title">✅ 今日完成</div>
-          <button class="desktop-panel-link" type="button" onclick="switchTab('summary')">看总结</button>
-        </div>
-        <div class="desktop-list" id="desktopDoneList"></div>
-      </section>
-
-      <section class="desktop-panel">
-        <div class="desktop-panel-head">
-          <div class="desktop-panel-title">🌙 最近备忘</div>
-          <button class="desktop-panel-link" type="button" onclick="switchTab('memo')">添加</button>
-        </div>
-        <div class="desktop-list" id="desktopMemoList"></div>
-      </section>
-
-      <section class="desktop-panel">
-        <div class="desktop-panel-head">
-          <div class="desktop-panel-title">📊 本周概览</div>
-          <button class="desktop-panel-link" type="button" onclick="switchTab('summary')">生成</button>
-        </div>
-        <div class="desktop-list" id="desktopWeekList"></div>
-      </section>
-    </div>
-  </section>
-
 
   <!-- 手机端今日首页（仅小屏显示） -->
   <div class="mobile-home" id="mobileHome">
@@ -2340,6 +2039,13 @@ body {
           <div class="summary-stat"><div class="summary-stat-num" id="summaryWorkDays">0</div><div class="summary-stat-label">有记录天数</div></div>
           <div class="summary-stat"><div class="summary-stat-num" id="summaryNoteCount">0</div><div class="summary-stat-label">有说明事项</div></div>
         </div>
+        <div class="summary-block" id="summaryFocusBlock">
+          <div class="summary-block-head">
+            <div class="summary-block-title">🎯 重点事项推荐</div>
+            <div class="summary-mini-note">自动挑出适合写进总结的素材</div>
+          </div>
+          <div class="summary-focus-list" id="summaryFocusList"></div>
+        </div>
         <div class="summary-block">
           <div class="summary-block-head">
             <div class="summary-block-title">📅 记录日历</div>
@@ -2465,10 +2171,11 @@ body {
         <div class="update-log-panel">
           <h3>更新日志</h3>
           <p>
-            <span class="log-version">2026-06-23 · PWA v2.7 电脑版增强</span><br>
-            - 新增电脑版宽屏工作台首页：今日任务航线、今日完成、最近备忘、本周概览和快捷入口<br>
-            - 手机版继续沿用 v2.6 的轻量首页、底部导航和独立 chat.html 专线入口<br>
-            - 本次不修改 manifest、service-worker、icons 和 chat.html，降低缓存与专线回归风险<br><br>
+            <span class="log-version">2026-06-23 · PWA v2.8 自动化准备版</span><br>
+            - 完成待办改为页面内表单，支持填写完成日期、分类、优先级和完成说明<br>
+            - 补记完成改为一次性表单，不再连续弹窗<br>
+            - 编辑完成记录改为可视化表单，并同步关联待办<br>
+            - 工作总结新增“重点事项推荐”，自动挑出适合写进总结的素材<br><br>
             <span class="log-version">2026-06-23 · PWA v2.5 入口修复</span><br>
             - 修复 GitHub Pages 根地址误进入 chat.html 的问题，PWA 默认入口明确指向 index.html<br>
             - Service Worker 不再预缓存 ./ 根路径，避免缓存到错误页面<br>
@@ -2584,13 +2291,59 @@ body {
 </div>
 
 
+
+<!-- PWA v2.8：完成 / 补记 / 编辑记录表单 -->
+<div class="record-modal" id="recordModal" aria-hidden="true">
+  <div class="record-modal-backdrop" onclick="closeRecordModal()"></div>
+  <section class="record-sheet" role="dialog" aria-modal="true" aria-labelledby="recordModalTitle">
+    <div class="record-head">
+      <div>
+        <div class="record-kicker" id="recordModalKicker">自动化准备版</div>
+        <div class="record-title" id="recordModalTitle">完成记录</div>
+        <div class="record-subtitle" id="recordModalSubtitle">把完成结果补清楚，后续总结才有材料。</div>
+      </div>
+      <button class="record-close" type="button" onclick="closeRecordModal()" aria-label="关闭">×</button>
+    </div>
+    <form class="record-form" id="recordForm" onsubmit="submitRecordModal(event)">
+      <div class="record-meta-card" id="recordMetaCard"></div>
+      <div class="record-field" id="recordTextField">
+        <label for="recordText" id="recordTextLabel">完成事项</label>
+        <input type="text" id="recordText" autocomplete="off" placeholder="例如：完成固定资产台账核对">
+      </div>
+      <div class="record-grid">
+        <div class="record-field">
+          <label for="recordDate">完成日期</label>
+          <input type="date" id="recordDate">
+        </div>
+        <div class="record-field">
+          <label for="recordPriority">优先级</label>
+          <select id="recordPriority"></select>
+        </div>
+      </div>
+      <div class="record-field">
+        <label for="recordCategory">工作分类</label>
+        <select id="recordCategory"></select>
+      </div>
+      <div class="record-field">
+        <label for="recordNote">完成说明</label>
+        <textarea id="recordNote" placeholder="建议写一句结果：做了什么、处理了什么、留下了什么材料。"></textarea>
+      </div>
+      <div class="record-hint">提示：完成说明会进入“工作总结”和“重点事项推荐”。以后做自动化整理，主要就靠这里的素材。</div>
+      <div class="record-actions">
+        <button class="btn btn-gray" type="button" onclick="closeRecordModal()">取消</button>
+        <button class="btn" type="submit" id="recordSubmitBtn">保存</button>
+      </div>
+    </form>
+  </section>
+</div>
+
 <!-- 5.0：手机端五键导航与记录菜单 -->
 <div class="mobile-quick-overlay" id="mobileQuickOverlay" onclick="closeMobileQuickMenu()"></div>
 <div class="mobile-quick-sheet" id="mobileQuickSheet" aria-hidden="true">
   <div class="mobile-quick-title">快速记录</div>
   <div class="mobile-quick-grid compact">
     <button class="mobile-quick-item primary" type="button" onclick="mobileQuickAddTodo(); closeMobileQuickMenu();"><span class="quick-ico">＋</span>添加待办</button>
-    <button class="mobile-quick-item" type="button" onclick="mobileQuickMemo(); closeMobileQuickMenu();" title="查看或新增备忘"><span class="quick-ico">🌙</span>备忘</button>
+    <button class="mobile-quick-item" type="button" onclick="mobileQuickMemo(); closeMobileQuickMenu();"><span class="quick-ico">🌙</span>备忘</button>
     <button class="mobile-quick-item" type="button" onclick="mobileQuickLogDone(); closeMobileQuickMenu();"><span class="quick-ico">✅</span>补记完成</button>
   </div>
 </div>
@@ -3256,38 +3009,9 @@ window.mobileQuickMemo = function() {
 };
 
 
-window.mobileQuickLogDone = async function() {
+window.mobileQuickLogDone = function() {
   if (isReadonly) return;
-  const text = prompt('补记完成事项：');
-  if (!text || !text.trim()) return;
-  const today = localDate();
-  const dateInput = prompt('完成日期（格式：YYYY-MM-DD）：', today);
-  if (!dateInput) return;
-  if (!isValidOptionalDate(dateInput)) { alert('日期格式错误，请使用 YYYY-MM-DD 格式'); return; }
-  const categoryInput = prompt('分类代码：daily=日常，material=材料，data=数据，meeting=会议，asset=固定资产，system=系统，temp=临时，other=其他', 'temp');
-  const category = catMap[categoryInput] ? categoryInput : 'temp';
-  const noteInput = prompt('完成说明（可不填，会进入工作总结素材）：', '');
-  const completeNote = noteInput === null ? '' : noteInput.trim();
-  const payload = {
-    date: dateInput,
-    time: fmt(new Date()),
-    text: text.trim(),
-    priority: 'normal',
-    category,
-    dueDate: '',
-    taskNote: '',
-    completeNote,
-    todoDocId: null,
-    manual: true,
-    isReminder: false,
-    createdAt: Date.now()
-  };
-  const logId = await cloudAdd(myIdentity, 'logs', payload);
-  currentLogDate = dateInput;
-  const d = get();
-  if (logId && d && !d.logs.some(l => l._docId === logId)) d.logs.push({ ...payload, _docId: logId });
-  renderLog(); renderCal(); updateStats();
-  alert('已补记完成 ✓');
+  window.openManualLogModal();
 };
 
 
@@ -3302,72 +3026,246 @@ function refreshAfterLogChange(date) {
   if (typeof renderWorkSummary === 'function') renderWorkSummary(false);
 }
 
-window.editLog = async function(id) {
-  if (isReadonly) return;
+
+// ── PWA v2.8：完成 / 补记 / 编辑记录统一表单 ──
+let recordModalState = null;
+const recordPriorityOptions = [
+  ['urgent','🔴 紧急'], ['important','🟠 重要'], ['normal','📘 普通'], ['low','🟢 低优']
+];
+const recordCategoryOptions = [
+  ['daily','📌 日常事务'], ['material','📝 材料撰写'], ['data','📊 数据统计'],
+  ['meeting','🤝 会议沟通'], ['asset','📦 固定资产'], ['system','💻 系统维护'],
+  ['temp','⚡ 临时任务'], ['other','🗂️ 其他事项']
+];
+function fillRecordSelects(priority = 'normal', category = 'temp') {
+  const pri = document.getElementById('recordPriority');
+  const cat = document.getElementById('recordCategory');
+  if (pri) {
+    pri.innerHTML = recordPriorityOptions.map(([value,label]) => `<option value="${value}">${label}</option>`).join('');
+    pri.value = priority || 'normal';
+  }
+  if (cat) {
+    cat.innerHTML = recordCategoryOptions.map(([value,label]) => `<option value="${value}">${label}</option>`).join('');
+    cat.value = category || 'temp';
+  }
+}
+function setRecordModalText({ title, subtitle, kicker = 'v2.8 自动化准备版', submit = '保存' }) {
+  const titleEl = document.getElementById('recordModalTitle');
+  const subEl = document.getElementById('recordModalSubtitle');
+  const kickerEl = document.getElementById('recordModalKicker');
+  const submitEl = document.getElementById('recordSubmitBtn');
+  if (titleEl) titleEl.textContent = title;
+  if (subEl) subEl.textContent = subtitle;
+  if (kickerEl) kickerEl.textContent = kicker;
+  if (submitEl) submitEl.textContent = submit;
+}
+function setRecordMeta(html) {
+  const el = document.getElementById('recordMetaCard');
+  if (!el) return;
+  el.innerHTML = html || '';
+  el.classList.toggle('show', !!html);
+}
+function openRecordModal(config) {
+  recordModalState = config;
+  fillRecordSelects(config.priority || 'normal', config.category || 'temp');
+  setRecordModalText(config.copy || {});
+  const modal = document.getElementById('recordModal');
+  const textEl = document.getElementById('recordText');
+  const dateEl = document.getElementById('recordDate');
+  const noteEl = document.getElementById('recordNote');
+  const textLabel = document.getElementById('recordTextLabel');
+  if (textEl) {
+    textEl.value = config.text || '';
+    textEl.readOnly = !!config.textReadonly;
+    textEl.placeholder = config.placeholder || '例如：完成固定资产台账核对';
+  }
+  if (textLabel) textLabel.textContent = config.textLabel || '完成事项';
+  if (dateEl) dateEl.value = config.date || localDate();
+  if (noteEl) noteEl.value = config.note || '';
+  setRecordMeta(config.meta || '');
+  if (modal) {
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
+  }
+  setTimeout(() => {
+    const focusEl = config.textReadonly ? document.getElementById('recordNote') : document.getElementById('recordText');
+    focusEl?.focus();
+  }, 50);
+}
+window.closeRecordModal = function() {
+  const modal = document.getElementById('recordModal');
+  if (modal) {
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden','true');
+  }
+  recordModalState = null;
+};
+window.openCompleteTodoModal = function(todoId) {
   const d = get();
-  const l = d.logs.find(x => x._docId === id);
+  const t = d?.todos?.find(x => x._docId === todoId);
+  if (!t) { alert('没有找到这条待办，可能已经同步更新。'); return; }
+  const cat = getCategoryInfo(t.category);
+  const p = priMap[t.priority] || priMap.normal;
+  const due = getDueInfo(t.dueDate, false);
+  const meta = `<strong>原待办：</strong>${esc(t.text)}<br><strong>当前标签：</strong>${p.lbl} · ${cat.lbl}${due ? ' · ' + due.lbl : ''}`;
+  openRecordModal({
+    mode:'completeTodo', todoId,
+    text:t.text || '', textReadonly:true,
+    date:localDate(), priority:t.priority || 'normal', category:t.category || 'other', note:t.completeNote || '',
+    textLabel:'完成事项', meta,
+    copy:{ title:'完成待办', subtitle:'补一句完成说明，后续周报/月报会更像样。', submit:'确认完成' }
+  });
+};
+window.openManualLogModal = function() {
+  openRecordModal({
+    mode:'manualLog',
+    text:'', textReadonly:false,
+    date:localDate(), priority:'normal', category:'temp', note:'',
+    textLabel:'补记完成事项', placeholder:'例如：补充上报材料、核对数据、处理临时通知',
+    copy:{ title:'补记完成', subtitle:'把临时完成的事情一次性补全，不再连续弹窗。', submit:'保存补记' }
+  });
+};
+window.openEditLogModal = function(id) {
+  const d = get();
+  const l = d?.logs?.find(x => x._docId === id);
   if (!l) { alert('没有找到这条完成记录，可能已经同步删除。'); return; }
-
-  const textInput = prompt('修改完成事项：', l.text || '');
-  if (textInput === null) return;
-  const text = textInput.trim();
+  const linked = l.todoDocId ? '这条记录关联了一个待办，保存后会同步更新对应待办。' : '这是一条补记完成记录。';
+  openRecordModal({
+    mode:'editLog', logId:id,
+    text:l.text || '', textReadonly:false,
+    date:l.date || localDate(), priority:l.priority || 'normal', category:l.category || 'temp', note:l.completeNote || '',
+    textLabel:'完成事项', meta:linked,
+    copy:{ title:'编辑完成记录', subtitle:'修改后的内容会继续用于工作总结和记录日历。', submit:'保存修改' }
+  });
+};
+window.submitRecordModal = async function(event) {
+  event?.preventDefault?.();
+  if (isReadonly || !recordModalState) return;
+  const state = recordModalState;
+  const text = (document.getElementById('recordText')?.value || '').trim();
+  const date = (document.getElementById('recordDate')?.value || '').trim();
+  const priorityRaw = document.getElementById('recordPriority')?.value || 'normal';
+  const categoryRaw = document.getElementById('recordCategory')?.value || 'other';
+  const priority = priMap[priorityRaw] ? priorityRaw : 'normal';
+  const category = catMap[categoryRaw] ? categoryRaw : 'other';
+  const completeNote = (document.getElementById('recordNote')?.value || '').trim();
   if (!text) { alert('完成事项不能为空'); return; }
-
-  const dateInput = prompt('完成日期（格式：YYYY-MM-DD）：', l.date || localDate());
-  if (dateInput === null) return;
-  const date = dateInput.trim();
   if (!isValidOptionalDate(date)) { alert('日期格式错误，请使用 YYYY-MM-DD 格式'); return; }
-
-  const priorityInput = prompt('优先级代码：urgent=紧急，important=重要，normal=普通，low=低优', l.priority || 'normal');
-  if (priorityInput === null) return;
-  const priority = priMap[priorityInput] ? priorityInput : 'normal';
-
-  const categoryInput = prompt('分类代码：daily=日常，material=材料，data=数据，meeting=会议，asset=固定资产，system=系统，temp=临时，other=其他', l.category || 'temp');
-  if (categoryInput === null) return;
-  const category = catMap[categoryInput] ? categoryInput : 'other';
-
-  const noteInput = prompt('完成说明（可不填，会进入工作总结素材）：', l.completeNote || '');
-  if (noteInput === null) return;
-  const completeNote = noteInput.trim();
-
-  const { _docId, ...oldData } = l;
-  const updated = {
-    ...oldData,
-    date,
-    text,
-    priority,
-    category,
-    completeNote,
-    time: l.time || fmt(new Date()),
-    updatedAt: Date.now()
-  };
-
-  await cloudSet(userDocRef(myIdentity, 'logs', id), updated);
-  const idx = d.logs.findIndex(x => x._docId === id);
-  if (idx >= 0) d.logs[idx] = { ...updated, _docId:id };
-
-  // 如果这条记录来自“待办完成”，同步回对应待办，避免待办和总结对不上。
-  if (l.todoDocId) {
-    const t = d.todos.find(x => x._docId === l.todoDocId);
-    if (t) {
-      const { _docId: todoId, ...todoData } = t;
+  const submitBtn = document.getElementById('recordSubmitBtn');
+  if (submitBtn) submitBtn.disabled = true;
+  try {
+    const d = get();
+    if (state.mode === 'completeTodo') {
+      const t = d.todos.find(x => x._docId === state.todoId);
+      if (!t) { alert('没有找到这条待办，可能已经同步更新。'); return; }
+      const doneTime = fmt(new Date());
+      const { _docId, ...tData } = t;
       const updatedTodo = {
-        ...todoData,
+        ...tData,
         text,
         priority,
         category,
-        doneDate: date,
+        dueDate: t.dueDate || '',
+        taskNote: t.taskNote || '',
+        done:true,
+        doneTime,
+        doneDate:date,
         completeNote,
+        completedAt: Date.now(),
         updatedAt: Date.now()
       };
-      await cloudSet(userDocRef(myIdentity, 'todos', l.todoDocId), updatedTodo);
-      const tidx = d.todos.findIndex(x => x._docId === l.todoDocId);
-      if (tidx >= 0) d.todos[tidx] = { ...updatedTodo, _docId:l.todoDocId };
+      await cloudSet(userDocRef(myIdentity,'todos',state.todoId), updatedTodo);
+      const tidx = d.todos.findIndex(x => x._docId === state.todoId);
+      if (tidx >= 0) d.todos[tidx] = { ...updatedTodo, _docId:state.todoId };
+      const logPayload = {
+        date,
+        time:doneTime,
+        text,
+        priority,
+        category,
+        dueDate:t.dueDate || '',
+        taskNote:t.taskNote || '',
+        completeNote,
+        todoDocId:state.todoId,
+        isReminder:false,
+        createdAt:Date.now()
+      };
+      const logId = await cloudAdd(myIdentity, 'logs', logPayload);
+      if (logId && !d.logs.some(l => l._docId === logId)) d.logs.push({ ...logPayload, _docId:logId });
+      refreshAfterLogChange(date);
+      window.closeRecordModal();
+      alert('已完成并写入总结素材 ✓');
+      return;
     }
+    if (state.mode === 'manualLog') {
+      const payload = {
+        date,
+        time: fmt(new Date()),
+        text,
+        priority,
+        category,
+        dueDate: '',
+        taskNote: '',
+        completeNote,
+        todoDocId: null,
+        manual: true,
+        isReminder: false,
+        createdAt: Date.now()
+      };
+      const logId = await cloudAdd(myIdentity, 'logs', payload);
+      if (logId && d && !d.logs.some(l => l._docId === logId)) d.logs.push({ ...payload, _docId: logId });
+      refreshAfterLogChange(date);
+      window.closeRecordModal();
+      alert('已补记完成 ✓');
+      return;
+    }
+    if (state.mode === 'editLog') {
+      const l = d.logs.find(x => x._docId === state.logId);
+      if (!l) { alert('没有找到这条完成记录，可能已经同步删除。'); return; }
+      const { _docId, ...oldData } = l;
+      const updated = {
+        ...oldData,
+        date,
+        text,
+        priority,
+        category,
+        completeNote,
+        time: l.time || fmt(new Date()),
+        updatedAt: Date.now()
+      };
+      await cloudSet(userDocRef(myIdentity, 'logs', state.logId), updated);
+      const idx = d.logs.findIndex(x => x._docId === state.logId);
+      if (idx >= 0) d.logs[idx] = { ...updated, _docId:state.logId };
+      if (l.todoDocId) {
+        const t = d.todos.find(x => x._docId === l.todoDocId);
+        if (t) {
+          const { _docId: todoId, ...todoData } = t;
+          const updatedTodo = {
+            ...todoData,
+            text,
+            priority,
+            category,
+            doneDate: date,
+            completeNote,
+            updatedAt: Date.now()
+          };
+          await cloudSet(userDocRef(myIdentity, 'todos', l.todoDocId), updatedTodo);
+          const tidx = d.todos.findIndex(x => x._docId === l.todoDocId);
+          if (tidx >= 0) d.todos[tidx] = { ...updatedTodo, _docId:l.todoDocId };
+        }
+      }
+      refreshAfterLogChange(date);
+      window.closeRecordModal();
+      alert('完成记录已更新 ✓');
+    }
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
   }
+};
 
-  refreshAfterLogChange(date);
-  alert('完成记录已更新 ✓');
+window.editLog = function(id) {
+  if (isReadonly) return;
+  window.openEditLogModal(id);
 };
 
 window.deleteLog = async function(id) {
@@ -3508,6 +3406,29 @@ function buildSummaryText(range, data) {
   lines.push('总体来看，本阶段工作推进较为有序，能够围绕日常事务、重点任务和临时事项持续跟进落实。后续将继续做好任务记录、过程跟进和结果复盘，提升工作积累和总结效率。');
   return lines.join('\n');
 }
+function getSummaryHighlights(data) {
+  const logs = data?.logs || [];
+  const scored = logs.map(l => {
+    let score = 0;
+    if (l.completeNote) score += 4;
+    if (l.priority === 'urgent') score += 5;
+    if (l.priority === 'important') score += 4;
+    if (['material','data','asset','meeting','system'].includes(l.category)) score += 2;
+    if ((l.text || '').length >= 8) score += 1;
+    return { log:l, score };
+  }).filter(x => x.score > 0);
+  const seen = new Set();
+  return scored
+    .sort((a,b) => b.score - a.score || (b.log.createdAt || 0) - (a.log.createdAt || 0))
+    .filter(x => {
+      const key = `${x.log.date}|${x.log.text}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, 6)
+    .map(x => x.log);
+}
 window.renderWorkSummary = function(showAlert = false) {
   const panel = document.getElementById('tab-summary');
   if (!panel) return;
@@ -3520,6 +3441,7 @@ window.renderWorkSummary = function(showAlert = false) {
   const daysEl = document.getElementById('summaryWorkDays');
   const noteEl = document.getElementById('summaryNoteCount');
   const labelEl = document.getElementById('summaryRangeLabel');
+  const focusList = document.getElementById('summaryFocusList');
   if (!range) {
     if (showAlert) alert('自定义日期范围不正确，请检查开始日期和结束日期。');
     if (textEl) textEl.value = '日期范围不正确，请重新选择。';
@@ -3533,6 +3455,22 @@ window.renderWorkSummary = function(showAlert = false) {
   if (daysEl) daysEl.textContent = days.length;
   if (noteEl) noteEl.textContent = data.logs.filter(l => l.completeNote).length;
   if (labelEl) labelEl.textContent = `${range.label} · ${fmtDate(range.start)} 至 ${fmtDate(range.end)}`;
+  if (focusList) {
+    const highlights = getSummaryHighlights(data);
+    focusList.innerHTML = highlights.length ? highlights.map((l, i) => {
+      const cat = getCategoryInfo(l.category);
+      const p = priMap[l.priority] || priMap.normal;
+      const note = l.completeNote ? `<div class="summary-focus-note">${esc(l.completeNote)}</div>` : '';
+      return `<div class="summary-focus-item">
+        <div class="summary-focus-rank">${i + 1}</div>
+        <div class="summary-focus-body">
+          <div class="summary-focus-text">${esc(l.text)}</div>
+          <div class="summary-focus-meta"><span class="cat-tag ${cat.cls}">${cat.lbl}</span><span class="pri-tag ${p.cls}">${p.lbl}</span><span class="due-tag">${fmtDate(l.date || range.start)}</span></div>
+          ${note}
+        </div>
+      </div>`;
+    }).join('') : '<div class="summary-empty">暂无明显重点事项。建议给重要事项补充完成说明。</div>';
+  }
   if (categoryList) {
     categoryList.innerHTML = categories.length ? categories.map(row => `
       <div class="summary-cat-row">
@@ -3682,113 +3620,6 @@ function renderSummaryCalendar(range = getSummaryRange()) {
 
 
 
-
-
-// ── PWA v2.7：电脑版增强首页渲染（仅更新新增桌面区域，不影响手机 mobile-home） ──
-function setDesktopText(id, value) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = value;
-}
-
-function renderDesktopWorkbench() {
-  const root = document.getElementById('desktopWorkbench');
-  if (!root || !viewingUser) return;
-  const d = get();
-  if (!d) return;
-
-  const today = localDate();
-  const pending = (d.todos || []).filter(t => !t.done).sort(todoSort);
-  const doneToday = (d.logs || [])
-    .filter(l => l.date === today && !l.isReminder)
-    .sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-  const latestMemos = [...(d.memos || [])].sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-  const totalToday = pending.length + doneToday.length;
-  const progress = totalToday ? Math.round(doneToday.length / totalToday * 100) : 100;
-  const viewerName = USERS[viewingUser] || viewingUser;
-  const identityName = USERS[myIdentity] || myIdentity || 'KK@Tiff';
-
-  setDesktopText('desktopRolePill', isReadonly ? `👀 正在查看 ${viewerName}` : `🧑‍🚀 ${identityName} · v2.7 desktop`);
-  setDesktopText('desktopHomeTitle', currentTheme === 'wyb' ? '一博工作台' : '深空工作台');
-  setDesktopText('desktopHomeSubtitle', isReadonly
-    ? `当前是只读浏览 ${viewerName} 的工作台。你可以查看任务、完成记录和备忘，但不会误改对方数据。`
-    : '今日任务、完成记录、备忘与专线入口集中呈现，方便快速查看和继续处理。');
-  setDesktopText('desktopLineBtn', getLineLabel(false));
-  setDesktopText('desktopShortcutLine', getLineLabel(false));
-  setDesktopText('desktopProgressNum', `${progress}%`);
-  const fill = document.getElementById('desktopProgressFill');
-  if (fill) fill.style.width = `${progress}%`;
-  setDesktopText('desktopTodayLabel', `${fmtDate(today)} · 今日进度`);
-  setDesktopText('desktopTodayLine', `今日完成 ${doneToday.length} 项，待办 ${pending.length} 项，备忘 ${latestMemos.length} 条。`);
-  setDesktopText('desktopPendingNum', pending.length);
-  setDesktopText('desktopDoneNum', doneToday.length);
-  setDesktopText('desktopMemoNum', latestMemos.length);
-
-  const todoList = document.getElementById('desktopTodoList');
-  if (todoList) {
-    const shown = pending.slice(0, 6);
-    todoList.innerHTML = shown.length ? shown.map((t, i) => {
-      const p = priMap[t.priority] || priMap.normal;
-      const cat = getCategoryInfo(t.category);
-      const due = getDueInfo(t.dueDate, false);
-      return `<div class="desktop-list-item">
-        <span class="desktop-list-index">${i + 1}</span>
-        <div class="desktop-list-body">
-          <div class="desktop-list-title">${esc(t.text)}</div>
-          <div class="desktop-list-meta"><span class="pri-tag ${p.cls}">${p.lbl}</span><span class="cat-tag ${cat.cls}">${cat.lbl}</span>${due ? `<span class="due-tag ${due.cls}">${due.lbl}</span>` : ''}</div>
-        </div>
-      </div>`;
-    }).join('') : '<div class="desktop-empty">待办清空了。今天可以高贵地喝口水，别急着给自己加班。</div>';
-  }
-
-  const doneList = document.getElementById('desktopDoneList');
-  if (doneList) {
-    const shown = doneToday.slice(0, 5);
-    doneList.innerHTML = shown.length ? shown.map((l, i) => {
-      const cat = getCategoryInfo(l.category);
-      return `<div class="desktop-list-item">
-        <span class="desktop-list-index">${i + 1}</span>
-        <div class="desktop-list-body">
-          <div class="desktop-list-title">${esc(l.text)}</div>
-          <div class="desktop-list-meta"><span class="cat-tag ${cat.cls}">${cat.lbl}</span>${l.time ? `<span class="due-tag">${l.time}</span>` : ''}</div>
-        </div>
-      </div>`;
-    }).join('') : '<div class="desktop-empty">今天还没有完成记录。先从一件最小的事开始，别让工作台空转。</div>';
-  }
-
-  const memoList = document.getElementById('desktopMemoList');
-  if (memoList) {
-    const shown = latestMemos.slice(0, 4);
-    memoList.innerHTML = shown.length ? shown.map(m => `
-      <div class="desktop-memo-item">
-        ${esc(m.text)}
-        <div class="desktop-memo-time">${m.created || ''}</div>
-      </div>`).join('') : '<div class="desktop-empty">还没有备忘。灵感来的时候，先扔这里。</div>';
-  }
-
-  const weekList = document.getElementById('desktopWeekList');
-  if (weekList) {
-    const range = getWeekRange();
-    const weekLogs = (d.logs || []).filter(l => !l.isReminder && l.date && l.date >= range.start && l.date <= range.end);
-    const byCategory = {};
-    weekLogs.forEach(l => {
-      const key = catMap[l.category] ? l.category : 'other';
-      byCategory[key] = (byCategory[key] || 0) + 1;
-    });
-    const rows = Object.entries(byCategory).sort((a,b) => b[1] - a[1]).slice(0, 5);
-    weekList.innerHTML = weekLogs.length ? rows.map(([key, count], i) => {
-      const cat = getCategoryInfo(key);
-      return `<div class="desktop-list-item">
-        <span class="desktop-list-index">${i + 1}</span>
-        <div class="desktop-list-body">
-          <div class="desktop-list-title">${cat.lbl}</div>
-          <div class="desktop-list-meta"><span class="due-tag">本周 ${count} 项</span></div>
-        </div>
-      </div>`;
-    }).join('') : '<div class="desktop-empty">本周暂无完成记录。完成待办后，这里会自动生成分类概览。</div>';
-  }
-}
-
-
 // ── 统计 ──
 function updateStats() {
   const d = get();
@@ -3796,7 +3627,6 @@ function updateStats() {
   if (memoTab) memoTab.textContent = `${themes[currentTheme].tabMemo} · ${d.memos.length}`;
   renderDailyOverview();
   renderMobileHome();
-  renderDesktopWorkbench();
   renderWorkSummary(false);
 }
 
@@ -4017,57 +3847,17 @@ window.toggleTodo = async function(id) {
   const d = get();
   const t = d.todos.find(x => x._docId === id); if (!t) return;
   if (!t.done) {
-    const today     = localDate();
-    const dateInput = prompt('选择完成日期（格式：YYYY-MM-DD）：', today);
-    if (!dateInput) return;
-    if (!isValidOptionalDate(dateInput)) { alert('日期格式错误！请使用 YYYY-MM-DD 格式'); return; }
-    const noteInput = prompt('完成说明（可不填，以后生成工作总结会用到）：', t.completeNote || '');
-    const completeNote = noteInput === null ? '' : noteInput.trim();
-    const doneTime = fmt(new Date());
-    const { _docId, ...tData } = t;
-    await cloudSet(userDocRef(myIdentity,'todos',id), {
-      ...tData,
-      category: t.category || 'other',
-      dueDate: t.dueDate || '',
-      taskNote: t.taskNote || '',
-      done:true,
-      doneTime,
-      doneDate:dateInput,
-      completeNote,
-      completedAt: Date.now(),
-      updatedAt: Date.now()
-    });
-    const logPayload = {
-      date:dateInput,
-      time:doneTime,
-      text:t.text,
-      priority:t.priority || 'normal',
-      category:t.category || 'other',
-      dueDate:t.dueDate || '',
-      taskNote:t.taskNote || '',
-      completeNote,
-      todoDocId:id,
-      isReminder:false,
-      createdAt:Date.now()
-    };
-    const logId = await cloudAdd(myIdentity, 'logs', logPayload);
-    currentLogDate = dateInput;
-    if (logId && !d.logs.some(l => l._docId === logId)) {
-      d.logs.push({ ...logPayload, _docId:logId });
-    }
-    renderLog();
-    renderCal();
-    updateStats();
-  } else {
-    const { _docId, ...tData } = t;
-    await cloudSet(userDocRef(myIdentity,'todos',id), { ...tData, done:false, doneTime:null, doneDate:null, completeNote:null, completedAt:null, updatedAt:Date.now() });
-    const logEntry = d.logs.find(l => l.todoDocId === id && l.date === t.doneDate);
-    if (logEntry?._docId) await cloudDelete(userDocRef(myIdentity,'logs', logEntry._docId));
-    cache[viewingUser].logs = d.logs.filter(l => l._docId !== logEntry?._docId);
-    renderLog();
-    renderCal();
-    updateStats();
+    window.openCompleteTodoModal(id);
+    return;
   }
+  const { _docId, ...tData } = t;
+  await cloudSet(userDocRef(myIdentity,'todos',id), { ...tData, done:false, doneTime:null, doneDate:null, completeNote:null, completedAt:null, updatedAt:Date.now() });
+  const logEntry = d.logs.find(l => l.todoDocId === id && l.date === t.doneDate);
+  if (logEntry?._docId) await cloudDelete(userDocRef(myIdentity,'logs', logEntry._docId));
+  cache[viewingUser].logs = d.logs.filter(l => l._docId !== logEntry?._docId);
+  renderLog();
+  renderCal();
+  updateStats();
 };
 
 window.editTodo = async function(id) {
