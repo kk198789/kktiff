@@ -1,4 +1,4 @@
-const CACHE_NAME = 'deep-space-workbench-github-pwa-v2-1-log-edit';
+const CACHE_NAME = 'deep-space-workbench-github-pwa-v2-2-emoji-fix';
 const APP_SHELL = [
   './',
   './index.html',
