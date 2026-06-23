@@ -253,7 +253,7 @@ button { -webkit-tap-highlight-color:transparent; }
         <button class="back-btn" id="backBtn" type="button">‹ 返回</button>
         <div class="title-wrap">
           <div class="chat-title" id="chatTitle">💌 专线</div>
-          <div class="chat-subtitle" id="chatSubtitle">独立聊天页 · v2.3</div>
+          <div class="chat-subtitle" id="chatSubtitle">独立聊天页 · v2.4</div>
         </div>
       </div>
       <button class="icon-btn" id="muteBtn" type="button" title="点击静音">🔔</button>
@@ -284,6 +284,20 @@ button { -webkit-tap-highlight-color:transparent; }
     </div>
   </div>
   <div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const params = new URLSearchParams(window.location.search);
+  // 如果用户曾经误把 chat.html 添加成桌面图标，打开图标时自动回主工作台。
+  // 从工作台点击“专线”会带 from=workbench，不受影响。
+  if (standalone && !params.has('from') && !params.has('direct')) {
+    const url = new URL('./index.html', window.location.href);
+    url.searchParams.set('v', '2.4-workbench-start');
+    window.location.replace(url.toString());
+  }
+})();
+</script>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
@@ -367,7 +381,7 @@ function applyTheme() {
 }
 function updateTitle() {
   $('chatTitle').textContent = lineLabel();
-  $('chatSubtitle').textContent = `${USERS[myIdentity] || '未选择'} 正在使用 · 独立聊天页 v2.2`;
+  $('chatSubtitle').textContent = `${USERS[myIdentity] || '未选择'} 正在使用 · 独立聊天页 v2.4`;
 }
 function updateMuteBtn() {
   muteBtn.textContent = chatMuted ? '🔇' : '🔔';
@@ -537,7 +551,7 @@ function goBack() {
   closeEmojiPanel();
   inputEl.blur();
   const url = new URL('./index.html', window.location.href);
-  url.searchParams.set('v', '2.2-emoji-fix');
+  url.searchParams.set('v', '2.4-workbench-start');
   window.location.href = url.toString();
 }
 

@@ -2041,7 +2041,7 @@ body {
         <div class="update-log-panel">
           <h3>更新日志</h3>
           <p>
-            <span class="log-version">2026-06-23 · PWA v2.3 专线表情修复</span><br>            - 修复独立 chat.html 中表情按钮/表情面板点击不稳定问题<br>            - 表情面板改为固定浮层，表情点击后可插入输入框<br>            - 不改待办、总结、日志编辑和 Firebase 数据结构<br><br>            <span class="log-version">2026-06-22 · PWA v2.1 完成记录可编辑</span><br>
+            <span class="log-version">2026-06-23 · PWA v2.4 入口固定工作台</span><br>            - PWA 桌面/手机图标默认进入主工作台，不默认进入 chat.html<br>            - 工作台进入专线时自动带 from=workbench，保留独立聊天页稳定结构<br>            - 修正专线返回工作台的版本参数，缓存升级到 v2.4<br><br>            <span class="log-version">2026-06-23 · PWA v2.3 专线表情修复</span><br>            - 修复独立 chat.html 中表情按钮/表情面板点击不稳定问题<br>            - 表情面板改为固定浮层，表情点击后可插入输入框<br>            - 不改待办、总结、日志编辑和 Firebase 数据结构<br><br>            <span class="log-version">2026-06-22 · PWA v2.1 完成记录可编辑</span><br>
             - 补记完成记录支持编辑事项、日期、优先级、分类和完成说明<br>
             - 今日首页、工作日志、工作总结每日记录中增加编辑入口<br>
             - 支持删除补记记录；待办完成记录删除时会同步改回未完成<br>
@@ -2629,7 +2629,8 @@ function getLineLabel(short = false) {
 
 window.openChatPage = function() {
   const url = new URL('./chat.html', window.location.href);
-  url.searchParams.set('v', '2.0');
+  url.searchParams.set('v', '2.4-workbench-start');
+  url.searchParams.set('from', 'workbench');
   window.location.href = url.toString();
 };
 function updateLineLabels() {
