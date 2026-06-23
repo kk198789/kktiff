@@ -1,4 +1,4 @@
-const CACHE_NAME = 'deep-space-workbench-github-pwa-v2-5-root-repair';
+const CACHE_NAME = 'deep-space-workbench-github-pwa-v2-6-root-guard';
 const APP_SHELL = [
   './index.html',
   './chat.html',

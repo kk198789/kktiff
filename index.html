@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
-<title>深空工作台 PWA v2.5 入口修复 ✨ KK@Tiff</title>
+<title>深空工作台 PWA v2.6 根入口自救 ✨ KK@Tiff</title>
 
 <meta name="theme-color" content="#2368ad">
 <meta name="application-name" content="KK@Tiff">
@@ -2633,7 +2633,7 @@ function getLineLabel(short = false) {
 
 window.openChatPage = function() {
   const url = new URL('./chat.html', window.location.href);
-  url.searchParams.set('v', '2.5-root-repair');
+  url.searchParams.set('v', '2.6-root-guard');
   url.searchParams.set('from', 'workbench');
   window.location.href = url.toString();
 };

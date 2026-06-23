@@ -7,6 +7,18 @@
 <meta name="application-name" content="KK@Tiff">
 <meta name="apple-mobile-web-app-title" content="KK@Tiff">
 <title>💌 专线聊天 · KK@Tiff</title>
+<script>
+(function(){
+  var path = location.pathname.toLowerCase();
+  var isRealChatPage = /(^|\/)chat\.html$/.test(path);
+  if (!isRealChatPage) {
+    var target = new URL('./index.html', location.href);
+    target.searchParams.set('v', '2.6-root-guard');
+    target.searchParams.set('from', 'chat-root-guard');
+    location.replace(target.toString());
+  }
+})();
+</script>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <style>

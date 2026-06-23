@@ -1,13 +1,13 @@
-KK@Tiff PWA v2.5 Root Repair
+PWA v2.6 根入口自救版上传检查
 
-Upload these files to the GitHub repo root on main branch:
-- index.html  about 565 KB, title: 深空工作台 PWA v2.5 入口修复
-- chat.html   about 21 KB, title: 专线聊天 · KK@Tiff
+上传到 GitHub 仓库根目录：
+- index.html 约 566KB，应显示主工作台
+- chat.html 约 22KB，应显示独立专线聊天
 - manifest.webmanifest
 - service-worker.js
 - icons/
 
-Important: do NOT overwrite index.html with chat.html.
-Test:
-https://kk198789.github.io/kktiff/index.html?v=2.5-root-repair
-https://kk198789.github.io/kktiff/chat.html?v=2.5-root-repair
+测试：
+1. /kktiff/index.html?v=2.6-root-guard 应进入主工作台
+2. /kktiff/chat.html?v=2.6-root-guard 应进入聊天
+3. /kktiff/?v=2.6-root-guard 若旧缓存误入聊天，也会被 chat.html 根路径自救跳回 index.html

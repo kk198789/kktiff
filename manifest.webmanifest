@@ -1,8 +1,8 @@
 {
   "name": "KK@Tiff 工作台",
   "short_name": "KK@Tiff",
-  "description": "KK 和 Tiffany 的日常记录、待办管理、工作总结与独立专线。默认明确进入主工作台 index.html。",
-  "start_url": "./index.html?v=2.5-root-repair",
+  "description": "KK 和 Tiffany 的日常记录、待办管理、工作总结与独立专线。默认明确进入主工作台 index.html，并防止根路径误入聊天页。",
+  "start_url": "./index.html?v=2.6-root-guard",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
