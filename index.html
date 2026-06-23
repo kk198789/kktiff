@@ -253,7 +253,7 @@ button { -webkit-tap-highlight-color:transparent; }
         <button class="back-btn" id="backBtn" type="button">‹ 返回</button>
         <div class="title-wrap">
           <div class="chat-title" id="chatTitle">💌 专线</div>
-          <div class="chat-subtitle" id="chatSubtitle">独立聊天页 · v2.4</div>
+          <div class="chat-subtitle" id="chatSubtitle">独立聊天页 · v2.5</div>
         </div>
       </div>
       <button class="icon-btn" id="muteBtn" type="button" title="点击静音">🔔</button>
@@ -293,7 +293,7 @@ button { -webkit-tap-highlight-color:transparent; }
   // 从工作台点击“专线”会带 from=workbench，不受影响。
   if (standalone && !params.has('from') && !params.has('direct')) {
     const url = new URL('./index.html', window.location.href);
-    url.searchParams.set('v', '2.4-workbench-start');
+    url.searchParams.set('v', '2.5-root-repair');
     window.location.replace(url.toString());
   }
 })();
@@ -551,7 +551,7 @@ function goBack() {
   closeEmojiPanel();
   inputEl.blur();
   const url = new URL('./index.html', window.location.href);
-  url.searchParams.set('v', '2.4-workbench-start');
+  url.searchParams.set('v', '2.5-root-repair');
   window.location.href = url.toString();
 }
 
