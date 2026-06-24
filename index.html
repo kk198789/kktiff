@@ -14,6 +14,22 @@
 <link rel="apple-touch-icon" href="./icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
+<script>
+// v2.8：如果旧缓存把 index.html 错误塞到 chat.html 地址下，强制重新请求真正的独立聊天页。
+(function(){
+  var path = location.pathname.toLowerCase();
+  var isWrongChatShell = /(^|\/)chat\.html$/.test(path);
+  if (isWrongChatShell && !location.search.includes('freshChat=1')) {
+    var url = new URL('/kktiff/chat.html', location.origin);
+    url.searchParams.set('v', '2.8-chat-direct');
+    url.searchParams.set('from', 'index-cache-guard');
+    url.searchParams.set('direct', '1');
+    url.searchParams.set('freshChat', '1');
+    url.searchParams.set('t', String(Date.now()));
+    location.replace(url.toString());
+  }
+})();
+</script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 
@@ -2211,7 +2227,7 @@ body {
       <div class="desktop-hero-main">
         <div class="desktop-kicker" id="desktopRolePill">KK@Tiff · v2.8</div>
         <h2 class="desktop-title" id="desktopHomeTitle">深空工作台</h2>
-        <p class="desktop-subtitle" id="desktopHomeSubtitle">今日任务、完成记录、备忘与专线入口集中呈现。</p>
+        <p class="desktop-subtitle" id="desktopHomeSubtitle">今日事项、完成记录、备忘信息与专线入口集中呈现。</p>
         <div class="desktop-hero-actions">
           <button class="desktop-primary-btn" type="button" onclick="openChatPage()" id="desktopLineBtn">💌 Tiffany 专线</button>
           <button class="desktop-secondary-btn" type="button" onclick="switchTab('todo')">✅ 管理待办</button>
@@ -3235,10 +3251,12 @@ function getLineLabel(short = false) {
 }
 
 window.openChatPage = function() {
-  const url = new URL('./chat.html', window.location.href);
-  url.searchParams.set('v', '2.6-root-guard');
+  const url = new URL('/kktiff/chat.html', window.location.origin);
+  url.searchParams.set('v', '2.8-chat-direct');
   url.searchParams.set('from', 'workbench');
-  window.location.href = url.toString();
+  url.searchParams.set('direct', '1');
+  url.searchParams.set('t', String(Date.now()));
+  window.location.assign(url.toString());
 };
 function updateLineLabels() {
   const tab = document.getElementById('tabChat');
@@ -4064,11 +4082,11 @@ function renderDesktopWorkbench() {
   const viewerName = USERS[viewingUser] || viewingUser;
   const identityName = USERS[myIdentity] || myIdentity || 'KK@Tiff';
 
-  setDesktopText('desktopRolePill', isReadonly ? `👀 正在查看 ${viewerName}` : `🧑‍🚀 ${identityName} · v2.8 desktop`);
+  setDesktopText('desktopRolePill', isReadonly ? `👀 正在查看 ${viewerName}` : `🧑‍🚀 ${identityName} · v2.8`);
   setDesktopText('desktopHomeTitle', currentTheme === 'wyb' ? '一博工作台' : '深空工作台');
   setDesktopText('desktopHomeSubtitle', isReadonly
     ? `当前是只读浏览 ${viewerName} 的工作台。你可以查看任务、完成记录和备忘，但不会误改对方数据。`
-    : '今日任务、完成记录、备忘与专线入口集中呈现，方便快速查看和继续处理。');
+    : '今日事项、完成记录、备忘信息与专线入口集中呈现，方便快速查看和继续处理。');
   setDesktopText('desktopLineBtn', getLineLabel(false));
   setDesktopText('desktopShortcutLine', getLineLabel(false));
   setDesktopText('desktopProgressNum', `${progress}%`);
