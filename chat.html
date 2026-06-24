@@ -325,7 +325,7 @@ button { -webkit-tap-highlight-color:transparent; }
   // 从工作台点击“专线”会带 from=workbench，不受影响。
   if (standalone && !params.has('from') && !params.has('direct')) {
     const url = new URL('./index.html', window.location.href);
-    url.searchParams.set('v', '2.5-root-repair');
+    url.searchParams.set('v', '2.8-automation-desktop');
     window.location.replace(url.toString());
   }
 })();
@@ -601,7 +601,7 @@ function goBack() {
   closeEmojiPanel();
   inputEl.blur();
   const url = new URL('./index.html', window.location.href);
-  url.searchParams.set('v', '2.5-root-repair');
+  url.searchParams.set('v', '2.8-automation-desktop');
   window.location.href = url.toString();
 }
 
