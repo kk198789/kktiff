@@ -1687,6 +1687,352 @@ body {
 }
 
 
+/* ── PWA v2.8：电脑版增强首页（合并自动化准备版），手机版保持 v2.6 结构不变 ── */
+.desktop-workbench { display:none; }
+
+@media (min-width:900px) {
+  body.desktop-home-mode .desktop-workbench {
+    display:block;
+    margin:0 0 18px;
+  }
+  body.desktop-home-mode .daily-overview {
+    display:none !important;
+  }
+  body.desktop-home-mode .tabs {
+    margin-top:10px;
+    margin-bottom:14px;
+    justify-content:center;
+  }
+  body.desktop-home-mode .tab {
+    border-radius:16px;
+    padding:12px 18px;
+  }
+  .desktop-hero {
+    position:relative;
+    overflow:hidden;
+    display:grid;
+    grid-template-columns:minmax(0,1.45fr) minmax(320px,0.8fr);
+    gap:18px;
+    padding:24px;
+    border-radius:26px;
+    background:linear-gradient(135deg,rgba(255,255,255,0.96),rgba(236,244,252,0.92));
+    border:1px solid var(--theme-border);
+    box-shadow:0 22px 55px rgba(15,23,42,0.14);
+    -webkit-backdrop-filter:blur(14px);
+    backdrop-filter:blur(14px);
+  }
+  .desktop-hero::before {
+    content:'';
+    position:absolute;
+    width:340px;
+    height:340px;
+    right:-120px;
+    top:-160px;
+    border-radius:50%;
+    background:radial-gradient(circle,rgba(35,104,173,0.18),rgba(35,104,173,0));
+    pointer-events:none;
+  }
+  .desktop-hero-main,
+  .desktop-hero-side { position:relative; z-index:1; min-width:0; }
+  .desktop-kicker {
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    margin-bottom:12px;
+    padding:6px 10px;
+    border-radius:999px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-size:12px;
+    font-weight:900;
+  }
+  .desktop-title {
+    font-size:38px;
+    line-height:1.1;
+    color:var(--text);
+    letter-spacing:-0.04em;
+    margin-bottom:10px;
+  }
+  .desktop-subtitle {
+    max-width:660px;
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.8;
+  }
+  .desktop-hero-actions {
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:20px;
+  }
+  .desktop-primary-btn,
+  .desktop-secondary-btn {
+    border:0;
+    border-radius:15px;
+    padding:12px 16px;
+    font:inherit;
+    font-size:14px;
+    font-weight:900;
+    cursor:pointer;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .desktop-primary-btn {
+    color:#fff;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    box-shadow:0 10px 24px rgba(31,45,58,0.16);
+  }
+  .desktop-secondary-btn {
+    color:var(--accent);
+    background:var(--accent-soft);
+    border:1px solid rgba(35,104,173,0.08);
+  }
+  .desktop-primary-btn:hover,
+  .desktop-secondary-btn:hover { transform:translateY(-2px); }
+  .desktop-hero-side {
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .desktop-progress-card {
+    padding:16px;
+    border-radius:20px;
+    background:#fff;
+    border:1px solid var(--theme-border);
+    box-shadow:0 10px 28px rgba(15,23,42,0.08);
+  }
+  .desktop-progress-head {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    color:var(--text);
+    font-size:13px;
+    font-weight:900;
+    margin-bottom:10px;
+  }
+  .desktop-progress-num {
+    font-size:26px;
+    font-weight:950;
+    color:var(--accent);
+  }
+  .desktop-progress-track {
+    height:10px;
+    border-radius:999px;
+    overflow:hidden;
+    background:var(--surface-2);
+  }
+  .desktop-progress-fill {
+    width:0%;
+    height:100%;
+    border-radius:inherit;
+    background:linear-gradient(90deg,var(--accent),var(--accent2));
+    transition:width .25s ease;
+  }
+  .desktop-today-line {
+    margin-top:10px;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.6;
+  }
+  .desktop-kpi-grid {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+  }
+  .desktop-kpi {
+    padding:13px 10px;
+    border-radius:18px;
+    background:rgba(255,255,255,0.9);
+    border:1px solid var(--theme-border);
+    text-align:center;
+  }
+  .desktop-kpi-num {
+    font-size:25px;
+    font-weight:950;
+    color:var(--accent);
+  }
+  .desktop-kpi-label {
+    margin-top:3px;
+    color:var(--muted);
+    font-size:12px;
+    font-weight:800;
+  }
+  .desktop-grid {
+    display:grid;
+    grid-template-columns:1.08fr 1fr 0.78fr;
+    gap:14px;
+    margin-top:14px;
+  }
+  .desktop-panel {
+    min-width:0;
+    border-radius:22px;
+    padding:16px;
+    background:rgba(255,255,255,0.95);
+    border:1px solid var(--theme-border);
+    box-shadow:0 14px 36px rgba(15,23,42,0.1);
+  }
+  .desktop-panel.wide { grid-column:span 2; }
+  .desktop-panel-head {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:12px;
+  }
+  .desktop-panel-title {
+    font-size:15px;
+    font-weight:950;
+    color:var(--text);
+  }
+  .desktop-panel-link {
+    border:0;
+    background:transparent;
+    color:var(--accent);
+    cursor:pointer;
+    font:inherit;
+    font-size:12px;
+    font-weight:900;
+  }
+  .desktop-list {
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .desktop-list-item {
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px;
+    border-radius:14px;
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+  }
+  .desktop-list-index {
+    width:24px;
+    height:24px;
+    flex:0 0 24px;
+    border-radius:9px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    font-size:12px;
+    font-weight:950;
+  }
+  .desktop-list-body { min-width:0; flex:1; }
+  .desktop-list-title {
+    color:var(--text);
+    font-size:14px;
+    font-weight:850;
+    line-height:1.45;
+    word-break:break-word;
+  }
+  .desktop-list-meta {
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:6px;
+  }
+  .desktop-empty {
+    padding:22px 14px;
+    text-align:center;
+    border-radius:16px;
+    background:#f8fafc;
+    border:1px dashed #d1d5db;
+    color:#9ca3af;
+    font-size:13px;
+    line-height:1.6;
+  }
+  .desktop-memo-item {
+    padding:10px 11px;
+    border-radius:14px;
+    background:var(--accent-soft);
+    color:var(--text);
+    font-size:13px;
+    line-height:1.55;
+    word-break:break-word;
+  }
+  .desktop-memo-time {
+    margin-top:5px;
+    color:var(--muted);
+    font-size:11px;
+  }
+  .desktop-shortcuts {
+    display:grid;
+    grid-template-columns:1fr;
+    gap:9px;
+  }
+  .desktop-shortcut {
+    width:100%;
+    border:1px solid var(--theme-border);
+    border-radius:16px;
+    padding:13px 12px;
+    background:#fff;
+    color:var(--text);
+    cursor:pointer;
+    font:inherit;
+    text-align:left;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    transition:transform .16s ease, border-color .16s ease;
+  }
+  .desktop-shortcut:hover {
+    transform:translateY(-2px);
+    border-color:var(--accent);
+  }
+  .desktop-shortcut strong {
+    display:block;
+    font-size:14px;
+    font-weight:950;
+  }
+  .desktop-shortcut span {
+    display:block;
+    margin-top:3px;
+    color:var(--muted);
+    font-size:12px;
+  }
+  .desktop-shortcut-arrow {
+    color:var(--accent);
+    font-size:18px;
+    font-weight:950;
+  }
+  .theme-layout-wyb .desktop-hero,
+  body[data-theme="wyb"] .desktop-panel,
+  body[data-theme="wyb"] .desktop-progress-card,
+  body[data-theme="wyb"] .desktop-kpi,
+  body[data-theme="wyb"] .desktop-shortcut {
+    border-color:rgba(255,255,255,0.12);
+    background:rgba(12,12,20,0.78);
+  }
+  body[data-theme="wyb"] .desktop-title,
+  body[data-theme="wyb"] .desktop-panel-title,
+  body[data-theme="wyb"] .desktop-list-title,
+  body[data-theme="wyb"] .desktop-shortcut strong,
+  body[data-theme="wyb"] .desktop-progress-head { color:#f9fafb; }
+  body[data-theme="wyb"] .desktop-subtitle,
+  body[data-theme="wyb"] .desktop-today-line,
+  body[data-theme="wyb"] .desktop-kpi-label,
+  body[data-theme="wyb"] .desktop-shortcut span,
+  body[data-theme="wyb"] .desktop-memo-time { color:#cbd5e1; }
+  body[data-theme="wyb"] .desktop-list-item,
+  body[data-theme="wyb"] .desktop-empty { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.12); }
+  body[data-theme="wyb"] .desktop-memo-item { background:rgba(233,69,96,0.16); color:#f8fafc; }
+}
+
+@media (min-width:900px) and (max-width:1080px) {
+  .desktop-hero { grid-template-columns:1fr; }
+  .desktop-grid { grid-template-columns:1fr 1fr; }
+  .desktop-panel.wide { grid-column:span 2; }
+}
+
+@media (max-width:899px) {
+  .desktop-workbench { display:none !important; }
+}
+
+
 /* ── PWA v2.8：自动化准备版 - 完成记录表单化 ── */
 .record-modal {
   position:fixed; inset:0; z-index:980;
@@ -1858,6 +2204,82 @@ body {
   </div>
 
   <div class="readonly-banner" id="readonlyBanner">👀 正在浏览对方的数据（只读）</div>
+
+<!-- PWA v2.8：电脑版增强首页（只在宽屏显示，手机版继续使用 mobile-home） -->
+  <section class="desktop-workbench" id="desktopWorkbench" aria-label="电脑版深空工作台首页">
+    <div class="desktop-hero">
+      <div class="desktop-hero-main">
+        <div class="desktop-kicker" id="desktopRolePill">KK@Tiff · v2.8</div>
+        <h2 class="desktop-title" id="desktopHomeTitle">深空工作台</h2>
+        <p class="desktop-subtitle" id="desktopHomeSubtitle">今日任务、完成记录、备忘与专线入口集中呈现。</p>
+        <div class="desktop-hero-actions">
+          <button class="desktop-primary-btn" type="button" onclick="openChatPage()" id="desktopLineBtn">💌 Tiffany 专线</button>
+          <button class="desktop-secondary-btn" type="button" onclick="switchTab('todo')">✅ 管理待办</button>
+          <button class="desktop-secondary-btn" type="button" onclick="switchTab('summary')">📊 生成总结</button>
+        </div>
+      </div>
+      <aside class="desktop-hero-side">
+        <div class="desktop-progress-card">
+          <div class="desktop-progress-head">
+            <span id="desktopTodayLabel">今日进度</span>
+            <span class="desktop-progress-num" id="desktopProgressNum">0%</span>
+          </div>
+          <div class="desktop-progress-track"><div class="desktop-progress-fill" id="desktopProgressFill"></div></div>
+          <div class="desktop-today-line" id="desktopTodayLine">等待同步今日数据...</div>
+        </div>
+        <div class="desktop-kpi-grid">
+          <div class="desktop-kpi"><div class="desktop-kpi-num" id="desktopPendingNum">0</div><div class="desktop-kpi-label">待办</div></div>
+          <div class="desktop-kpi"><div class="desktop-kpi-num" id="desktopDoneNum">0</div><div class="desktop-kpi-label">今日完成</div></div>
+          <div class="desktop-kpi"><div class="desktop-kpi-num" id="desktopMemoNum">0</div><div class="desktop-kpi-label">备忘</div></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="desktop-grid">
+      <section class="desktop-panel wide">
+        <div class="desktop-panel-head">
+          <div class="desktop-panel-title">🛰️ 今日任务航线</div>
+          <button class="desktop-panel-link" type="button" onclick="switchTab('todo')">查看全部</button>
+        </div>
+        <div class="desktop-list" id="desktopTodoList"></div>
+      </section>
+
+      <section class="desktop-panel">
+        <div class="desktop-panel-head">
+          <div class="desktop-panel-title">⚡ 快捷入口</div>
+        </div>
+        <div class="desktop-shortcuts">
+          <button class="desktop-shortcut" type="button" onclick="openChatPage()"><div><strong id="desktopShortcutLine">💌 专线</strong><span>打开独立聊天页</span></div><b class="desktop-shortcut-arrow">›</b></button>
+          <button class="desktop-shortcut" type="button" onclick="switchTab('memo')"><div><strong>🌙 备忘记录</strong><span>随手记一条</span></div><b class="desktop-shortcut-arrow">›</b></button>
+          <button class="desktop-shortcut" type="button" onclick="switchTab('settings')"><div><strong>⚙️ 设置与备份</strong><span>PWA / 数据 / 身份</span></div><b class="desktop-shortcut-arrow">›</b></button>
+        </div>
+      </section>
+
+      <section class="desktop-panel">
+        <div class="desktop-panel-head">
+          <div class="desktop-panel-title">✅ 今日完成</div>
+          <button class="desktop-panel-link" type="button" onclick="switchTab('summary')">看总结</button>
+        </div>
+        <div class="desktop-list" id="desktopDoneList"></div>
+      </section>
+
+      <section class="desktop-panel">
+        <div class="desktop-panel-head">
+          <div class="desktop-panel-title">🌙 最近备忘</div>
+          <button class="desktop-panel-link" type="button" onclick="switchTab('memo')">添加</button>
+        </div>
+        <div class="desktop-list" id="desktopMemoList"></div>
+      </section>
+
+      <section class="desktop-panel">
+        <div class="desktop-panel-head">
+          <div class="desktop-panel-title">📊 本周概览</div>
+          <button class="desktop-panel-link" type="button" onclick="switchTab('summary')">生成</button>
+        </div>
+        <div class="desktop-list" id="desktopWeekList"></div>
+      </section>
+    </div>
+  </section>
 
   <!-- 手机端今日首页（仅小屏显示） -->
   <div class="mobile-home" id="mobileHome">
@@ -3620,6 +4042,110 @@ function renderSummaryCalendar(range = getSummaryRange()) {
 
 
 
+function setDesktopText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
+function renderDesktopWorkbench() {
+  const root = document.getElementById('desktopWorkbench');
+  if (!root || !viewingUser) return;
+  const d = get();
+  if (!d) return;
+
+  const today = localDate();
+  const pending = (d.todos || []).filter(t => !t.done).sort(todoSort);
+  const doneToday = (d.logs || [])
+    .filter(l => l.date === today && !l.isReminder)
+    .sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+  const latestMemos = [...(d.memos || [])].sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+  const totalToday = pending.length + doneToday.length;
+  const progress = totalToday ? Math.round(doneToday.length / totalToday * 100) : 100;
+  const viewerName = USERS[viewingUser] || viewingUser;
+  const identityName = USERS[myIdentity] || myIdentity || 'KK@Tiff';
+
+  setDesktopText('desktopRolePill', isReadonly ? `👀 正在查看 ${viewerName}` : `🧑‍🚀 ${identityName} · v2.8 desktop`);
+  setDesktopText('desktopHomeTitle', currentTheme === 'wyb' ? '一博工作台' : '深空工作台');
+  setDesktopText('desktopHomeSubtitle', isReadonly
+    ? `当前是只读浏览 ${viewerName} 的工作台。你可以查看任务、完成记录和备忘，但不会误改对方数据。`
+    : '今日任务、完成记录、备忘与专线入口集中呈现，方便快速查看和继续处理。');
+  setDesktopText('desktopLineBtn', getLineLabel(false));
+  setDesktopText('desktopShortcutLine', getLineLabel(false));
+  setDesktopText('desktopProgressNum', `${progress}%`);
+  const fill = document.getElementById('desktopProgressFill');
+  if (fill) fill.style.width = `${progress}%`;
+  setDesktopText('desktopTodayLabel', `${fmtDate(today)} · 今日进度`);
+  setDesktopText('desktopTodayLine', `今日完成 ${doneToday.length} 项，待办 ${pending.length} 项，备忘 ${latestMemos.length} 条。`);
+  setDesktopText('desktopPendingNum', pending.length);
+  setDesktopText('desktopDoneNum', doneToday.length);
+  setDesktopText('desktopMemoNum', latestMemos.length);
+
+  const todoList = document.getElementById('desktopTodoList');
+  if (todoList) {
+    const shown = pending.slice(0, 6);
+    todoList.innerHTML = shown.length ? shown.map((t, i) => {
+      const p = priMap[t.priority] || priMap.normal;
+      const cat = getCategoryInfo(t.category);
+      const due = getDueInfo(t.dueDate, false);
+      return `<div class="desktop-list-item">
+        <span class="desktop-list-index">${i + 1}</span>
+        <div class="desktop-list-body">
+          <div class="desktop-list-title">${esc(t.text)}</div>
+          <div class="desktop-list-meta"><span class="pri-tag ${p.cls}">${p.lbl}</span><span class="cat-tag ${cat.cls}">${cat.lbl}</span>${due ? `<span class="due-tag ${due.cls}">${due.lbl}</span>` : ''}</div>
+        </div>
+      </div>`;
+    }).join('') : '<div class="desktop-empty">待办清空了。今天可以高贵地喝口水，别急着给自己加班。</div>';
+  }
+
+  const doneList = document.getElementById('desktopDoneList');
+  if (doneList) {
+    const shown = doneToday.slice(0, 5);
+    doneList.innerHTML = shown.length ? shown.map((l, i) => {
+      const cat = getCategoryInfo(l.category);
+      return `<div class="desktop-list-item">
+        <span class="desktop-list-index">${i + 1}</span>
+        <div class="desktop-list-body">
+          <div class="desktop-list-title">${esc(l.text)}</div>
+          <div class="desktop-list-meta"><span class="cat-tag ${cat.cls}">${cat.lbl}</span>${l.time ? `<span class="due-tag">${l.time}</span>` : ''}</div>
+        </div>
+      </div>`;
+    }).join('') : '<div class="desktop-empty">今天还没有完成记录。先从一件最小的事开始，别让工作台空转。</div>';
+  }
+
+  const memoList = document.getElementById('desktopMemoList');
+  if (memoList) {
+    const shown = latestMemos.slice(0, 4);
+    memoList.innerHTML = shown.length ? shown.map(m => `
+      <div class="desktop-memo-item">
+        ${esc(m.text)}
+        <div class="desktop-memo-time">${m.created || ''}</div>
+      </div>`).join('') : '<div class="desktop-empty">还没有备忘。灵感来的时候，先扔这里。</div>';
+  }
+
+  const weekList = document.getElementById('desktopWeekList');
+  if (weekList) {
+    const range = getWeekRange();
+    const weekLogs = (d.logs || []).filter(l => !l.isReminder && l.date && l.date >= range.start && l.date <= range.end);
+    const byCategory = {};
+    weekLogs.forEach(l => {
+      const key = catMap[l.category] ? l.category : 'other';
+      byCategory[key] = (byCategory[key] || 0) + 1;
+    });
+    const rows = Object.entries(byCategory).sort((a,b) => b[1] - a[1]).slice(0, 5);
+    weekList.innerHTML = weekLogs.length ? rows.map(([key, count], i) => {
+      const cat = getCategoryInfo(key);
+      return `<div class="desktop-list-item">
+        <span class="desktop-list-index">${i + 1}</span>
+        <div class="desktop-list-body">
+          <div class="desktop-list-title">${cat.lbl}</div>
+          <div class="desktop-list-meta"><span class="due-tag">本周 ${count} 项</span></div>
+        </div>
+      </div>`;
+    }).join('') : '<div class="desktop-empty">本周暂无完成记录。完成待办后，这里会自动生成分类概览。</div>';
+  }
+}
+
+
 // ── 统计 ──
 function updateStats() {
   const d = get();
@@ -3627,6 +4153,7 @@ function updateStats() {
   if (memoTab) memoTab.textContent = `${themes[currentTheme].tabMemo} · ${d.memos.length}`;
   renderDailyOverview();
   renderMobileHome();
+  renderDesktopWorkbench();
   renderWorkSummary(false);
 }
 
